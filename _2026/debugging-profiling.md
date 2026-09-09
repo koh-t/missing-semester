@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Debugging and Profiling"
+title: "デバッグとプロファイリング"
 description: >
-  Learn how to debug programs using logging and debuggers, and how to profile code for performance.
+  ロギングとデバッガを使ったプログラムのデバッグ方法と、パフォーマンスのためのコードのプロファイリング方法を学びます。
 thumbnail: /static/assets/thumbnails/2026/lec4.png
 date: 2026-01-15
 ready: true
@@ -12,69 +12,63 @@ video:
   id: 8VYT9TcUmKs
 ---
 
-A golden rule in programming is that code does not do what you expect it to do, but what you tell it to do. Bridging that gap can sometimes be a quite difficult feat. In this lecture we are going to cover useful techniques for dealing with buggy and resource hungry code: debugging and profiling.
+プログラミングにおける黄金律は、コードはあなたが期待した通りには動かず、あなたが命じた通りに動く、というものです。そのギャップを埋めるのは、時にかなり難しい仕事になります。この講義では、バグを含むコードやリソースを大量に消費するコードに対処するための有用な技術、すなわちデバッグとプロファイリングを扱います。
 
-# Debugging
+# デバッグ
 
-## Printf Debugging and Logging
+## printfデバッグとロギング
 
-> "The most effective debugging tool is still careful thought, coupled with judiciously placed print statements" — Brian Kernighan, _Unix for Beginners_.
+> 「最も効果的なデバッグツールは、今でも注意深い思考と、要所要所に配置されたprint文である」 — Brian Kernighan, _Unix for Beginners_
 
-A first approach to debug a program is to add print statements around where you have detected the problem, and keep iterating until you have extracted enough information to understand what is responsible for the issue.
+プログラムをデバッグする最初のアプローチは、問題を検出したあたりにprint文を追加し、問題の原因を理解するのに十分な情報が得られるまで繰り返すことです。
 
-A second approach is to use logging in your program, instead of ad hoc print statements. Logging is essentially "printing with more care", and is usually done through a logging framework that includes built-in support for things like:
+2つ目のアプローチは、その場しのぎのprint文の代わりに、プログラムでロギングを使うことです。ロギングは本質的に「より丁寧なprint」であり、通常は次のような機能を組み込みで備えたロギングフレームワークを通じて行われます。
 
-- the ability to direct the logs (or subsets of the logs) to other output locations;
-- setting severity levels (such as INFO, DEBUG, WARN, ERROR, etc.) and allow you to filter the output according to those; and
-- support for structured logging of data related to the log entries, which can then be extracted more easily after the fact.
+- ログ(またはログの一部)を別の出力先に振り分ける機能
+- 深刻度レベル(INFO、DEBUG、WARN、ERRORなど)を設定し、それに応じて出力をフィルタリングできる機能
+- ログエントリに関連するデータを構造化してロギングし、後から容易に抽出できるようにするサポート
 
-Logging statements you'll also usually proactively put in while
-programming so that the data you need to debug may already be there!
-And indeed, once you've found and fixed a problem using print
-statements, it's often worthwhile to convert those prints into proper
-log statements before removing them. This way, if similar bugs occur
-in the future, you'll already have the diagnostic information you need
-without modifying the code.
+また、ログ出力の文は、デバッグに必要なデータが最初から揃っているように、プログラミング中に先回りして入れておくことが多いものです。実際、print文を使って問題を見つけて修正したら、それらを削除する前に、適切なログ文に変換しておく価値がしばしばあります。こうしておけば、将来同じようなバグが発生したとき、コードを変更することなく、必要な診断情報がすでに手元にあることになります。
 
-> **Third-party logs**: Many programs support the `-v` or `--verbose` flag to print more information when they run. This can be useful for discovering why a given command fails. Some even allow repeating the flag for more details. When debugging issues with services (databases, web servers, etc.), check their logs—often in `/var/log/` on Linux. Use `journalctl -u <service>` to view logs for systemd services. For third-party libraries, check if they support debug logging via environment variables or configuration.
+> **サードパーティのログ**: 多くのプログラムは、実行時により多くの情報を出力する `-v` や `--verbose` フラグをサポートしています。これは、あるコマンドがなぜ失敗するのかを突き止めるのに役立ちます。フラグを繰り返し指定することで、さらに詳細な情報が得られるものもあります。サービス(データベース、Webサーバーなど)の問題をデバッグするときは、そのログを確認しましょう。Linuxでは多くの場合 `/var/log/` にあります。systemdのサービスのログを見るには `journalctl -u <service>` を使います。サードパーティのライブラリについては、環境変数や設定でデバッグロギングをサポートしていないか確認してみてください。
 
-## Debuggers
+## デバッガ
 
-Print debugging works well when you know what to print and can easily modify and re-run your code. Debuggers become valuable when you're not sure what information you need, when the bug only manifests in hard-to-reproduce conditions, or when modifying and restarting the program is expensive (long startup times, complex state to recreate, etc.).
+printデバッグは、何を出力すればよいかが分かっていて、コードを簡単に変更・再実行できる場合にはうまく機能します。デバッガが真価を発揮するのは、どんな情報が必要か分からないとき、バグが再現しにくい条件でしか発生しないとき、あるいはプログラムの変更や再起動のコストが高い(起動時間が長い、再現すべき状態が複雑など)ときです。
 
-Debuggers are programs that let you interact with the execution of a program as it happens, allowing you to:
+デバッガは、プログラムの実行にリアルタイムで介入できるプログラムで、次のようなことができます。
 
-- Halt execution when it reaches a certain line.
-- Step through one instruction at a time.
-- Inspect values of variables after a crash.
-- Conditionally halt execution when a given condition is met.
-- And many more advanced features.
+- 特定の行に到達したときに実行を停止する。
+- 一度に1命令ずつステップ実行する。
+- クラッシュ後に変数の値を調べる。
+- 特定の条件が満たされたときに条件付きで実行を停止する。
+- その他多くの高度な機能。
 
-Most programming languages support (or come with) some form of debugger. The most versatile are **general-purpose debuggers** like [`gdb`](https://www.gnu.org/software/gdb/) (GNU Debugger) and [`lldb`](https://lldb.llvm.org/) (LLVM Debugger), which can debug any native binary. Many languages also have **language-specific debuggers** that integrate more tightly with the runtime (like Python's pdb or Java's jdb).
+ほとんどのプログラミング言語は、何らかの形のデバッガをサポート(または同梱)しています。最も汎用性が高いのは、[`gdb`](https://www.gnu.org/software/gdb/)(GNU Debugger)や [`lldb`](https://lldb.llvm.org/)(LLVM Debugger)のような**汎用デバッガ**で、あらゆるネイティブバイナリをデバッグできます。多くの言語には、ランタイムとより緊密に統合された**言語固有のデバッガ**もあります(Pythonのpdb、Javaのjdbなど)。
 
-`gdb` is the de-facto standard debugger for C, C++, Rust, and other compiled languages. It lets you probe pretty much any process and get its current machine state: registers, stack, program counter, and more.
+`gdb` は、C、C++、Rustなどのコンパイル言語における事実上の標準デバッガです。ほぼあらゆるプロセスを調査して、レジスタ、スタック、プログラムカウンタなど、現在のマシン状態を取得できます。
 
-Some useful GDB commands:
+便利なGDBコマンドをいくつか挙げます。
 
-- `run` - Start the program
-- `b {function}` or `b {file}:{line}` - Set a breakpoint
-- `c` - Continue execution
-- `step` / `next` / `finish` - Step in / step over / step out
-- `p {variable}` - Print value of variable
-- `bt` - Show backtrace (call stack)
-- `watch {expression}` - Break when the value changes
+- `run` - プログラムを開始する
+- `b {function}` または `b {file}:{line}` - ブレークポイントを設定する
+- `c` - 実行を継続する
+- `step` / `next` / `finish` - ステップイン / ステップオーバー / ステップアウト
+- `p {variable}` - 変数の値を表示する
+- `bt` - バックトレース(コールスタック)を表示する
+- `watch {expression}` - 値が変化したときに停止する
 
-> Consider using GDB's TUI mode (`gdb -tui` or press `Ctrl-x a` inside GDB) for a split-screen view showing source code alongside the command prompt.
+> GDBのTUIモード(`gdb -tui`、またはGDB内で `Ctrl-x a` を押す)を使うと、ソースコードとコマンドプロンプトを並べて表示する分割画面ビューになるので、検討してみてください。
 
-### Record-Replay Debugging
+### 記録・再生デバッグ
 
-Some of the most frustrating bugs are _Heisenbugs_: bugs that seem to disappear or change behavior when you try to observe them. Race conditions, timing-dependent bugs, and issues that only appear under certain system conditions fall into this category. Traditional debugging is often useless here because running the program again produces different behavior (e.g., print statements may slow down the code sufficiently that the race no longer happens).
+最も苛立たしいバグのひとつが _ハイゼンバグ(Heisenbug)_ です。これは、観察しようとすると消えたり振る舞いが変わったりするように見えるバグのことです。競合状態(race condition)、タイミングに依存するバグ、特定のシステム条件でしか現れない問題がこれに該当します。プログラムを再実行するたびに違う振る舞いをするため(例えば、print文がコードを十分に遅くして競合が起きなくなってしまうなど)、従来のデバッグはここではしばしば役に立ちません。
 
-**Record-replay debugging** solves this by recording a program's execution and allowing you to replay it deterministically as many times as you need. Even better, you can _reverse_ through the execution to find exactly where things went wrong.
+**記録・再生デバッグ(record-replay debugging)** は、プログラムの実行を記録し、必要な回数だけ決定的に再生できるようにすることで、この問題を解決します。さらに、実行を _逆方向_ にたどって、何が悪かったのかを正確に見つけることもできます。
 
-[rr](https://rr-project.org/) is a powerful tool for Linux that records program execution and allows deterministic replay with full debugging capabilities. It works with GDB, so you already know the interface.
+[rr](https://rr-project.org/) は、プログラムの実行を記録し、完全なデバッグ機能を備えた決定的な再生を可能にする、Linux向けの強力なツールです。GDBと連携して動作するので、インターフェースはすでにおなじみのものです。
 
-Basic usage:
+基本的な使い方は次の通りです。
 
 ```bash
 # Record a program execution
@@ -84,37 +78,37 @@ rr record ./my_program
 rr replay
 ```
 
-The magic happens during replay. Because the execution is deterministic, you can use **reverse debugging** commands:
+魔法が起こるのは再生時です。実行が決定的であるため、**逆方向デバッグ(reverse debugging)** コマンドが使えます。
 
-- `reverse-continue` (`rc`) - Run backwards until hitting a breakpoint
-- `reverse-step` (`rs`) - Step backwards one line
-- `reverse-next` (`rn`) - Step backwards, skipping function calls
-- `reverse-finish` - Run backwards until entering the current function
+- `reverse-continue` (`rc`) - ブレークポイントに到達するまで逆方向に実行する
+- `reverse-step` (`rs`) - 1行逆方向にステップする
+- `reverse-next` (`rn`) - 関数呼び出しをスキップしながら逆方向にステップする
+- `reverse-finish` - 現在の関数に入るところまで逆方向に実行する
 
-This is incredibly powerful for debugging. Say you have a crash—instead of guessing where the bug is and setting breakpoints, you can:
+これはデバッグにおいて信じられないほど強力です。例えばクラッシュが起きたとします。バグの場所を推測してブレークポイントを設定する代わりに、次のようにできます。
 
-1. Run to the crash
-2. Inspect the corrupted state
-3. Set a watchpoint on the corrupted variable
-4. `reverse-continue` to find exactly where it was corrupted
+1. クラッシュまで実行する
+2. 壊れた状態を調べる
+3. 壊れた変数にウォッチポイントを設定する
+4. `reverse-continue` で、それがどこで壊されたのかを正確に見つける
 
-**When to use rr:**
-- Flaky tests that fail intermittently
-- Race conditions and threading bugs
-- Crashes that are hard to reproduce
-- Any bug where you wish you could "go back in time"
+**rrを使うべき場面:**
+- 断続的に失敗する不安定なテスト
+- 競合状態やスレッド関連のバグ
+- 再現が難しいクラッシュ
+- 「時間を巻き戻せたら」と思うようなあらゆるバグ
 
-> Note: rr only works on Linux and requires hardware performance counters. It doesn't work in VMs that don't expose these counters, such as on most AWS EC2 instances, and it doesn't support GPU access. For macOS, check out [Warpspeed](https://warpspeed.dev/).
+> 注意: rrはLinux上でのみ動作し、ハードウェアパフォーマンスカウンタを必要とします。これらのカウンタを公開していないVM(ほとんどのAWS EC2インスタンスなど)では動作せず、GPUアクセスもサポートしていません。macOSでは [Warpspeed](https://warpspeed.dev/) をチェックしてみてください。
 
-> **rr and concurrency**: Because rr records execution deterministically, it serializes thread scheduling. This means some race conditions may not manifest under rr if they depend on specific timing. rr is still useful for debugging races—once you capture a failing run, you can replay it reliably—but you may need multiple recording attempts to catch an intermittent bug. For bugs that don't involve concurrency, rr shines brightest: you can always reproduce the exact execution and use reverse debugging to hunt down corruption.
+> **rrと並行処理**: rrは実行を決定的に記録するため、スレッドのスケジューリングを直列化します。つまり、特定のタイミングに依存する競合状態は、rrの下では発生しないことがあります。それでもrrは競合のデバッグに有用です。失敗した実行を一度捕まえてしまえば、確実に再生できるからです。ただし、断続的なバグを捕まえるには、複数回の記録の試行が必要になるかもしれません。並行処理が関係しないバグに対しては、rrは最も輝きます。常に全く同じ実行を再現でき、逆方向デバッグを使ってデータ破壊を追い詰めることができます。
 
-## System Call Tracing
+## システムコールのトレース
 
-Sometimes you need to understand how your program interacts with the operating system. Programs make [system calls](https://en.wikipedia.org/wiki/System_call) to request services from the kernel—opening files, allocating memory, creating processes, and more. Tracing these calls can reveal why a program is hanging, what files it's trying to access, or where it's spending time waiting.
+プログラムがオペレーティングシステムとどのようにやり取りしているかを理解する必要がある場合もあります。プログラムは、ファイルを開く、メモリを割り当てる、プロセスを作成するといったカーネルのサービスを要求するために、[システムコール](https://en.wikipedia.org/wiki/System_call)を発行します。これらの呼び出しをトレースすることで、プログラムがなぜハングしているのか、どのファイルにアクセスしようとしているのか、どこで待ち時間を費やしているのかが明らかになります。
 
-### strace (Linux) and dtruss (macOS)
+### strace (Linux) と dtruss (macOS)
 
-[`strace`](https://www.man7.org/linux/man-pages/man1/strace.1.html) lets you observe every system call a program makes:
+[`strace`](https://www.man7.org/linux/man-pages/man1/strace.1.html) を使うと、プログラムが発行するすべてのシステムコールを観察できます。
 
 ```bash
 # Trace all system calls
@@ -133,13 +127,13 @@ strace -p <PID>
 strace -T ./my_program
 ```
 
-> On macOS and BSD, use [`dtruss`](https://www.manpagez.com/man/1/dtruss/) (which wraps `dtrace`) for similar functionality:
+> macOSとBSDでは、同様の機能を持つ [`dtruss`](https://www.manpagez.com/man/1/dtruss/)(`dtrace` のラッパー)を使ってください。
 
-> For deeper dives into `strace`, check out Julia Evans' excellent [strace zine](https://jvns.ca/strace-zine-unfolded.pdf).
+> `strace` をより深く知りたい場合は、Julia Evansによる素晴らしい [strace zine](https://jvns.ca/strace-zine-unfolded.pdf) をチェックしてみてください。
 
-### bpftrace and eBPF
+### bpftrace と eBPF
 
-[eBPF](https://ebpf.io/) (extended Berkeley Packet Filter) is a powerful Linux technology that allows running sandboxed programs in the kernel. [`bpftrace`](https://github.com/iovisor/bpftrace) provides a high-level syntax for writing eBPF programs. These are arbitrary programs running in the kernel, and thus have huge expressive power (though also a somewhat clumsy awk-like syntax). The most common use-case for them is to investigate what system calls are being invoked, including aggregations (like counts or latency statistics) or introspecting (or even filtering on) system call arguments.
+[eBPF](https://ebpf.io/)(extended Berkeley Packet Filter)は、サンドボックス化されたプログラムをカーネル内で実行できるようにする、Linuxの強力な技術です。[`bpftrace`](https://github.com/iovisor/bpftrace) は、eBPFプログラムを書くための高水準な構文を提供します。これらはカーネル内で動く任意のプログラムであり、それゆえ非常に大きな表現力を持ちます(ただし、awkに似たやや扱いにくい構文でもあります)。最も一般的なユースケースは、どのシステムコールが呼び出されているのかを調査することで、集計(カウントやレイテンシの統計など)や、システムコールの引数の中身を調べる(あるいはそれによるフィルタリング)も含まれます。
 
 ```bash
 # Trace file opens system-wide (prints immediately)
@@ -149,9 +143,9 @@ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_openat { printf("%s %s\n", comm,
 sudo bpftrace -e 'tracepoint:syscalls:sys_enter_* { @[probe] = count(); }'
 ```
 
-However, you can also write eBPF programs directly in C using a toolchain like [`bcc`](https://github.com/iovisor/bcc), which also ships with [many handy tools](https://www.brendangregg.com/blog/2015-09-22/bcc-linux-4.3-tracing.html) like `biosnoop` for printing latency distributions for disk operations or `opensnoop` for printing all open files.
+しかし、[`bcc`](https://github.com/iovisor/bcc) のようなツールチェーンを使えば、eBPFプログラムをC言語で直接書くこともできます。bccには、ディスク操作のレイテンシ分布を表示する `biosnoop` や、開かれたすべてのファイルを表示する `opensnoop` など、[多くの便利なツール](https://www.brendangregg.com/blog/2015-09-22/bcc-linux-4.3-tracing.html)も付属しています。
 
-Where `strace` is useful because it's easy to "just get up and running", `bpftrace` is what you should reach for when you need lower overhead, want to trace through kernel functions, need to do any kind of aggregation, etc. Note that `bpftrace` has to run as `root` though, and that it generally monitors the entire kernel, not just a particular process. To target a specific program, you can filter by command name or PID:
+`strace` が「とりあえずすぐに使い始められる」点で有用であるのに対し、`bpftrace` は、より低いオーバーヘッドが必要なとき、カーネル関数の中までトレースしたいとき、何らかの集計を行いたいときなどに手を伸ばすべきツールです。ただし、`bpftrace` は `root` として実行する必要があり、また一般に特定のプロセスだけでなくカーネル全体を監視することに注意してください。特定のプログラムを対象にするには、コマンド名やPIDでフィルタリングできます。
 
 ```bash
 # Filter by command name (prints summary on Ctrl-C)
@@ -161,11 +155,11 @@ sudo bpftrace -e 'tracepoint:syscalls:sys_enter_* /comm == "bash"/ { @[probe] = 
 sudo bpftrace -e 'tracepoint:syscalls:sys_enter_* /pid == cpid/ { @[probe] = count(); }' -c 'ls -la'
 ```
 
-The `-c` flag runs the specified command and sets `cpid` to its PID, which is useful for tracing a program from the moment it starts. When the traced command exits, bpftrace prints the aggregated results.
+`-c` フラグは指定したコマンドを実行し、そのPIDを `cpid` に設定します。これは、プログラムを起動した瞬間からトレースするのに便利です。トレース対象のコマンドが終了すると、bpftraceは集計結果を出力します。
 
-### Network Debugging
+### ネットワークのデバッグ
 
-For network issues, [`tcpdump`](https://www.man7.org/linux/man-pages/man1/tcpdump.1.html) and [Wireshark](https://www.wireshark.org/) let you capture and analyze network packets:
+ネットワークの問題については、[`tcpdump`](https://www.man7.org/linux/man-pages/man1/tcpdump.1.html) と [Wireshark](https://www.wireshark.org/) を使ってネットワークパケットをキャプチャして分析できます。
 
 ```bash
 # Capture packets on port 80
@@ -175,19 +169,19 @@ sudo tcpdump -i any port 80
 sudo tcpdump -i any -w capture.pcap
 ```
 
-For HTTPS traffic, the encryption makes tcpdump less useful. Tools like [mitmproxy](https://mitmproxy.org/) can act as an intercepting proxy to inspect encrypted traffic. Browser developer tools (Network tab) are often the easiest way to debug HTTPS requests from web applications—they show decrypted request/response data, headers, and timing.
+HTTPSトラフィックについては、暗号化のためtcpdumpの有用性は下がります。[mitmproxy](https://mitmproxy.org/) のようなツールは、傍受プロキシとして動作し、暗号化されたトラフィックを検査できます。Webアプリケーションから発行されるHTTPSリクエストをデバッグするには、ブラウザの開発者ツール(Networkタブ)が最も手軽な方法であることが多く、復号されたリクエスト/レスポンスのデータ、ヘッダ、タイミング情報を表示してくれます。
 
-## Memory Debugging
+## メモリのデバッグ
 
-Memory bugs—buffer overflows, use-after-free, memory leaks—are among the most dangerous and difficult to debug. They often don't crash immediately but corrupt memory in ways that cause problems much later.
+メモリのバグ、すなわちバッファオーバーフロー、解放後使用(use-after-free)、メモリリークは、最も危険でデバッグが難しいバグの部類に入ります。これらは多くの場合、すぐにはクラッシュせず、ずっと後になって問題を引き起こすような形でメモリを破壊します。
 
-### Sanitizers
+### サニタイザ
 
-One approach to finding memory bugs is to use **sanitizers**, which are compiler features that instrument your code to detect errors at runtime. For example, the widely used **AddressSanitizer (ASan)** detects:
-- Buffer overflows (stack, heap, and global)
-- Use-after-free
-- Use-after-return
-- Memory leaks
+メモリのバグを見つけるひとつのアプローチは、**サニタイザ**を使うことです。これは、実行時にエラーを検出できるようコードを計装するコンパイラの機能です。例えば、広く使われている **AddressSanitizer (ASan)** は次のものを検出します。
+- バッファオーバーフロー(スタック、ヒープ、グローバル)
+- 解放後使用(use-after-free)
+- リターン後使用(use-after-return)
+- メモリリーク
 
 ```bash
 # Compile with AddressSanitizer
@@ -195,66 +189,66 @@ gcc -fsanitize=address -g program.c -o program
 ./program
 ```
 
-There are a variety of useful sanitizers:
+有用なサニタイザは他にも各種あります。
 
-- **ThreadSanitizer (TSan)**: Detects data races in multithreaded code (`-fsanitize=thread`)
-- **MemorySanitizer (MSan)**: Detects reads of uninitialized memory (`-fsanitize=memory`)
-- **UndefinedBehaviorSanitizer (UBSan)**: Detects undefined behavior like integer overflow (`-fsanitize=undefined`)
+- **ThreadSanitizer (TSan)**: マルチスレッドコードのデータ競合を検出します(`-fsanitize=thread`)
+- **MemorySanitizer (MSan)**: 未初期化メモリの読み取りを検出します(`-fsanitize=memory`)
+- **UndefinedBehaviorSanitizer (UBSan)**: 整数オーバーフローなどの未定義動作を検出します(`-fsanitize=undefined`)
 
-Sanitizers require recompilation but are fast enough to use in CI pipelines and during regular development.
+サニタイザは再コンパイルを必要としますが、CIパイプラインや日々の開発で使えるほど十分に高速です。
 
-### Valgrind: When You Can't Recompile
+### Valgrind: 再コンパイルできないとき
 
-[Valgrind](https://valgrind.org/) instead runs your program in something akin to a virtual machine to detect memory errors. It's slower than sanitizers but doesn't require recompilation:
+[Valgrind](https://valgrind.org/) は、代わりに一種の仮想マシンのような環境でプログラムを実行してメモリエラーを検出します。サニタイザより低速ですが、再コンパイルは不要です。
 
 ```bash
 valgrind --leak-check=full ./my_program
 ```
 
-Use Valgrind when:
-- You don't have source code
-- You can't recompile (third-party libraries)
-- You need specific tools not available as sanitizers
+Valgrindを使うべき場面は次の通りです。
+- ソースコードがないとき
+- 再コンパイルできないとき(サードパーティのライブラリ)
+- サニタイザにはない特定のツールが必要なとき
 
-Valgrind is actually a really powerful controlled execution environment, and we'll see more of it later when we get to profiling!
+Valgrindは実は非常に強力な制御された実行環境であり、プロファイリングの話に入るときに再登場します!
 
-## AI for Debugging
+## AIによるデバッグ
 
-Large language models have become surprisingly useful debugging assistants. They excel at certain debugging tasks that complement traditional tools.
+大規模言語モデル(LLM)は、驚くほど有用なデバッグアシスタントになりました。従来のツールを補完する特定のデバッグタスクにおいて、LLMは力を発揮します。
 
-**Where LLMs shine:**
+**LLMが得意なこと:**
 
-- **Explaining cryptic error messages**: Compiler errors, especially from C++ templates or Rust's borrow checker, can be notoriously cryptic. LLMs can translate them into plain English and suggest fixes.
+- **不可解なエラーメッセージの説明**: コンパイラのエラー、特にC++のテンプレートやRustの借用チェッカが出すものは、悪名高いほど分かりにくいことがあります。LLMはそれらを平易な言葉に翻訳し、修正案を提示できます。
 
-- **Traversing language and abstraction boundaries**: If you're debugging a problem that spans multiple languages (say, a bug in a C library that manifests through a Python binding), LLMs can help navigate the different layers. They're particularly good at understanding FFI boundaries, build system issues, and cross-language debugging (e.g., my program errors, but I believe it is because of a bug in one of my dependencies).
+- **言語や抽象化の境界をまたぐこと**: 複数の言語にまたがる問題(例えば、Pythonバインディングを通じて顕在化するCライブラリのバグ)をデバッグしている場合、LLMは異なるレイヤの間を行き来する手助けをしてくれます。FFIの境界、ビルドシステムの問題、言語をまたいだデバッグ(例:プログラムがエラーになるが、原因は依存ライブラリのバグだと思われる、など)の理解が特に得意です。
 
-- **Correlating symptoms with root causes**: "My program works fine but uses 10x more memory than expected" is the kind of vague symptom that LLMs can help investigate, suggesting likely causes and what to look for.
+- **症状と根本原因の関連付け**: 「プログラムは正常に動くが、想定の10倍のメモリを使う」といった漠然とした症状は、LLMが調査を助けられる類のもので、ありそうな原因や着目すべき点を提案してくれます。
 
-- **Analyzing crash dumps and stack traces**: Paste a stack trace and ask what might have caused it.
+- **クラッシュダンプやスタックトレースの分析**: スタックトレースを貼り付けて、何が原因になり得るかを尋ねてみましょう。
 
-> **Note on debug symbols**: For meaningful stack traces and debugging, ensure your binaries (and any linked libraries) are compiled with debug symbols (`-g` flag). Debug information is typically stored in DWARF format. Additionally, compiling with frame pointers (`-fno-omit-frame-pointer`) makes stack traces more reliable, especially for profiling tools. Without these, stack traces may show only memory addresses or be incomplete. This matters more for natively compiled programs (C++, Rust) than Python or Java.
+> **デバッグシンボルに関する注意**: 意味のあるスタックトレースとデバッグのためには、バイナリ(およびリンクされるライブラリ)がデバッグシンボル付き(`-g` フラグ)でコンパイルされていることを確認してください。デバッグ情報は通常DWARF形式で格納されます。さらに、フレームポインタ付き(`-fno-omit-frame-pointer`)でコンパイルすると、特にプロファイリングツールにとって、スタックトレースの信頼性が高まります。これらがないと、スタックトレースがメモリアドレスしか表示しなかったり、不完全になったりすることがあります。これはPythonやJavaよりも、ネイティブにコンパイルされるプログラム(C++、Rust)でより重要です。
 
-**Limitations to keep in mind:**
-- LLMs can hallucinate plausible-sounding but wrong explanations
-- They may suggest fixes that mask the bug rather than fix it
-- Always verify suggestions with actual debugging tools
-- They work best as a complement to, not replacement for, understanding your code
+**心に留めておくべき限界:**
+- LLMは、もっともらしく聞こえるが間違った説明をでっち上げる(ハルシネーションを起こす)ことがあります
+- バグを修正するのではなく、覆い隠すだけの修正を提案することがあります
+- 提案は必ず実際のデバッグツールで検証しましょう
+- LLMは、コードを理解することの代替ではなく、補完として使うのが最も効果的です
 
-> This is distinct from the [general AI coding capabilities](/2026/development-environment/#ai-powered-development) covered in the Development Environment lecture. Here we're specifically talking about using LLMs as a debugging aid.
+> これは、開発環境の講義で扱った[AIコーディング全般の機能](/2026/development-environment/#ai-powered-development)とは別の話です。ここでは特に、デバッグの補助としてLLMを使うことについて述べています。
 
-# Profiling
+# プロファイリング
 
-Even if your code functionally behaves as you would expect, that might not be good enough if it takes all your CPU or memory in the process. Algorithms classes often teach big _O_ notation but not how to find hot spots in your programs. Since [premature optimization is the root of all evil](https://wiki.c2.com/?PrematureOptimization), you should learn about profilers and monitoring tools. They will help you understand which parts of your program are taking most of the time and/or resources so you can focus on optimizing those parts.
+たとえコードが機能的に期待通りに動作していても、その過程でCPUやメモリを食い尽くしてしまうなら、それでは不十分かもしれません。アルゴリズムの授業ではビッグ _O_ 記法は教えても、プログラムのホットスポットの見つけ方は教えないことが多いものです。[早すぎる最適化は諸悪の根源](https://wiki.c2.com/?PrematureOptimization)なので、プロファイラと監視ツールについて学ぶべきです。これらは、プログラムのどの部分が時間やリソースの大半を消費しているのかを理解する助けになり、最適化すべき部分に集中できるようになります。
 
-## Timing
+## 時間計測
 
-The simplest way to measure performance is to time things. In many scenarios it can be enough to just print the time it took your code between two points.
+パフォーマンスを測定する最も単純な方法は、時間を計ることです。多くの場面では、2点間でコードにかかった時間を出力するだけで十分なこともあります。
 
-However, wall clock time can be misleading since your computer might be running other processes at the same time or waiting for events to happen. The `time` command distinguishes between _Real_, _User_, and _Sys_ time:
+しかし、実時間(wall clock time)は誤解を招くことがあります。コンピュータが同時に他のプロセスを実行していたり、イベントの発生を待っていたりするかもしれないからです。`time` コマンドは _Real_、_User_、_Sys_ の時間を区別します。
 
-- **Real** - Wall clock time from start to finish, including time spent waiting
-- **User** - Time spent in the CPU running user code
-- **Sys** - Time spent in the CPU running kernel code
+- **Real** - 開始から終了までの実時間。待ち時間を含む
+- **User** - CPUがユーザーコードの実行に費やした時間
+- **Sys** - CPUがカーネルコードの実行に費やした時間
 
 ```bash
 $ time curl https://missing.csail.mit.edu &> /dev/null
@@ -263,58 +257,58 @@ user	0m0.079s
 sys	    0m0.028s
 ```
 
-Here the request took nearly 300 milliseconds (real time) but only 107ms of CPU time (user + sys). The rest was waiting for the network.
+この例では、リクエストに300ミリ秒近く(real時間)かかっていますが、CPU時間(user + sys)は107ミリ秒だけです。残りはネットワークの待ち時間でした。
 
-## Resource Monitoring
+## リソース監視
 
-Sometimes the first step towards analyzing the performance of your program is to understand what its actual resource consumption is. Programs often run slowly when they are resource constrained.
+プログラムのパフォーマンス分析の第一歩は、実際のリソース消費が何であるかを理解することである場合があります。プログラムは、リソースの制約を受けているときに遅くなることがよくあります。
 
-- **General Monitoring**: [`htop`](https://htop.dev/) is an improved version of `top` that presents various statistics for currently running processes. Useful keybinds: `<F6>` to sort processes, `t` to show tree hierarchy, `h` to toggle threads. There's also [`btop`](https://github.com/aristocratos/btop) which monitors _way_ more things.
+- **全般的な監視**: [`htop`](https://htop.dev/) は `top` の改良版で、現在実行中のプロセスに関するさまざまな統計情報を表示します。便利なキー操作: `<F6>` でプロセスのソート、`t` でツリー階層表示、`h` でスレッド表示の切り替え。さらに _はるかに_ 多くの項目を監視できる [`btop`](https://github.com/aristocratos/btop) もあります。
 
-- **I/O Operations**: [`iotop`](https://www.man7.org/linux/man-pages/man8/iotop.8.html) displays live I/O usage information.
+- **I/O操作**: [`iotop`](https://www.man7.org/linux/man-pages/man8/iotop.8.html) は、リアルタイムのI/O使用状況を表示します。
 
-- **Memory Usage**: [`free`](https://www.man7.org/linux/man-pages/man1/free.1.html) displays total free and used memory.
+- **メモリ使用量**: [`free`](https://www.man7.org/linux/man-pages/man1/free.1.html) は、空きメモリと使用中メモリの合計を表示します。
 
-- **Open Files**: [`lsof`](https://www.man7.org/linux/man-pages/man8/lsof.8.html) lists file information about files opened by processes. Useful for checking which process has opened a specific file.
+- **オープン中のファイル**: [`lsof`](https://www.man7.org/linux/man-pages/man8/lsof.8.html) は、プロセスが開いているファイルの情報を一覧表示します。特定のファイルをどのプロセスが開いているかを調べるのに便利です。
 
-- **Network Connections**: [`ss`](https://www.man7.org/linux/man-pages/man8/ss.8.html) lets you monitor network connections. A common use case is figuring out what process is using a given port: `ss -tlnp | grep :8080`.
+- **ネットワーク接続**: [`ss`](https://www.man7.org/linux/man-pages/man8/ss.8.html) を使うと、ネットワーク接続を監視できます。よくあるユースケースは、あるポートをどのプロセスが使っているのかを突き止めることです: `ss -tlnp | grep :8080`。
 
-- **Network Usage**: [`nethogs`](https://github.com/raboof/nethogs) and [`iftop`](https://pdw.ex-parrot.com/iftop/) are good interactive CLI tools for monitoring network usage per process.
+- **ネットワーク使用量**: [`nethogs`](https://github.com/raboof/nethogs) と [`iftop`](https://pdw.ex-parrot.com/iftop/) は、プロセスごとのネットワーク使用量を監視するのに適した対話型CLIツールです。
 
-## Visualizing Performance Data
+## パフォーマンスデータの可視化
 
-Humans spot patterns in graphs much faster than in tables of numbers. When analyzing performance, plotting your data often reveals trends, spikes, and anomalies that would be invisible in raw numbers.
+人間は、数値の表よりもグラフのほうがはるかに速くパターンを見つけられます。パフォーマンスを分析するとき、データをプロットすると、生の数値では見えなかった傾向、スパイク、異常がしばしば明らかになります。
 
-**Making data plottable**: When adding print or log statements for debugging, consider formatting the output so it can be easily graphed later. A simple timestamp and value in CSV format (`1705012345,42.5`) is much easier to plot than a prose sentence. JSON-structured logs can also be parsed and plotted with minimal effort. In other words, log your data [in a tidy way](https://vita.had.co.nz/papers/tidy-data.pdf).
+**データをプロット可能にする**: デバッグのためにprint文やログ文を追加するときは、後で簡単にグラフ化できるように出力をフォーマットすることを考えてみてください。CSV形式のシンプルなタイムスタンプと値(`1705012345,42.5`)は、散文の文章よりもはるかにプロットしやすいものです。JSONで構造化されたログも、最小限の手間でパースしてプロットできます。言い換えれば、データは[整然(tidy)な形で](https://vita.had.co.nz/papers/tidy-data.pdf)ログに残しましょう。
 
-**Quick plotting with gnuplot**: For simple command-line plotting, [`gnuplot`](http://www.gnuplot.info/) can generate graphs directly from data files:
+**gnuplotによる手軽なプロット**: コマンドラインでの簡単なプロットには、[`gnuplot`](http://www.gnuplot.info/) を使ってデータファイルから直接グラフを生成できます。
 
 ```bash
 # Plot a simple CSV with timestamp,value
 gnuplot -e "set datafile separator ','; plot 'latency.csv' using 1:2 with lines"
 ```
 
-**Iterative exploration with matplotlib and ggplot2**: For deeper analysis, Python's [`matplotlib`](https://matplotlib.org/) and R's [`ggplot2`](https://ggplot2.tidyverse.org/) enable iterative exploration. Unlike one-off plotting, these tools let you quickly slice and transform data to investigate hypotheses. ggplot2's facet plots are particularly powerful—you can split a single dataset across multiple subplots by category (e.g., faceting request latency by endpoint or time-of-day) to tease out patterns that would otherwise be hidden.
+**matplotlibとggplot2による反復的な探索**: より深い分析には、Pythonの [`matplotlib`](https://matplotlib.org/) とRの [`ggplot2`](https://ggplot2.tidyverse.org/) が反復的な探索を可能にします。一回限りのプロットとは異なり、これらのツールを使えば、仮説を検証するためにデータを素早くスライスしたり変換したりできます。ggplot2のファセットプロットは特に強力で、単一のデータセットをカテゴリごとに複数のサブプロットに分割することで(例えば、リクエストのレイテンシをエンドポイント別や時間帯別にファセット化する)、そうしなければ隠れたままだったパターンをあぶり出すことができます。
 
-**Example use cases:**
-- Plotting request latency over time reveals periodic slowdowns (garbage collection, cron jobs, traffic patterns) that raw percentiles obscure
-- Visualizing insert times for a growing data structure can expose algorithmic complexity issues—a plot of vector insertions will show characteristic spikes when the backing array doubles in size
-- Faceting metrics by different dimensions (request type, user cohort, server) often reveals that a "system-wide" problem is actually isolated to one category
+**ユースケースの例:**
+- リクエストのレイテンシを時系列でプロットすると、生のパーセンタイルでは分からない周期的な遅延(ガベージコレクション、cronジョブ、トラフィックパターン)が明らかになる
+- 成長するデータ構造への挿入時間を可視化すると、アルゴリズム的な計算量の問題が露わになることがある。ベクタへの挿入をプロットすると、内部の配列がサイズを倍にするタイミングで特徴的なスパイクが現れる
+- メトリクスをさまざまな次元(リクエスト種別、ユーザーコホート、サーバー)でファセット化すると、「システム全体」の問題が実は特定のカテゴリだけに限られていることがしばしば分かる
 
-## CPU Profilers
+## CPUプロファイラ
 
-Most of the time when people refer to _profilers_ they mean _CPU profilers_. There are two main types:
+_プロファイラ_ という言葉が使われるとき、ほとんどの場合それは _CPUプロファイラ_ を指しています。主に2つのタイプがあります。
 
-- **Tracing profilers** keep a record of every function call your program makes
-- **Sampling profilers** probe your program periodically (commonly every millisecond) and record the program's stack
+- **トレーシングプロファイラ**は、プログラムが行うすべての関数呼び出しを記録します
+- **サンプリングプロファイラ**は、プログラムを定期的に(一般的には1ミリ秒ごとに)調べて、プログラムのスタックを記録します
 
-Sampling profilers have lower overhead and are generally preferred for production use.
+サンプリングプロファイラはオーバーヘッドが小さく、本番環境での使用には一般にこちらが好まれます。
 
-### perf: the sampling profiler
+### perf: サンプリングプロファイラ
 
-[`perf`](https://www.man7.org/linux/man-pages/man1/perf.1.html) is the standard Linux profiler. It can profile any program without recompilation:
+[`perf`](https://www.man7.org/linux/man-pages/man1/perf.1.html) はLinuxの標準プロファイラです。再コンパイルなしにあらゆるプログラムをプロファイリングできます。
 
-`perf stat` gives you a quick overview of where time is spent:
+`perf stat` は、どこに時間が費やされているかの概要を手早く教えてくれます。
 
 ```bash
 $ perf stat ./slow_program
@@ -331,13 +325,13 @@ $ perf stat ./slow_program
        12,345,678      branch-misses             #    1.00% of all branches
 ```
 
-Profiler output for real world programs will contain large amounts of information. Humans are visual creatures and are quite terrible at reading large amounts of numbers. [Flame graphs](https://www.brendangregg.com/flamegraphs.html) are a visualization that makes profiling data much easier to understand.
+実世界のプログラムに対するプロファイラの出力は、大量の情報を含みます。人間は視覚的な生き物であり、大量の数値を読むのはかなり苦手です。[フレームグラフ(Flame graph)](https://www.brendangregg.com/flamegraphs.html)は、プロファイリングデータをはるかに理解しやすくする可視化手法です。
 
-A flame graph displays a hierarchy of function calls across the Y axis and time taken proportional to the X axis. They're interactive—you can click to zoom into specific parts of the program.
+フレームグラフは、Y軸に関数呼び出しの階層を、X軸に所要時間に比例した幅を表示します。インタラクティブなので、クリックしてプログラムの特定の部分にズームインできます。
 
 [![FlameGraph](https://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg)](https://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg)
 
-To generate a flame graph from `perf` data:
+`perf` のデータからフレームグラフを生成するには、次のようにします。
 
 ```bash
 # Record profile
@@ -347,11 +341,11 @@ perf record -g ./my_program
 perf script | stackcollapse-perf.pl | flamegraph.pl > flamegraph.svg
 ```
 
-> Consider using [Speedscope](https://www.speedscope.app/) for an interactive web-based flame graph viewer, or [Perfetto](https://perfetto.dev/) for comprehensive system-level analysis.
+> インタラクティブなWebベースのフレームグラフビューアとして [Speedscope](https://www.speedscope.app/) を、包括的なシステムレベルの分析には [Perfetto](https://perfetto.dev/) を検討してみてください。
 
-### Valgrind's Callgrind: the tracing profiler
+### ValgrindのCallgrind: トレーシングプロファイラ
 
-[`callgrind`](https://valgrind.org/docs/manual/cl-manual.html) is a profiling tool that records the call history and instruction counts of your program. Unlike sampling profilers, it provides exact call counts and can show the relationship between callers and callees:
+[`callgrind`](https://valgrind.org/docs/manual/cl-manual.html) は、プログラムの呼び出し履歴と命令数を記録するプロファイリングツールです。サンプリングプロファイラとは異なり、正確な呼び出し回数を提供し、呼び出し元と呼び出し先の関係を表示できます。
 
 ```bash
 # Run with callgrind
@@ -362,30 +356,30 @@ callgrind_annotate callgrind.out.<pid>
 kcachegrind callgrind.out.<pid>
 ```
 
-Callgrind is slower than sampling profilers but provides precise call counts and can optionally simulate cache behavior (with `--cache-sim=yes`) if you need that information.
+Callgrindはサンプリングプロファイラより低速ですが、正確な呼び出し回数を提供し、必要であればキャッシュの挙動のシミュレーション(`--cache-sim=yes`)もオプションで行えます。
 
-> If you're using a particular language, there may be more specialized profilers. For example, Python has [`cProfile`](https://docs.python.org/3/library/profile.html) and [`py-spy`](https://github.com/benfred/py-spy), Go has [`go tool pprof`](https://pkg.go.dev/cmd/pprof), and Rust has [`cargo-flamegraph`](https://github.com/flamegraph-rs/flamegraph) (which actually works for any compiled program!).
+> 特定の言語を使っているなら、より専門化されたプロファイラがあるかもしれません。例えば、Pythonには [`cProfile`](https://docs.python.org/3/library/profile.html) と [`py-spy`](https://github.com/benfred/py-spy) が、Goには [`go tool pprof`](https://pkg.go.dev/cmd/pprof) が、Rustには [`cargo-flamegraph`](https://github.com/flamegraph-rs/flamegraph)(実は任意のコンパイル済みプログラムで動きます!)があります。
 
-## Memory Profilers
+## メモリプロファイラ
 
-Memory profilers help you understand how your program uses memory over time and find memory leaks.
+メモリプロファイラは、プログラムが時間とともにどのようにメモリを使うかを理解し、メモリリークを見つける助けになります。
 
-### Valgrind's Massif
+### ValgrindのMassif
 
-[`massif`](https://valgrind.org/docs/manual/ms-manual.html) profiles heap memory usage:
+[`massif`](https://valgrind.org/docs/manual/ms-manual.html) はヒープメモリの使用状況をプロファイリングします。
 
 ```bash
 valgrind --tool=massif ./my_program
 ms_print massif.out.<pid>
 ```
 
-This shows you heap usage over time, helping identify memory leaks and excessive allocation.
+これはヒープ使用量の時間変化を表示し、メモリリークや過剰なアロケーションの特定に役立ちます。
 
-> For Python, [`memory-profiler`](https://pypi.org/project/memory-profiler/) provides line-by-line memory usage information.
+> Pythonでは、[`memory-profiler`](https://pypi.org/project/memory-profiler/) が行単位のメモリ使用量情報を提供します。
 
-## Benchmarking
+## ベンチマーク
 
-When you need to compare the performance of different implementations or tools, [`hyperfine`](https://github.com/sharkdp/hyperfine) is excellent for benchmarking command-line programs:
+異なる実装やツールのパフォーマンスを比較する必要があるとき、コマンドラインプログラムのベンチマークには [`hyperfine`](https://github.com/sharkdp/hyperfine) が最適です。
 
 ```bash
 $ hyperfine --warmup 3 'fd -e jpg' 'find . -iname "*.jpg"'
@@ -402,13 +396,13 @@ Summary
    21.89 ± 2.33 times faster than 'find . -iname "*.jpg"'
 ```
 
-> For web development, browser developer tools include excellent profilers. See the [Firefox Profiler](https://profiler.firefox.com/docs/) and [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/rendering-tools) documentation.
+> Web開発では、ブラウザの開発者ツールに優れたプロファイラが含まれています。[Firefox Profiler](https://profiler.firefox.com/docs/) と [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/rendering-tools) のドキュメントを参照してください。
 
-# Exercises
+# 演習
 
-## Debugging
+## デバッグ
 
-1. **Debug a sorting algorithm**: The following pseudocode implements merge sort but contains a bug. Implement it in a language of your choice, then use a debugger (gdb, lldb, pdb, or your IDE's debugger) to find and fix the bug.
+1. **ソートアルゴリズムのデバッグ**: 次の擬似コードはマージソートを実装していますが、バグが含まれています。好きな言語で実装した上で、デバッガ(gdb、lldb、pdb、またはIDEのデバッガ)を使ってバグを見つけ、修正してください。
 
    ```
    function merge_sort(arr):
@@ -433,9 +427,9 @@ Summary
        return result
    ```
 
-   Test vector: `merge_sort([3, 1, 4, 1, 5, 9, 2, 6])` should return `[1, 1, 2, 3, 4, 5, 6, 9]`. Use breakpoints and step through the merge function to find where the incorrect element is being selected.
+   テストベクタ: `merge_sort([3, 1, 4, 1, 5, 9, 2, 6])` は `[1, 1, 2, 3, 4, 5, 6, 9]` を返すはずです。ブレークポイントを使ってmerge関数をステップ実行し、誤った要素が選択されている箇所を見つけてください。
 
-1. Install [`rr`](https://rr-project.org/) and use reverse debugging to find a corruption bug. Save this program as `corruption.c`:
+1. [`rr`](https://rr-project.org/) をインストールし、逆方向デバッグを使ってデータ破壊のバグを見つけてください。このプログラムを `corruption.c` として保存してください。
 
    ```c
    #include <stdio.h>
@@ -486,9 +480,9 @@ Summary
    }
    ```
 
-   Compile with `gcc -g corruption.c -o corruption` and run it. Student 1's ID gets corrupted, but the corruption happens in a function that only touches student 0. Use `rr record ./corruption` and `rr replay` to find the culprit. Set a watchpoint on `students[1].id` and use `reverse-continue` after the corruption to find exactly which line of code overwrote it.
+   `gcc -g corruption.c -o corruption` でコンパイルして実行してください。Student 1のIDが破壊されますが、その破壊はStudent 0にしか触れていないはずの関数の中で起きています。`rr record ./corruption` と `rr replay` を使って犯人を見つけてください。`students[1].id` にウォッチポイントを設定し、破壊が起きた後に `reverse-continue` を使って、どの行がそれを上書きしたのかを正確に突き止めてください。
 
-1. Debug a memory error with AddressSanitizer. Save this as `uaf.c`:
+1. AddressSanitizerでメモリエラーをデバッグしてください。これを `uaf.c` として保存してください。
 
    ```c
    #include <stdlib.h>
@@ -509,17 +503,17 @@ Summary
    }
    ```
 
-   First compile and run without sanitizers: `gcc uaf.c -o uaf && ./uaf`. It may appear to work. Now compile with AddressSanitizer: `gcc -fsanitize=address -g uaf.c -o uaf && ./uaf`. Read the error report. What bug does ASan find? Fix the issue it identifies.
+   まずサニタイザなしでコンパイルして実行してください: `gcc uaf.c -o uaf && ./uaf`。一見正常に動くように見えるかもしれません。次にAddressSanitizer付きでコンパイルしてください: `gcc -fsanitize=address -g uaf.c -o uaf && ./uaf`。エラーレポートを読んでください。ASanはどんなバグを見つけましたか? 指摘された問題を修正してください。
 
-1. Use `strace` (Linux) or `dtruss` (macOS) to trace the system calls made by a command like `ls -l`. What system calls is it making? Try tracing a more complex program and see what files it opens.
+1. `strace`(Linux)または `dtruss`(macOS)を使って、`ls -l` のようなコマンドが発行するシステムコールをトレースしてください。どんなシステムコールを発行していますか? もっと複雑なプログラムもトレースして、どんなファイルを開いているか見てみましょう。
 
-1. Use an LLM to help debug a cryptic error message. Try copying a compiler error (especially from C++ templates or Rust) and asking for an explanation and fix. Try putting some of the output from `strace` or the address sanitizer into it.
+1. LLMを使って不可解なエラーメッセージのデバッグを手伝ってもらいましょう。コンパイラのエラー(特にC++のテンプレートやRustのもの)をコピーして、説明と修正を求めてみてください。`strace` やAddressSanitizerの出力の一部を入力してみるのも試してください。
 
-## Profiling
+## プロファイリング
 
-1. Use `perf stat` to get basic performance statistics for a program of your choice. What do the different counters mean?
+1. `perf stat` を使って、好きなプログラムの基本的なパフォーマンス統計を取得してください。それぞれのカウンタは何を意味していますか?
 
-1. Profile with `perf record`. Save this as `slow.c`:
+1. `perf record` でプロファイリングしてください。これを `slow.c` として保存してください。
 
    ```c
    #include <math.h>
@@ -545,10 +539,10 @@ Summary
    }
    ```
 
-   Compile with debug symbols: `gcc -g -O2 slow.c -o slow -lm`. Run `perf record -g ./slow`, then `perf report` to see where time is spent. Try generating a flame graph using the flamegraph scripts.
+   デバッグシンボル付きでコンパイルしてください: `gcc -g -O2 slow.c -o slow -lm`。`perf record -g ./slow` を実行し、続いて `perf report` でどこに時間が費やされているかを見てください。flamegraphスクリプトを使ってフレームグラフの生成も試してみましょう。
 
-1. Use `hyperfine` to benchmark two different implementations of the same task (e.g., `find` vs `fd`, `grep` vs `ripgrep`, or two versions of your own code).
+1. `hyperfine` を使って、同じタスクの2つの異なる実装のベンチマークを取ってください(例: `find` と `fd`、`grep` と `ripgrep`、あるいは自分のコードの2つのバージョン)。
 
-1. Use `htop` to monitor your system while running a resource-intensive program. Try using `taskset` to limit which CPUs a process can use: `taskset --cpu-list 0,2 stress -c 3`. Why doesn't `stress` use three CPUs?
+1. リソースを大量に消費するプログラムを実行しながら、`htop` を使ってシステムを監視してください。`taskset` を使ってプロセスが使用できるCPUを制限してみましょう: `taskset --cpu-list 0,2 stress -c 3`。なぜ `stress` は3つのCPUを使わないのでしょうか?
 
-1. A common issue is that a port you want to listen on is already taken by another process. Learn how to discover that process: First execute `python -m http.server 4444` to start a minimal web server on port 4444. On a separate terminal run `ss -tlnp | grep 4444` to find the process. Terminate it with `kill <PID>`.
+1. よくある問題として、リッスンしたいポートがすでに別のプロセスに取られている、というものがあります。そのプロセスを発見する方法を学びましょう。まず `python -m http.server 4444` を実行して、ポート4444で最小限のWebサーバーを起動します。別のターミナルで `ss -tlnp | grep 4444` を実行してプロセスを見つけます。`kill <PID>` でそれを終了させましょう。

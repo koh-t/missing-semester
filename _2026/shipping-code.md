@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Packaging and Shipping Code"
+title: "コードのパッケージングと配布"
 description: >
-  Learn about project packaging, environments, versioning, and deploying libraries, applications, and services.
+  プロジェクトのパッケージング、環境、バージョニング、そしてライブラリ・アプリケーション・サービスのデプロイについて学びます。
 thumbnail: /static/assets/thumbnails/2026/lec6.png
 date: 2026-01-20
 ready: true
@@ -11,32 +11,32 @@ video:
   id: KBMiB-8P4Ns
 ---
 
-Getting code to work as intended is hard; getting that same code to run on a machine different from your own is often harder.
+コードを意図したとおりに動かすのは難しいことですが、その同じコードを自分のマシンとは別のマシンで動かすのは、往々にしてもっと難しいものです。
 
-Shipping code means taking the code you wrote and converting it into a usable form that someone else can run without your computer's exact setup.
-Shipping code takes many forms and depends on the choices of programming language, system libraries, and operating system, among many other factors.
-It also depends on what you are building: a software library, a command line tool, and a web service all have different requirements and deployment steps.
-Regardless, there is a common pattern between all these scenarios: we need to define what the deliverable is --- a.k.a. the _artifact_ --- and what assumptions it makes about the environment around it.
+コードを配布する(ship する)とは、自分が書いたコードを、あなたのコンピュータとまったく同じセットアップがなくても他の人が実行できる、利用可能な形に変換することを意味します。
+コードの配布にはさまざまな形態があり、プログラミング言語、システムライブラリ、オペレーティングシステムの選択など、多くの要因に依存します。
+また、何を作っているかにも依存します。ソフトウェアライブラリ、コマンドラインツール、Webサービスでは、それぞれ要件やデプロイの手順が異なります。
+とはいえ、これらすべてのシナリオには共通のパターンがあります。それは、成果物 --- すなわち _アーティファクト_ --- が何であるかを定義し、それが周囲の環境についてどのような前提を置いているかを明確にする必要がある、ということです。
 
-In this lecture, we'll cover:
+この講義では、以下の内容を扱います。
 
-- [Dependencies & Environments](#dependencies--environments)
-- [Artifacts & Packaging](#artifacts--packaging)
-- [Releases & Versioning](#releases--versioning)
-- [Reproducibility](#reproducibility)
-- [VMs & Containers](#vms--containers)
-- [Configuration](#configuration)
-- [Services & Orchestration](#services--orchestration)
-- [Publishing](#publishing)
+- [依存関係と環境](#依存関係と環境)
+- [アーティファクトとパッケージング](#アーティファクトとパッケージング)
+- [リリースとバージョニング](#リリースとバージョニング)
+- [再現性](#再現性)
+- [VMとコンテナ](#vmとコンテナ)
+- [設定](#設定)
+- [サービスとオーケストレーション](#サービスとオーケストレーション)
+- [公開](#公開)
 
-We'll explain these concepts through examples from the Python ecosystem, as concrete examples are helpful for understanding. While the tools are different for other programming language ecosystems, the concepts will largely be the same.
+これらの概念は、Pythonエコシステムの例を通して説明していきます。具体例があるほうが理解しやすいからです。他のプログラミング言語のエコシステムではツールこそ異なりますが、概念はおおむね共通です。
 
-# Dependencies & Environments
+# 依存関係と環境
 
-In modern software development, layers of abstraction are ubiquitous.
-Programs naturally offload logic to other libraries or services.
-However, this introduces a _dependency_ relationship between your program and the libraries it requires to function.
-For instance, in Python, to fetch the content of a website we often do:
+現代のソフトウェア開発では、抽象化のレイヤーがいたるところに存在します。
+プログラムは当然のように、処理のロジックを他のライブラリやサービスに委ねます。
+しかし、これによってあなたのプログラムと、その動作に必要なライブラリとの間に _依存関係_ が生まれます。
+たとえばPythonでWebサイトのコンテンツを取得するには、よく次のように書きます。
 
 ```python
 import requests
@@ -44,7 +44,7 @@ import requests
 response = requests.get("https://missing.csail.mit.edu")
 ```
 
-Yet the `requests` library does not come bundled with the Python runtime, so if we try to run this code without having `requests` installed, Python will raise an error:
+しかし `requests` ライブラリはPythonランタイムに同梱されていないため、`requests` をインストールせずにこのコードを実行しようとすると、Pythonはエラーを出します。
 
 ```console
 $ python fetch.py
@@ -54,14 +54,14 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'requests'
 ```
 
-To make this library available we need to first run `pip install requests` to install it.
-`pip` is the command line tool that the Python programming language provides for installing packages.
-Executing `pip install requests` produces the following sequence of actions:
+このライブラリを利用可能にするには、まず `pip install requests` を実行してインストールする必要があります。
+`pip` は、Pythonというプログラミング言語がパッケージのインストール用に提供しているコマンドラインツールです。
+`pip install requests` を実行すると、次の一連の処理が行われます。
 
-1. Search for requests in the Python Package Index ([PyPI](https://pypi.org/))
-1. Search for the appropriate artifact for the platform we are running under
-1. Resolve dependencies --- the `requests` library itself depends on other packages, so the installer must find compatible versions of all transitive dependencies and install them beforehand
-1. Download the artifacts, then unpack and copy the files into the right places in our filesystem
+1. Python Package Index([PyPI](https://pypi.org/))で requests を検索する
+1. 実行中のプラットフォームに適したアーティファクトを探す
+1. 依存関係を解決する --- `requests` ライブラリ自体も他のパッケージに依存しているため、インストーラーはすべての推移的依存関係について互換性のあるバージョンを見つけ、先にそれらをインストールする必要があります
+1. アーティファクトをダウンロードし、展開して、ファイルシステム内の適切な場所にファイルをコピーする
 
 ```console
 $ pip install requests
@@ -79,8 +79,8 @@ Installing collected packages: urllib3, idna, charset-normalizer, certifi, reque
 Successfully installed certifi-2024.8.30 charset-normalizer-3.4.0 idna-3.10 requests-2.32.3 urllib3-2.2.3
 ```
 
-Here we can see that `requests` has its own dependencies such as `certifi` or `charset-normalizer` and that they have to be installed before `requests` can be installed.
-Once installed, the Python runtime can find this library when importing it.
+ここで、`requests` には `certifi` や `charset-normalizer` といった独自の依存関係があり、それらを先にインストールしないと `requests` をインストールできないことがわかります。
+いったんインストールされれば、Pythonランタイムはインポート時にこのライブラリを見つけられるようになります。
 
 ```console
 $ python -c 'import requests; print(requests.__path__)'
@@ -90,19 +90,19 @@ $ pip list | grep requests
 requests        2.32.3
 ```
 
-Programming languages have different tools, conventions and practices for installing and publishing libraries.
-In some languages like Rust, the toolchain is unified --- `cargo` handles building, testing, dependency management, and publishing.
-In others like Python, the unification happens at a specification level --- rather than a single tool, there are standardized specifications that define how packaging works, allowing multiple competing tools for each task (`pip` vs [`uv`](https://docs.astral.sh/uv/), `setuptools` vs [`hatch`](https://hatch.pypa.io/) vs [`poetry`](https://python-poetry.org/)).
-And in some ecosystems like LaTeX, distributions like TeX Live or MacTeX come bundled with thousands of packages pre-installed.
+ライブラリのインストールと公開のためのツールや慣習、プラクティスは、プログラミング言語ごとに異なります。
+Rustのような一部の言語ではツールチェーンが統一されており、`cargo` がビルド、テスト、依存関係の管理、公開までを担います。
+一方、Pythonのような言語では、統一は仕様のレベルで行われています。単一のツールではなく、パッケージングの仕組みを定義した標準仕様があり、それぞれのタスクについて複数の競合するツールが存在できるのです(`pip` 対 [`uv`](https://docs.astral.sh/uv/)、`setuptools` 対 [`hatch`](https://hatch.pypa.io/) 対 [`poetry`](https://python-poetry.org/) など)。
+また、LaTeXのようなエコシステムでは、TeX LiveやMacTeXといったディストリビューションに何千ものパッケージがあらかじめ同梱されています。
 
-Introducing dependencies also introduces dependency conflicts.
-Conflicts happen when programs require incompatible versions of the same dependency.
-For example, if `tensorflow==2.3.0` requires `numpy>=1.16.0,<1.19.0` and `pandas==1.2.0`  requires `numpy>=1.16.5`, then any version satisfying `numpy>=1.16.5,<1.19.0` will be valid.
-But if another package in your project requires `numpy>=1.19`, you have a conflict with no valid version that satisfies all constraints.
+依存関係を導入すると、依存関係の競合(コンフリクト)も持ち込むことになります。
+競合は、複数のプログラムが同じ依存関係の互換性のないバージョンを要求するときに発生します。
+たとえば、`tensorflow==2.3.0` が `numpy>=1.16.0,<1.19.0` を要求し、`pandas==1.2.0` が `numpy>=1.16.5` を要求する場合、`numpy>=1.16.5,<1.19.0` を満たすバージョンであれば有効です。
+しかし、プロジェクト内の別のパッケージが `numpy>=1.19` を要求すると、すべての制約を満たす有効なバージョンが存在しない競合状態になります。
 
-This situation --- where multiple packages require mutually incompatible versions of shared dependencies --- is commonly referred to as _dependency hell_.
-One way to deal with conflicts is to isolate the dependencies of each program into their own _environment_.
-In Python we create a virtual environment by running:
+このように、複数のパッケージが共有する依存関係について互いに相容れないバージョンを要求する状況は、一般に _依存関係地獄(dependency hell)_ と呼ばれます。
+競合に対処する方法のひとつは、各プログラムの依存関係をそれぞれ独立した _環境_ に分離することです。
+Pythonでは、次のように実行して仮想環境を作成します。
 
 ```console
 $ which python
@@ -124,17 +124,17 @@ Package Version
 pip     24.0
 ```
 
-You can think of an environment as an entire standalone version of the language runtime with its own set of installed packages.
-This virtual environment or venv isolates the installed dependencies from the global Python installation.
-It is a good practice to have a virtual environment for each project, containing the dependencies it requires.
+環境とは、独自のインストール済みパッケージ一式を持つ、言語ランタイムの完全に独立したコピーのようなものだと考えることができます。
+この仮想環境(venv)は、インストールされた依存関係をグローバルなPythonインストールから分離します。
+プロジェクトごとに、必要な依存関係を含む仮想環境を用意するのが良いプラクティスです。
 
-> While many modern operating systems ship with installations of programming language runtimes like Python, it is unwise to modify these installations since the OS might rely on them for its own functionality. Prefer using separate environments instead.
+> 多くの現代的なオペレーティングシステムにはPythonのようなプログラミング言語ランタイムがあらかじめインストールされていますが、OSが自身の機能のためにそれらに依存している可能性があるため、これらのインストールを変更するのは賢明ではありません。代わりに別の環境を使うようにしましょう。
 
-In some languages, the installation protocol is not defined by a tool but as a specification.
-In Python [PEP 517](https://peps.python.org/pep-0517/) defines the build system interface and [PEP 621](https://peps.python.org/pep-0621/) specifies how project metadata is stored in `pyproject.toml`.
-This has enabled developers to improve upon `pip` and produce more optimized tools like `uv`. To install `uv` it suffices to do `pip install uv`.
+一部の言語では、インストールのプロトコルはツールではなく仕様として定義されています。
+Pythonでは、[PEP 517](https://peps.python.org/pep-0517/) がビルドシステムのインターフェースを定義し、[PEP 621](https://peps.python.org/pep-0621/) がプロジェクトのメタデータを `pyproject.toml` にどう格納するかを規定しています。
+これにより、開発者は `pip` を改良して `uv` のようなより最適化されたツールを生み出せるようになりました。`uv` のインストールは `pip install uv` を実行するだけです。
 
-Using `uv` instead of `pip` follows the same interface but is significantly faster:
+`pip` の代わりに `uv` を使っても同じインターフェースに従いますが、大幅に高速です。
 
 ```console
 $ uv pip install requests
@@ -148,9 +148,9 @@ Installed 5 packages in 8ms
  + urllib3==2.2.3
 ```
 
-> We strongly recommend using `uv pip` instead of `pip` whenever possible as it dramatically reduces the installation time.
+> インストール時間が劇的に短縮されるため、可能な限り `pip` ではなく `uv pip` を使うことを強くおすすめします。
 
-Beyond dependency isolation, environments also allow you to have different versions of your programming language runtime.
+依存関係の分離だけでなく、環境を使うことで、プログラミング言語ランタイム自体の異なるバージョンを持つこともできます。
 
 ```console
 $ uv venv --python 3.12 venv312
@@ -168,15 +168,15 @@ $ source venv311/bin/activate && python --version
 Python 3.11.10
 ```
 
-This helps when you need to test your code across multiple Python versions or when a project requires a specific version.
+これは、複数のPythonバージョンでコードをテストする必要があるときや、プロジェクトが特定のバージョンを要求するときに役立ちます。
 
-> In some programming languages, each project automatically gets its own environment for its dependencies rather than you creating it manually, but the principle is the same. Most languages these days also have a mechanism for managing multiple versions of the language on a single system, and then specifying which version to use for individual projects.
+> プログラミング言語によっては、手動で作成しなくても各プロジェクトが自動的に依存関係用の独自の環境を持つものもありますが、原理は同じです。また、最近のほとんどの言語には、1つのシステム上で言語の複数バージョンを管理し、プロジェクトごとに使用するバージョンを指定する仕組みがあります。
 
-# Artifacts & Packaging
+# アーティファクトとパッケージング
 
-In software development we differentiate between source code and artifacts. Developers write and read source code, while artifacts are the packaged, distributable outputs produced from that source code --- ready to be installed or deployed.
-An artifact can be as simple as a file of code that we run, and as complex as an entire Virtual Machine that contains all the necessary bits and bobs of an application.
-Consider this example where we have a Python file `greet.py` in our current directory:
+ソフトウェア開発では、ソースコードとアーティファクトを区別します。開発者が書いたり読んだりするのがソースコードであるのに対し、アーティファクトはそのソースコードから生成される、パッケージ化された配布可能な出力物であり、そのままインストールやデプロイができる状態のものです。
+アーティファクトは、実行するコードファイル1つのような単純なものから、アプリケーションに必要なあらゆるものを含んだ仮想マシン(VM)全体のような複雑なものまでありえます。
+カレントディレクトリにPythonファイル `greet.py` がある、次の例を考えてみましょう。
 
 ```console
 $ cat greet.py
@@ -191,15 +191,15 @@ $ python -c "from greet import greet; greet('World')"
 ModuleNotFoundError: No module named 'greet'
 ```
 
-The import fails once we move to a different directory because Python only searches for modules in specific locations (the current directory, installed packages, and paths in `PYTHONPATH`). Packaging solves this by installing the code into a known location.
+別のディレクトリに移動するとインポートが失敗するのは、Pythonが特定の場所(カレントディレクトリ、インストール済みパッケージ、`PYTHONPATH` に含まれるパス)しかモジュールを探さないからです。パッケージングは、コードを既知の場所にインストールすることでこの問題を解決します。
 
-In Python, packaging a library involves producing an artifact that package installers like `pip` or `uv` can use to install the relevant files.
-Python artifacts are called _wheels_ and contain all the necessary information to install a package: the code files, metadata about the package (name, version, dependencies), and instructions for where to place files in the environment.
-Building an artifact requires that we write a project file (also often known as manifest) detailing the specifics of the project, the required dependencies, the version of the package, and other information. In Python, we use `pyproject.toml` for this purpose.
+Pythonでは、ライブラリのパッケージングとは、`pip` や `uv` のようなパッケージインストーラーが必要なファイルをインストールするために利用できるアーティファクトを生成することを意味します。
+Pythonのアーティファクトは _wheel_ と呼ばれ、パッケージのインストールに必要なすべての情報 --- コードファイル、パッケージに関するメタデータ(名前、バージョン、依存関係)、環境内のどこにファイルを配置するかの指示 --- を含んでいます。
+アーティファクトをビルドするには、プロジェクトの詳細、必要な依存関係、パッケージのバージョンなどの情報を記述したプロジェクトファイル(マニフェストとも呼ばれます)を書く必要があります。Pythonでは、この目的に `pyproject.toml` を使います。
 
-> `pyproject.toml` is the modern and recommended way. While earlier packaging methods like `requirements.txt` or `setup.py` are still supported, you should prefer `pyproject.toml` whenever possible.
+> `pyproject.toml` が現代的で推奨される方法です。`requirements.txt` や `setup.py` といった以前のパッケージング方法もまだサポートされていますが、可能な限り `pyproject.toml` を使うべきです。
 
-Here's a minimal `pyproject.toml` for a library that also provides a command-line tool:
+コマンドラインツールも提供するライブラリのための、最小限の `pyproject.toml` の例を示します。
 
 ```toml
 [project]
@@ -216,9 +216,9 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 ```
 
-The `typer` library is a popular Python package for creating command-line interfaces with minimal boilerplate.
+`typer` ライブラリは、最小限の定型コードでコマンドラインインターフェースを作れる人気のPythonパッケージです。
 
-And the corresponding `greeting.py`:
+対応する `greeting.py` は次のとおりです。
 
 ```python
 import typer
@@ -236,7 +236,7 @@ if __name__ == "__main__":
     cli()
 ```
 
-With this file, we can now build the wheel:
+このファイルがあれば、wheelをビルドできます。
 
 ```console
 $ uv build
@@ -250,9 +250,9 @@ greeting-0.1.0-py3-none-any.whl
 greeting-0.1.0.tar.gz
 ```
 
-The `.whl` file is the wheel (a zip archive with a specific structure), and the `.tar.gz` is a source distribution for systems that need to build from source.
+`.whl` ファイルがwheel(特定の構造を持つzipアーカイブ)で、`.tar.gz` はソースからビルドする必要があるシステム向けのソース配布物(source distribution)です。
 
-You can inspect the contents of a wheel to see what gets packaged:
+wheelの中身を調べて、何がパッケージングされているかを確認することもできます。
 
 ```console
 $ unzip -l dist/greeting-0.1.0-py3-none-any.whl
@@ -268,7 +268,7 @@ Archive:  dist/greeting-0.1.0-py3-none-any.whl
       998                     5 files
 ```
 
-Now if we were to give this wheel to someone else, they could install it by running:
+このwheelを他の人に渡せば、その人は次のように実行してインストールできます。
 
 ```console
 $ uv pip install ./greeting-0.1.0-py3-none-any.whl
@@ -276,45 +276,45 @@ $ greet Alice
 Hello, Alice!
 ```
 
-This would install the library we built earlier into their environment, including the `greet` cli tool.
+これにより、先ほどビルドしたライブラリが、`greet` というCLIツールも含めて相手の環境にインストールされます。
 
-There are limitations to this approach. In particular if our library depends on platform-specific libraries, e.g. CUDA for GPU acceleration, then our artifact only works on systems with those specific libraries installed, and we may need to build separate wheels for different platforms (Linux, macOS, Windows) and architectures (x86, ARM).
-
-
-When installing software, there's an important distinction between installing from source and installing a prebuilt binary. Installing from source means downloading the original code and compiling it on your machine --- this requires having a compiler and build tools installed, and can take significant time for large projects.
-
-Installing a prebuilt binary means downloading an artifact that was already compiled by someone else --- faster and simpler, but the binary must match your platform and architecture.
-For example, [ripgrep's releases page](https://github.com/BurntSushi/ripgrep/releases) shows prebuilt binaries for Linux (x86_64, ARM), macOS (Intel, Apple Silicon), and Windows.
+この方法には限界もあります。特に、ライブラリがプラットフォーム固有のライブラリ(たとえばGPUアクセラレーション用のCUDA)に依存している場合、アーティファクトはそれらの特定のライブラリがインストールされたシステムでしか動作せず、異なるプラットフォーム(Linux、macOS、Windows)やアーキテクチャ(x86、ARM)向けに別々のwheelをビルドする必要が出てくるかもしれません。
 
 
-# Releases & Versioning
+ソフトウェアをインストールする際には、ソースからのインストールとビルド済みバイナリのインストールという重要な区別があります。ソースからのインストールとは、元のコードをダウンロードして自分のマシンでコンパイルすることを意味します。これにはコンパイラとビルドツールがインストールされている必要があり、大規模なプロジェクトではかなりの時間がかかることがあります。
 
-Code is built in a continuous process but is released on a discrete basis.
-In software development there is a clear distinction between development and production environments.
-Code needs to be proven to work in a dev environment before getting _shipped_ to prod.
-The release process involves many steps, including testing, dependency management, versioning, configuration, deployment and publishing.
+ビルド済みバイナリのインストールとは、すでに誰かがコンパイルしたアーティファクトをダウンロードすることです。より高速で簡単ですが、バイナリが自分のプラットフォームとアーキテクチャに一致している必要があります。
+たとえば、[ripgrepのリリースページ](https://github.com/BurntSushi/ripgrep/releases)には、Linux(x86_64、ARM)、macOS(Intel、Apple Silicon)、Windows向けのビルド済みバイナリが公開されています。
 
 
-Software libraries are not static and evolve over time getting fixes and new features.
-We track this evolution by discrete version identifiers that correspond to the state of the library at a certain point in time.
-Changes in the behavior of a library can range from patches that fix noncritical functionality, new features that extend its functionality, to changes breaking backwards compatibility.
-Changelogs document what changes a version introduces --- these are documents that software developers use to communicate the changes associated with a new release.
+# リリースとバージョニング
 
-However, keeping track of the ongoing changes in each and every dependency is impractical, even more so when we consider the transitive dependencies --- i.e. the dependencies of our dependencies.
+コードは継続的なプロセスで作られますが、リリースは離散的な単位で行われます。
+ソフトウェア開発では、開発(dev)環境と本番(production)環境が明確に区別されます。
+コードは、本番環境に _配布(ship)_ される前に、開発環境で動作することが実証されている必要があります。
+リリースプロセスには、テスト、依存関係の管理、バージョニング、設定、デプロイ、公開など、多くのステップが含まれます。
 
-> You can visualize the entire dependency tree of your project with `uv tree`, which shows all packages and their transitive dependencies in a tree format.
 
-To simplify this problem there are conventions on how to version software, and one of the most prevalent is [Semantic Versioning](https://semver.org/) or SemVer.
-Under Semantic Versioning a version has an identifier of the form MAJOR.MINOR.PATCH where each one of the values takes an integer value. The short version is that upgrading:
+ソフトウェアライブラリは静的なものではなく、修正や新機能を取り込みながら時間とともに進化していきます。
+この進化は、ある時点でのライブラリの状態に対応する離散的なバージョン識別子によって追跡されます。
+ライブラリの挙動の変更には、重要度の低い機能を修正するパッチから、機能を拡張する新機能、後方互換性を破壊する変更まで、さまざまなものがあります。
+あるバージョンがどのような変更をもたらすかを記録するのがチェンジログ(changelog)です。これは、ソフトウェア開発者が新しいリリースに伴う変更を伝えるために使う文書です。
 
-- PATCH (e.g., 1.2.3 → 1.2.4) should only contain bug fixes and be fully backwards compatible
-- MINOR (e.g., 1.2.3 → 1.3.0) adds new functionality in a backwards-compatible way
-- MAJOR (e.g., 1.2.3 → 2.0.0) indicates breaking changes that may require code modifications
+しかし、ひとつひとつの依存関係の変更を逐一追いかけるのは現実的ではありません。推移的依存関係 --- すなわち依存関係の依存関係 --- まで考えればなおさらです。
 
-> This is a simplification and we encourage reading the full SemVer specification to understand for instance why going from 0.1.3 to 0.2.0 might cause breaking changes or what 1.0.0-rc.1 means.
-Python packaging supports semantic versioning natively, so when we specify the versions of our dependencies we can use various specifiers:
+> `uv tree` を使うと、プロジェクトの依存関係ツリー全体を可視化できます。すべてのパッケージとその推移的依存関係がツリー形式で表示されます。
 
-In the `pyproject.toml` we have different ways of constraining the ranges of compatible versions of our dependencies:
+この問題を単純化するために、ソフトウェアのバージョン付けに関する慣習が存在します。最も普及しているもののひとつが [Semantic Versioning](https://semver.org/)(SemVer)です。
+Semantic Versioningでは、バージョンは MAJOR.MINOR.PATCH という形式の識別子を持ち、それぞれの値は整数をとります。要点をまとめると、アップグレードのルールは次のとおりです。
+
+- PATCH(例: 1.2.3 → 1.2.4)はバグ修正のみを含み、完全に後方互換であるべき
+- MINOR(例: 1.2.3 → 1.3.0)は後方互換な形で新機能を追加する
+- MAJOR(例: 1.2.3 → 2.0.0)はコードの修正が必要になりうる破壊的変更を示す
+
+> これは簡略化した説明です。たとえば 0.1.3 から 0.2.0 への更新がなぜ破壊的変更を引き起こしうるのか、1.0.0-rc.1 が何を意味するのかを理解するには、SemVerの仕様全文を読むことをおすすめします。
+Pythonのパッケージングはセマンティックバージョニングをネイティブにサポートしているため、依存関係のバージョンを指定する際にさまざまな指定子(specifier)を使えます。
+
+`pyproject.toml` では、依存関係の互換バージョンの範囲を制約する方法がいくつかあります。
 
 ```toml
 [project]
@@ -326,22 +326,22 @@ dependencies = [
 ]
 ```
 
-Version specifiers exist across many package managers (npm, cargo, etc.) with varying exact semantics. The `~=` operator is Python's "compatible release" operator --- `~=2.1.0` means "any version that is compatible with 2.1.0", which translates to `>=2.1.0` and `<2.2.0`. This is roughly equivalent to the caret (`^`) operator in npm and cargo, which follows SemVer's notion of compatibility.
+バージョン指定子は多くのパッケージマネージャー(npm、cargoなど)に存在しますが、正確なセマンティクスはそれぞれ異なります。`~=` 演算子はPythonの「互換リリース(compatible release)」演算子で、`~=2.1.0` は「2.1.0と互換性のある任意のバージョン」を意味し、`>=2.1.0` かつ `<2.2.0` に相当します。これは、SemVerの互換性の概念に従うnpmやcargoのキャレット(`^`)演算子とおおよそ同等です。
 
-Not all software uses semantic versioning. A common alternative is Calendar Versioning (CalVer), where versions are based on release dates rather than semantic meaning. For example, Ubuntu uses versions like `24.04` (April 2024) and `24.10` (October 2024). CalVer makes it easy to see how old a release is, though it doesn't communicate anything about compatibility.  Lastly, semantic versioning is not infallible, and sometimes maintainers inadvertently introduce breaking changes in minor or patch releases.
+すべてのソフトウェアがセマンティックバージョニングを使っているわけではありません。よくある代替が Calendar Versioning(CalVer)で、バージョンは意味論的な意味ではなくリリース日に基づきます。たとえばUbuntuは `24.04`(2024年4月)や `24.10`(2024年10月)といったバージョンを使います。CalVerはリリースがどれくらい古いかをひと目で把握できますが、互換性については何も伝えません。最後に、セマンティックバージョニングも万能ではなく、メンテナーが意図せずマイナーリリースやパッチリリースに破壊的変更を持ち込んでしまうこともあります。
 
 
-# Reproducibility
+# 再現性
 
-In modern software development the code you write sits atop a significant number of layers of abstraction.
-This includes things like your programming language runtime, third party libraries, the operating system, or even the hardware itself.
-Any difference across any of these layers might change the behavior of your code or even prevent it from working as intended.
-Furthermore, even differences in the underlying hardware impact your ability to ship software.
+現代のソフトウェア開発では、あなたが書くコードは膨大な数の抽象化レイヤーの上に載っています。
+これには、プログラミング言語ランタイム、サードパーティライブラリ、オペレーティングシステム、さらにはハードウェアそのものまで含まれます。
+これらのレイヤーのいずれかに違いがあれば、コードの挙動が変わったり、意図したとおりに動かなくなったりする可能性があります。
+さらに言えば、基盤となるハードウェアの違いでさえ、ソフトウェアを配布する能力に影響します。
 
-Pinning a library refers to specifying an exact version rather than a range, e.g. `requests==2.32.3` instead of `requests>=2.0`.
+ライブラリをピン留め(pinning)するとは、範囲ではなく正確なバージョンを指定すること、たとえば `requests>=2.0` ではなく `requests==2.32.3` と指定することを指します。
 
-Part of the job of a package manager is to consider all the constraints provided by the dependencies --- and transitive dependencies --- and then produce a valid list of versions that will satisfy all the constraints.
-The specific list of versions can then be saved to a file for reproducibility purposes; these files are referred to as _lock files_.
+パッケージマネージャーの仕事のひとつは、依存関係 --- そして推移的依存関係 --- が提示するすべての制約を考慮し、すべての制約を満たす有効なバージョンのリストを生成することです。
+この具体的なバージョンのリストは、再現性のためにファイルに保存できます。こうしたファイルは _ロックファイル(lock file)_ と呼ばれます。
 
 ```console
 $ uv lock
@@ -362,37 +362,37 @@ wheels = [
 ...
 ```
 
-One critical distinction when dealing with dependency versioning and reproducibility is the difference between libraries and applications/services.
-A library is intended to be imported and used by other code which might have its own dependencies, so specifying overly strict version constraints can cause conflicts with the user's other dependencies.
-In contrast, applications or services are final consumers of the software and typically expose their functionality through a user interface or an API, not through a programming interface.
-For libraries, it is good practice to specify version ranges to maximize compatibility with the wider package ecosystem. For applications, pinning exact versions ensures reproducibility --- everyone running the application uses the exact same dependencies.
+依存関係のバージョニングと再現性を扱ううえで決定的に重要な区別のひとつが、ライブラリとアプリケーション/サービスの違いです。
+ライブラリは、独自の依存関係を持ちうる他のコードからインポートされて使われることを意図しているため、過度に厳しいバージョン制約を指定すると、利用者の他の依存関係と競合を起こす可能性があります。
+対照的に、アプリケーションやサービスはソフトウェアの最終消費者であり、通常はプログラミングインターフェースではなく、ユーザーインターフェースやAPIを通じて機能を公開します。
+ライブラリでは、パッケージエコシステム全体との互換性を最大化するためにバージョン範囲を指定するのが良いプラクティスです。アプリケーションでは、正確なバージョンをピン留めすることで再現性が保証されます --- アプリケーションを実行する全員が、まったく同じ依存関係を使うことになります。
 
 
-For projects requiring maximum reproducibility, tools like [Nix](https://nixos.org/) and [Bazel](https://bazel.build/) provide _hermetic_ builds --- where every input including compilers, system libraries, and even the build environment itself is pinned and content-addressed. This guarantees bit-for-bit identical outputs regardless of when or where the build runs.
+最大限の再現性が求められるプロジェクトのために、[Nix](https://nixos.org/) や [Bazel](https://bazel.build/) のようなツールは _ハーメチック(hermetic)_ ビルドを提供します。これは、コンパイラ、システムライブラリ、さらにはビルド環境そのものを含むすべての入力がピン留めされ、コンテンツアドレス化されているビルドです。これにより、いつどこでビルドを実行しても、ビットレベルで同一の出力が保証されます。
 
-> You can even use NixOS to manage your entire computer install so that you can trivially spin up new copies of your computer setup and manage their complete configuration through version-controlled configuration files.
+> NixOSを使えばコンピュータのインストール全体を管理することもでき、自分のコンピュータのセットアップの新しいコピーを簡単に立ち上げ、その完全な構成をバージョン管理された設定ファイルで管理できます。
 
-A neverending tension in software development is that new software versions introduce breakage either intentionally or unintentionally, while on the other hand, old software versions become compromised with security vulnerabilities over time.
-We can address this by using continuous integration pipelines (we'll see more in the [Code Quality and CI](/2026/code-quality/) lecture) that test our application against new software versions and having automation in place for detecting when new versions of our dependencies are released, such as [Dependabot](https://github.com/dependabot).
+ソフトウェア開発における終わりのない緊張関係として、新しいソフトウェアバージョンは意図的か否かにかかわらず破壊をもたらす一方で、古いソフトウェアバージョンは時間とともにセキュリティ脆弱性で危険にさらされていく、というものがあります。
+これに対処するには、新しいソフトウェアバージョンに対してアプリケーションをテストする継続的インテグレーション(CI)パイプラインを使い([コード品質とCI](/2026/code-quality/) の講義で詳しく見ます)、[Dependabot](https://github.com/dependabot) のような、依存関係の新バージョンのリリースを検出する自動化の仕組みを整えておくことが有効です。
 
-Even with CI testing in place, issues still occur when upgrading software versions, often because of the inevitable mismatch between dev and prod environments.
-In those circumstances the best course of action is to have a _rollback_ plan, where the version upgrade is reverted and a known good version is redeployed instead.
+CIによるテストがあっても、ソフトウェアバージョンのアップグレード時には問題が起こります。多くの場合、開発環境と本番環境の避けがたい不一致が原因です。
+そのような状況で最善の策は、_ロールバック_ 計画を用意しておくことです。つまり、バージョンアップグレードを取り消し、動作が確認されているバージョンを再デプロイするのです。
 
-# VMs & Containers
+# VMとコンテナ
 
-As you start relying on more complex dependencies, it is likely that the dependencies of your code will span beyond the boundaries of what the package manager can handle.
-One common reason is having to interface with specific system libraries or hardware drivers.
-For example, in scientific computing and AI, programs often need specialized libraries and drivers to utilize GPU hardware.
-Many system-level dependencies (GPU drivers, specific compiler versions, shared libraries like OpenSSL) still require system-wide installation.
+より複雑な依存関係に頼るようになると、コードの依存関係がパッケージマネージャーの扱える範囲を超えていく可能性が高くなります。
+よくある理由のひとつは、特定のシステムライブラリやハードウェアドライバとやり取りする必要があることです。
+たとえば科学計算やAIの分野では、プログラムがGPUハードウェアを利用するために専用のライブラリやドライバを必要とすることがよくあります。
+多くのシステムレベルの依存関係(GPUドライバ、特定バージョンのコンパイラ、OpenSSLのような共有ライブラリ)は、依然としてシステム全体へのインストールを必要とします。
 
-Traditionally this wider dependency problem was solved with Virtual Machines (VMs).
-VMs abstract the entire computer and provide a completely isolated environment with its own dedicated operating system.
-A more modern approach is containers, which package an application along with its dependencies, libraries, and filesystem, but share the host's operating system kernel rather than virtualizing an entire computer.
-Containers are lighter weight than VMs because they share the kernel, making them faster to start and more efficient to run.
+伝統的に、このより広い依存関係の問題は仮想マシン(VM)で解決されてきました。
+VMはコンピュータ全体を抽象化し、専用のオペレーティングシステムを持つ完全に隔離された環境を提供します。
+より現代的なアプローチがコンテナです。コンテナはアプリケーションをその依存関係、ライブラリ、ファイルシステムとともにパッケージ化しますが、コンピュータ全体を仮想化するのではなく、ホストのオペレーティングシステムのカーネルを共有します。
+コンテナはカーネルを共有するためVMより軽量で、起動が速く、実行効率も高くなります。
 
-The most popular container platform is [Docker](https://www.docker.com/). Docker introduced a standardized way to build, distribute, and run containers. Under the hood, Docker uses containerd as its container runtime --- an industry standard that other tools like Kubernetes also use.
+最も人気のあるコンテナプラットフォームは [Docker](https://www.docker.com/) です。Dockerは、コンテナのビルド、配布、実行の標準化された方法を導入しました。内部的には、Dockerはコンテナランタイムとしてcontainerdを使用しています。これは業界標準であり、Kubernetesなどの他のツールも使用しています。
 
-Running a container is straightforward. For example, to run a Python interpreter inside a container we use `docker run` (The `-it` flags make the container interactive with a terminal. When you exit, the container stops.).
+コンテナの実行は簡単です。たとえば、コンテナ内でPythonインタープリタを実行するには `docker run` を使います(`-it` フラグはコンテナをターミナル付きの対話モードにします。終了するとコンテナは停止します)。
 
 ```console
 $ docker run -it python:3.12 python
@@ -401,9 +401,9 @@ Python 3.12.7 (main, Nov  5 2024, 02:53:25) [GCC 12.2.0] on linux
 Hello from inside a container!
 ```
 
-In practice your program might depend on the entire filesystem.
-To overcome this, we can use container images that ship the entire filesystem of the application as the artifact.
-The container images are created programmatically. With docker we specify exactly the dependencies, system libraries, and configuration of the image using a Dockerfile syntax:
+実際には、プログラムがファイルシステム全体に依存していることもあります。
+これを乗り越えるために、アプリケーションのファイルシステム全体をアーティファクトとして持ち運ぶコンテナイメージを使うことができます。
+コンテナイメージはプログラム的に作成されます。Dockerでは、Dockerfileという構文を使って、イメージの依存関係、システムライブラリ、設定を正確に指定します。
 
 ```dockerfile
 FROM python:3.12
@@ -417,11 +417,11 @@ WORKDIR /app
 RUN pip install .
 ```
 
-An important distinction: a Docker **image** is the packaged artifact (like a template), while a **container** is a running instance of that image. You can run multiple containers from the same image. Images are built in layers, where each instruction (`FROM`, `RUN`, `COPY`, etc) in a Dockerfile creates a new layer. Docker caches these layers, so if you change a line in your Dockerfile, only that layer and subsequent layers need to be rebuilt.
+重要な区別として、Dockerの**イメージ**はパッケージ化されたアーティファクト(いわばテンプレート)であり、**コンテナ**はそのイメージの実行中のインスタンスです。同じイメージから複数のコンテナを実行できます。イメージはレイヤー構造でビルドされ、Dockerfile内の各命令(`FROM`、`RUN`、`COPY` など)が新しいレイヤーを作ります。Dockerはこれらのレイヤーをキャッシュするため、Dockerfileの1行を変更した場合、そのレイヤーとそれ以降のレイヤーだけを再ビルドすれば済みます。
 
-The previous Dockerfile has several issues: it uses the full Python image instead of a slim variant, runs separate `RUN` commands creating unnecessary layers, versions are not pinned, and it doesn't clean up package manager caches, shipping unnecessary files. Other frequent mistakes include insecurely running containers as root and accidentally embedding secrets in layers.
+先ほどのDockerfileにはいくつか問題があります。slim版ではなくフルサイズのPythonイメージを使っている、別々の `RUN` コマンドを実行して不要なレイヤーを作っている、バージョンがピン留めされていない、パッケージマネージャーのキャッシュを削除しておらず不要なファイルを含めてしまっている、という点です。他のよくある間違いとしては、コンテナをrootで実行してしまう危険な運用や、レイヤーにシークレットをうっかり埋め込んでしまうことが挙げられます。
 
-Here's an improved version
+改善版は次のとおりです。
 
 ```dockerfile
 FROM python:3.12-slim
@@ -437,19 +437,19 @@ COPY . .
 RUN uv sync --locked --no-dev
 ```
 
-In the previous example we see that instead of installing `uv` from source, we are copying the prebuilt binary from the `ghcr.io/astral-sh/uv:latest` image. This is known as the _builder_ pattern. With this pattern we do not need to ship all the tools needed to compile our code, just the final binary that is needed to run the application (`uv` in this case).
+この例では、`uv` をソースからインストールする代わりに、`ghcr.io/astral-sh/uv:latest` イメージからビルド済みバイナリをコピーしています。これは _ビルダー(builder)_ パターンとして知られています。このパターンを使えば、コードのコンパイルに必要なツール一式を持ち運ぶ必要はなく、アプリケーションの実行に必要な最終的なバイナリ(この場合は `uv`)だけを含めれば済みます。
 
-Docker has important limitations to be aware of. First, container images are often platform-specific --- an image built for `linux/amd64` won't run natively on `linux/arm64` (Apple Silicon Macs) without emulation, which is slow. Second, Docker containers require a Linux kernel, so on macOS and Windows, Docker actually runs a lightweight Linux VM under the hood, adding overhead. Third, Docker's isolation is weaker than VMs --- containers share the host kernel, which is a security concern in multi-tenant environments.
+Dockerには知っておくべき重要な制限があります。第一に、コンテナイメージは多くの場合プラットフォーム固有です。`linux/amd64` 向けにビルドされたイメージは、`linux/arm64`(Apple SiliconのMac)ではエミュレーションなしにネイティブ実行できず、エミュレーションは低速です。第二に、DockerコンテナはLinuxカーネルを必要とするため、macOSやWindowsでは、Dockerは実際には内部で軽量のLinux VMを動かしており、オーバーヘッドが生じます。第三に、Dockerの分離はVMより弱いものです。コンテナはホストのカーネルを共有するため、マルチテナント環境ではセキュリティ上の懸念になります。
 
-> These days, more projects are also making use of nix to manage even "system-wide" libraries and applications per project through [nix flakes](https://serokell.io/blog/practical-nix-flakes).
+> 最近では、[nix flakes](https://serokell.io/blog/practical-nix-flakes) を通じて、「システム全体」のライブラリやアプリケーションでさえプロジェクトごとにnixで管理するプロジェクトが増えています。
 
-# Configuration
+# 設定
 
-Software is inherently configurable. In the [command line environment](/2026/command-line-environment/) lecture we saw programs receiving options via flags, environment variables or even configuration files a.k.a. dotfiles. This holds true even for more complex applications, and there are established patterns for managing configuration at scale.
-Software configuration should not be embedded in the code but be provided at runtime.
-A couple of common ones being environment variables and config files.
+ソフトウェアは本質的に設定可能なものです。[コマンドライン環境](/2026/command-line-environment/)の講義では、プログラムがフラグ、環境変数、あるいは設定ファイル(いわゆるdotfiles)を通じてオプションを受け取るのを見ました。これはより複雑なアプリケーションでも同様で、大規模に設定を管理するための確立されたパターンが存在します。
+ソフトウェアの設定はコードに埋め込むのではなく、実行時に与えるべきです。
+よく使われる方法として、環境変数と設定ファイルがあります。
 
-Here's an example of an application that is configured via environment variables:
+環境変数で設定されるアプリケーションの例を示します。
 
 ```python
 import os
@@ -459,7 +459,7 @@ DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 API_KEY = os.environ["API_KEY"]  # Required - will raise if not set
 ```
 
-An application could also be configured via a configuration file (e.g., a Python program that loads a config via `yaml.load`), `config.yaml`:
+アプリケーションは設定ファイルを通じて設定することもできます(たとえば `yaml.load` で設定を読み込むPythonプログラム)。`config.yaml` の例:
 
 ```yaml
 database:
@@ -471,22 +471,22 @@ server:
   debug: false
 ```
 
-A good right-hand rule for thinking about configuration is that the same codebase should be deployable to different environments (development, staging, production) with only configuration changes, never code changes.
+設定について考える際の良い経験則は、同じコードベースを、設定の変更だけで --- コードの変更は一切なしに --- 異なる環境(開発、ステージング、本番)にデプロイできるべきだ、というものです。
 
-Among the many configuration options there is often sensitive data such as API keys.
-Secrets need to be handled with care to avoid exposing them accidentally, and must not be included in version control.
+数ある設定項目の中には、APIキーのような機密データが含まれることがよくあります。
+シークレットは誤って漏らさないよう慎重に扱う必要があり、バージョン管理に含めてはいけません。
 
 
-# Services & Orchestration
+# サービスとオーケストレーション
 
-Modern applications rarely exist in isolation. A typical web application might need a database for persistent storage, a cache for performance, a message queue for background tasks, and various other supporting services. Rather than bundling everything into a single monolithic application, modern architectures often decompose functionality into separate services that can be developed, deployed, and scaled independently.
+現代のアプリケーションが単独で存在することはめったにありません。典型的なWebアプリケーションには、永続的なストレージのためのデータベース、パフォーマンスのためのキャッシュ、バックグラウンドタスクのためのメッセージキュー、その他さまざまな支援サービスが必要になるでしょう。すべてを単一のモノリシックなアプリケーションに詰め込むのではなく、現代的なアーキテクチャでは、機能を個別に開発・デプロイ・スケールできる別々のサービスに分解することがよくあります。
 
-As an example, if we determine our application might benefit from using a cache, instead of rolling our own we can leverage existing battle tested solutions like [Redis](https://redis.io/) or [Memcached](https://memcached.org/).
-We could embed Redis in our application dependencies by building it as part of the container, but that means harmonizing all the dependencies between Redis and our application which could be challenging or even unfeasible.
-Instead what we can do is deploy each application separately in its own container.
-This is commonly referred to as a microservice architecture where each component runs as an independent service that communicates over the network, typically via HTTP APIs.
+例として、アプリケーションにキャッシュを導入すると有益だと判断した場合、自前で実装する代わりに、[Redis](https://redis.io/) や [Memcached](https://memcached.org/) のような実績のある既存のソリューションを活用できます。
+Redisをコンテナの一部としてビルドし、アプリケーションの依存関係に埋め込むこともできますが、それはRedisとアプリケーションのすべての依存関係を整合させることを意味し、困難、あるいは不可能でさえあるかもしれません。
+その代わりにできるのは、各アプリケーションをそれぞれ独自のコンテナとして別々にデプロイすることです。
+これは一般にマイクロサービスアーキテクチャと呼ばれ、各コンポーネントが独立したサービスとして動作し、ネットワーク越しに(通常はHTTP APIを介して)通信します。
 
-[Docker Compose](https://docs.docker.com/compose/) is a tool for defining and running multi-container applications. Rather than managing containers individually, you declare all services in a single YAML file and orchestrate them together. Now our full application encompasses more than one container:
+[Docker Compose](https://docs.docker.com/compose/) は、マルチコンテナアプリケーションを定義・実行するためのツールです。コンテナを個別に管理する代わりに、すべてのサービスを1つのYAMLファイルで宣言し、まとめてオーケストレーションします。これで、アプリケーション全体は複数のコンテナで構成されるようになります。
 
 ```yaml
 # docker-compose.yml
@@ -509,10 +509,10 @@ volumes:
   redis_data:
 ```
 
-With `docker compose up`, both services start together, and the web application can connect to Redis using the hostname `cache` (Docker's internal DNS resolves service names automatically).
-Docker Compose lets us declare how we want to deploy one or more services, and handles the orchestration of starting them together, setting up networking between them, and managing shared volumes for data persistence.
+`docker compose up` を実行すると両方のサービスが一緒に起動し、Webアプリケーションはホスト名 `cache` を使ってRedisに接続できます(Dockerの内部DNSがサービス名を自動的に解決します)。
+Docker Composeを使えば、1つ以上のサービスをどうデプロイしたいかを宣言でき、それらをまとめて起動し、サービス間のネットワークを設定し、データ永続化のための共有ボリュームを管理するといったオーケストレーションを担ってくれます。
 
-For production deployments, you often want your docker compose services to start automatically on boot and restart on failure. A common approach is to use systemd to manage the docker compose deployment:
+本番デプロイでは、docker composeのサービスをブート時に自動起動させ、障害時には再起動させたいことがよくあります。よくあるアプローチは、systemdを使ってdocker composeのデプロイを管理することです。
 
 ```ini
 # /etc/systemd/system/myapp.service
@@ -532,11 +532,11 @@ ExecStop=/usr/bin/docker compose down
 WantedBy=multi-user.target
 ```
 
-This systemd unit file ensures your application starts when the system boots (after Docker is ready), and provides standard controls like `systemctl start myapp`, `systemctl stop myapp`, and `systemctl status myapp`.
+このsystemdユニットファイルにより、システムのブート時に(Dockerの準備が整った後で)アプリケーションが起動し、`systemctl start myapp`、`systemctl stop myapp`、`systemctl status myapp` といった標準的な操作が使えるようになります。
 
-As deployment requirements grow more complex --- needing scalability across multiple machines, fault tolerance when services crash, and high availability guarantees --- organizations turn to sophisticated container orchestration platforms like Kubernetes (k8s), which can manage thousands of containers across clusters of machines. That said, Kubernetes has a steep learning curve and significant operational overhead, so it's often overkill for smaller projects.
+デプロイ要件がより複雑になるにつれ --- 複数マシンにまたがるスケーラビリティ、サービスがクラッシュしたときの耐障害性、高可用性の保証が必要になると --- 組織はKubernetes(k8s)のような高度なコンテナオーケストレーションプラットフォームに移行します。Kubernetesは、マシンのクラスタ全体で何千ものコンテナを管理できます。とはいえ、Kubernetesは学習コストが高く、運用上のオーバーヘッドも大きいため、小規模なプロジェクトには過剰であることが多いです。
 
-This multi-container setup is partly feasible because modern services communicate with each other via standardized APIs, with HTTP REST APIs. For example, whenever a program interacts with an LLM provider like OpenAI or Anthropic, under the hood it is sending an HTTP request to their servers and parsing the response:
+このようなマルチコンテナ構成が可能なのは、現代のサービスがHTTP REST APIをはじめとする標準化されたAPIで互いに通信していることが一因です。たとえば、プログラムがOpenAIやAnthropicのようなLLMプロバイダーとやり取りするときは、内部的には彼らのサーバーにHTTPリクエストを送信し、レスポンスをパースしているのです。
 
 ```console
 $ curl https://api.anthropic.com/v1/messages \
@@ -547,19 +547,19 @@ $ curl https://api.anthropic.com/v1/messages \
          "messages": [{"role": "user", "content": "Explain containers vs VMs in one sentence."}]}'
 ```
 
-# Publishing
+# 公開
 
-Once you have shown your code to work, you might be interested in distributing it for others to download and install.
-Distribution takes many forms and is intrinsically tied to the programming language and environments that you operate with.
+コードが動くことを示せたら、他の人がダウンロードしてインストールできるように配布したくなるかもしれません。
+配布にはさまざまな形態があり、扱っているプログラミング言語や環境と本質的に結びついています。
 
-The simplest form of distribution is uploading artifacts for people to download and install locally.
-This is still common and you can find it in places like [Ubuntu's package archive](http://archive.ubuntu.com/ubuntu/pool/main/), which is essentially an HTTP directory listing of `.deb` files.
+最も単純な配布の形態は、アーティファクトをアップロードして、人々がダウンロードしてローカルにインストールできるようにすることです。
+これは今でも一般的で、たとえば [Ubuntuのパッケージアーカイブ](http://archive.ubuntu.com/ubuntu/pool/main/) のような場所で見られます。これは本質的に `.deb` ファイルのHTTPディレクトリリスティングです。
 
-These days, GitHub has become the de facto platform for publishing source code and artifacts.
-While the source code is often publicly available, GitHub Releases allow maintainers to attach prebuilt binaries and other artifacts to tagged versions.
+今日では、GitHubがソースコードとアーティファクトを公開するためのデファクトのプラットフォームになっています。
+ソースコードが公開されていることが多いのに加えて、GitHub Releasesを使えば、メンテナーはタグ付けされたバージョンにビルド済みバイナリやその他のアーティファクトを添付できます。
 
 
-Package managers sometimes support installing directly from GitHub, either from source or from a pre-built wheel:
+パッケージマネージャーには、GitHubから直接インストールできるものもあります。ソースからでも、ビルド済みwheelからでも可能です。
 
 ```console
 # Install from source (will clone and build)
@@ -572,8 +572,8 @@ $ pip install git+https://github.com/psf/requests.git@v2.32.3
 $ pip install https://github.com/user/repo/releases/download/v1.0/package-1.0-py3-none-any.whl
 ```
 
-In fact, some languages like Go use a decentralized distribution model --- rather than a central package repository, Go modules are distributed directly from their source code repositories.
-Module paths like `github.com/gorilla/mux` indicate where the code lives, and `go get` fetches directly from there. However, most package managers like `pip`, `cargo`, or `brew` have central indexes of pre-packaged projects for ease of distribution and installation. If we run
+実際、Goのような一部の言語は分散型の配布モデルを採用しています。中央のパッケージリポジトリではなく、Goモジュールはソースコードリポジトリから直接配布されます。
+`github.com/gorilla/mux` のようなモジュールパスはコードの所在を示し、`go get` はそこから直接取得します。しかし、`pip`、`cargo`、`brew` のようなほとんどのパッケージマネージャーは、配布とインストールを容易にするため、パッケージ化済みプロジェクトの中央インデックスを持っています。次を実行すると
 
 ```console
 $ uv pip install requests --verbose --no-cache 2>&1 | grep -F '.whl'
@@ -582,18 +582,18 @@ DEBUG No cache entry for: https://files.pythonhosted.org/packages/1e/db/4254e3ea
 DEBUG No cache entry for: https://files.pythonhosted.org/packages/1e/db/4254e3eabe8020b458f1a747140d32277ec7a271daf1d235b70dc0b4e6e3/requests-2.32.5-py3-none-any.whl
 ```
 
-we see where we are fetching the `requests` wheel from. Notice the `py3-none-any` in the filename --- this means the wheel works with any Python 3 version, on any OS, on any architecture. For packages with compiled code, the wheel is platform-specific:
+`requests` のwheelをどこから取得しているかがわかります。ファイル名の `py3-none-any` に注目してください。これは、このwheelがあらゆるPython 3バージョン、あらゆるOS、あらゆるアーキテクチャで動作することを意味します。コンパイル済みコードを含むパッケージでは、wheelはプラットフォーム固有になります。
 
 ```console
 $ uv pip install numpy --verbose --no-cache 2>&1 | grep -F '.whl'
 DEBUG Selecting: numpy==2.2.1 [compatible] (numpy-2.2.1-cp312-cp312-macosx_14_0_arm64.whl)
 ```
 
-Here `cp312-cp312-macosx_14_0_arm64` indicates this wheel is specifically for CPython 3.12 on macOS 14+ for ARM64 (Apple Silicon). If you're on a different platform, `pip` will download a different wheel or build from source.
+ここで `cp312-cp312-macosx_14_0_arm64` は、このwheelがARM64(Apple Silicon)のmacOS 14以降上のCPython 3.12専用であることを示しています。別のプラットフォームを使っている場合、`pip` は別のwheelをダウンロードするか、ソースからビルドします。
 
-Conversely, for people to be able to find a package we've created, we need to publish it to one of these registries.
-In Python, the main registry is the [Python Package Index (PyPI)](https://pypi.org).
-Like with installing, there are multiple ways of publishing packages. The `uv publish` command provides a modern interface for uploading packages to PyPI:
+逆に、私たちが作成したパッケージを人々に見つけてもらうには、こうしたレジストリのいずれかに公開する必要があります。
+Pythonの主要なレジストリは [Python Package Index (PyPI)](https://pypi.org) です。
+インストールと同様に、パッケージの公開にも複数の方法があります。`uv publish` コマンドは、パッケージをPyPIにアップロードするための現代的なインターフェースを提供します。
 
 ```console
 $ uv publish --publish-url https://test.pypi.org/legacy/
@@ -601,17 +601,17 @@ Publishing greeting-0.1.0.tar.gz
 Publishing greeting-0.1.0-py3-none-any.whl
 ```
 
-Here we are using [TestPyPI](https://test.pypi.org) --- a separate package registry intended for testing your publishing workflow without polluting the real PyPI. Once uploaded, you can install from TestPyPI:
+ここでは [TestPyPI](https://test.pypi.org) を使っています。これは、本物のPyPIを汚染することなく公開ワークフローをテストするための、独立したパッケージレジストリです。アップロードしたら、TestPyPIからインストールできます。
 
 ```console
 $ uv pip install --index-url https://test.pypi.org/simple/ greeting
 ```
 
-A key consideration when publishing software is trust. How do users verify that the package they download actually comes from you and hasn't been tampered with? Package registries use checksums to verify integrity, and some ecosystems support package signing to provide cryptographic proof of authorship.
+ソフトウェアを公開する際の重要な考慮事項が信頼です。ダウンロードしたパッケージが本当にあなたのものであり、改ざんされていないことを、ユーザーはどうやって検証すればよいのでしょうか。パッケージレジストリはチェックサムを使って完全性を検証し、一部のエコシステムでは、作者であることの暗号学的な証明を提供するパッケージ署名をサポートしています。
 
-Different languages have their own package registries: [crates.io](https://crates.io) for Rust, [npm](https://www.npmjs.com) for JavaScript, [RubyGems](https://rubygems.org) for Ruby, and [Docker Hub](https://hub.docker.com) for container images. Meanwhile, for private or internal packages, organizations often deploy their own package repositories (such as a private PyPI server or a private Docker registry) or use managed solutions from cloud providers.
+言語ごとに独自のパッケージレジストリがあります。Rustの [crates.io](https://crates.io)、JavaScriptの [npm](https://www.npmjs.com)、Rubyの [RubyGems](https://rubygems.org)、そしてコンテナイメージの [Docker Hub](https://hub.docker.com) などです。一方、プライベートまたは社内向けのパッケージについては、組織が独自のパッケージリポジトリ(プライベートPyPIサーバーやプライベートDockerレジストリなど)をデプロイしたり、クラウドプロバイダーのマネージドソリューションを使ったりすることがよくあります。
 
-Deploying a web service to the internet involves additional infrastructure: domain name registration, DNS configuration to point your domain to your server, and often a reverse proxy like nginx to handle HTTPS and route traffic. For simpler use cases like documentation or static sites, [GitHub Pages](https://pages.github.com/) provides free hosting directly from a repository.
+Webサービスをインターネットにデプロイするには、追加のインフラが必要です。ドメイン名の登録、ドメインをサーバーに向けるDNS設定、そして多くの場合、HTTPSの処理とトラフィックのルーティングを行うnginxのようなリバースプロキシです。ドキュメントや静的サイトのようなシンプルな用途には、[GitHub Pages](https://pages.github.com/) がリポジトリから直接無料ホスティングを提供しています。
 
 <!--
 ## Documentation
@@ -623,11 +623,11 @@ Tools like [Sphinx](https://www.sphinx-doc.org/) (Python) and [MkDocs](https://w
 For HTTP-based APIs, the [OpenAPI specification](https://www.openapis.org/) (formerly Swagger) provides a standard format for describing API endpoints, which tools can use to generate interactive documentation and client libraries automatically. -->
 
 
-# Exercises
+# 演習
 
-1. Save your environment with `printenv` to a file, create a venv, activate it, `printenv` to another file and `diff before.txt after.txt`. What changed in the environment? Why does the shell prefer the venv? (Hint: look at `$PATH` before and after activation.) Run `which deactivate` and reason about what the deactivate bash function is doing.
-1. Create a Python package with a `pyproject.toml` and install it in a virtual environment. Create a lockfile and inspect it.
-1. Install Docker and use it to build the Missing Semester class website locally using docker compose.
-1. Write a Dockerfile for a simple Python application. Then write a `docker-compose.yml` that runs your application alongside a Redis cache.
-1. Publish a Python package to TestPyPI (don't publish to the real PyPI unless it's worth sharing!). Then build a Docker image with said package and push it to `ghcr.io`.
-1. Make a website using [GitHub Pages](https://docs.github.com/en/pages/quickstart). Extra (non-)credit: configure it with a custom domain.
+1. `printenv` で環境をファイルに保存し、venvを作成して有効化(activate)し、もう一度 `printenv` を別のファイルに保存して `diff before.txt after.txt` を実行してみましょう。環境の何が変わったでしょうか? なぜシェルはvenvのほうを優先するのでしょうか?(ヒント: 有効化の前後で `$PATH` を見比べてみましょう。)`which deactivate` を実行し、deactivateというbash関数が何をしているのか考えてみましょう。
+1. `pyproject.toml` を持つPythonパッケージを作成し、仮想環境にインストールしてみましょう。ロックファイルを作成し、その中身を調べてみましょう。
+1. Dockerをインストールし、docker composeを使ってMissing Semesterの講義Webサイトをローカルでビルドしてみましょう。
+1. シンプルなPythonアプリケーションのためのDockerfileを書いてみましょう。次に、そのアプリケーションをRedisキャッシュと一緒に実行する `docker-compose.yml` を書いてみましょう。
+1. PythonパッケージをTestPyPIに公開してみましょう(共有する価値があるものでない限り、本物のPyPIには公開しないでください!)。次に、そのパッケージを含むDockerイメージをビルドし、`ghcr.io` にプッシュしてみましょう。
+1. [GitHub Pages](https://docs.github.com/en/pages/quickstart) を使ってWebサイトを作ってみましょう。追加の(単位にはならない)課題: カスタムドメインを設定してみましょう。

@@ -10,13 +10,13 @@ layout: default
     <iframe src="https://www.youtube.com/embed/{{ page.video.id }}" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   </div>
 {% elsif page.panopto %}
-  <p class="center padded bordered"><strong><a href="{{ page.panopto }}">Click here to view the raw lecture video on Panopto (MIT Kerberos login required).</a></strong><br>
-  An edited version of this video will be posted after the course is over. Edited lecture videos will be posted to YouTube shortly after the conclusion of the course.</p>
+  <p class="center padded bordered"><strong><a href="{{ page.panopto }}">未編集の講義動画をPanoptoで見るにはこちら(MIT Kerberosログインが必要です)。</a></strong><br>
+  編集済みの動画はコース終了後に公開されます。編集済みの講義動画は、コース終了後まもなくYouTubeに公開されます。</p>
 {% elsif page.last_year %}
-  <p class="center padded bordered"><strong><a href="{{ page.last_year }}">Click here to view last year's lecture video.</a></strong><br>
-  This year's lecture video is coming soon.</p>
+  <p class="center padded bordered"><strong><a href="{{ page.last_year }}">昨年の講義動画を見るにはこちら。</a></strong><br>
+  今年の講義動画は近日公開予定です。</p>
 {% elsif page.video %}
-  <p class="center padded bordered"><strong>Lecture video coming soon!</strong></p>
+  <p class="center padded bordered"><strong>講義動画は近日公開予定です!</strong></p>
 {% endif %}
 
 {{ content }}
@@ -24,6 +24,6 @@ layout: default
 <hr>
 
 <div class="small center">
-<p><a href="https://github.com/missing-semester/missing-semester/blob/master/{{ page.path }}">Edit this page</a>.</p>
-<p>Licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA</a>.</p>
+<p><a href="https://github.com/missing-semester/missing-semester/blob/master/{{ page.path }}">このページを編集</a>.</p>
+<p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA</a>でライセンスされています。</p>
 </div>

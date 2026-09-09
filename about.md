@@ -1,140 +1,85 @@
 ---
 layout: lecture
-title: "Why we are teaching this class"
+title: "なぜ私たちはこの授業を教えるのか"
 ---
 
-During a traditional Computer Science education, chances are you will take
-plenty of classes that teach you advanced topics within CS, everything from
-Operating Systems to Programming Languages to Machine Learning. But at many
-institutions there is one essential topic that is rarely covered and is instead
-left for students to pick up on their own: computing ecosystem literacy.
+伝統的なコンピュータサイエンス教育では、オペレーティングシステムからプログラミング言語、機械学習まで、CSの高度なトピックを教える授業をたくさん受けることになるでしょう。しかし多くの教育機関では、非常に重要でありながらほとんど扱われず、学生が独学で身につけるしかないテーマがひとつあります。それは「コンピューティングエコシステムのリテラシー」です。
 
-Over the years, we have helped teach several classes at MIT, and over and over
-we have seen that many students have limited knowledge of the tools available
-to them. Computers were built to automate manual tasks, yet students often
-perform repetitive tasks by hand or fail to take full advantage of powerful
-tools such as version control and text editors. In the best case, this results
-in inefficiencies and wasted time; in the worst case, it results in issues like
-data loss or inability to complete certain tasks.
+私たちは長年MITでいくつもの授業を教えてきましたが、多くの学生が自分の使えるツールについて限られた知識しか持っていない場面を何度も目にしてきました。コンピュータは手作業を自動化するために作られたのに、学生はしばしば繰り返し作業を手でこなし、バージョン管理やテキストエディタといった強力なツールを十分に活用できていません。良くても非効率と時間の浪費につながり、最悪の場合はデータの喪失や、特定のタスクを完了できないといった問題を引き起こします。
 
-These topics are not taught as part of the university curriculum: students are
-never shown how to use these tools, or at least not how to use them
-efficiently, and thus waste time and effort on tasks that _should_ be simple.
-The standard CS curriculum is missing critical topics about the computing
-ecosystem that could make students' lives significantly easier.
+これらのトピックは大学のカリキュラムでは教えられていません。学生はこれらのツールの使い方を、少なくとも効率的な使い方を教わることがなく、そのため本来は簡単な<em>はず</em>のタスクに時間と労力を浪費してしまいます。標準的なCSカリキュラムには、学生の生活を大きく楽にしうるコンピューティングエコシステムに関する重要なトピックが欠けているのです。
 
-# The missing semester of your CS education
+# あなたのCS教育に欠けている学期
 
-To help remedy this, we created a class that covers all the topics we
-consider crucial to be an effective computer scientist and programmer. The
-class is pragmatic and practical, and it provides hands-on introduction to
-tools and techniques that you can immediately apply in a wide variety of
-situations you will encounter. The latest iteration of this class, with
-substantially revised material, is being run during MIT's "Independent
-Activities Period" in January 2026 — a one-month semester that features shorter
-student-run classes. While the lectures themselves are only available to the MIT
-community, we will provide all lecture materials along with video recordings of
-lectures to the public.
+この状況を改善するために、私たちは有能なコンピュータサイエンティスト・プログラマになるうえで欠かせないと考えるトピックをすべて扱う授業を作りました。この授業は実利的かつ実践的で、これから出会うさまざまな場面ですぐに使えるツールとテクニックをハンズオン形式で紹介します。内容を大幅に刷新した最新版の授業は、2026年1月のMITの「Independent Activities Period(IAP)」— 学生主導の短い授業が行われる1か月間の学期 — に開講されます。講義自体に参加できるのはMITのコミュニティに限られますが、すべての講義資料と講義の録画は一般に公開します。
 
-If this sounds like it might be for you, here are some concrete
-examples of what the class will teach:
+自分に向いていそうだと思った方のために、この授業で教える内容の具体例をいくつか紹介します。
 
-## Command shell
+## コマンドシェル
 
-How to automate common and repetitive tasks with aliases, scripts,
-and build systems. No more copy-pasting commands from a text
-document. No more "run these 15 commands one after the other". No
-more "you forgot to run this thing" or "you forgot to pass this
-argument".
+エイリアス、スクリプト、ビルドシステムを使って、よくある繰り返し作業を自動化する方法。テキスト文書からコマンドをコピペするのはもう終わりです。「この15個のコマンドを順番に実行して」も、「あれを実行し忘れてる」「この引数を渡し忘れてる」も、もうありません。
 
-For example, searching through your history quickly can be a huge time saver. In the example below we show several tricks related to navigating your shell history for `convert` commands.
+たとえば、履歴をすばやく検索できると大幅な時間の節約になります。以下の例では、`convert` コマンドを対象にシェル履歴を操作するいくつかのテクニックを紹介しています。
 
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
   <source src="/static/media/demos/history.mp4" type="video/mp4">
 </video>
 
-## Version control
+## バージョン管理
 
-How to use version control _properly_, and take advantage of it to
-save you from disaster, collaborate with others, and quickly find and
-isolate problematic changes. No more `rm -rf; git clone`. No more
-merge conflicts (well, fewer of them at least). No more huge blocks
-of commented-out code. No more fretting over how to find what broke
-your code. No more "oh no, did we delete the working code?!". We'll
-even teach you how to contribute to other people's projects with pull
-requests!
+バージョン管理を<em>正しく</em>使い、災難から身を守り、他の人と共同作業し、問題のある変更をすばやく見つけて切り分ける方法。`rm -rf; git clone` はもう終わりです。マージコンフリクトも(少なくとも減ります)。コメントアウトされた巨大なコードブロックも。何がコードを壊したのか探し方に悩むことも。「うわ、動いてたコード消しちゃった?!」も、もうありません。プルリクエストで他の人のプロジェクトに貢献する方法まで教えます!
 
-In the example below we use `git bisect` to find which commit broke a unit test and then we fix it with `git revert`.
+以下の例では、`git bisect` を使ってどのコミットがユニットテストを壊したかを特定し、`git revert` で修正しています。
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
   <source src="/static/media/demos/git.mp4" type="video/mp4">
 </video>
 
-## Text editing
+## テキスト編集
 
-How to efficiently edit files from the command-line, both locally and
-remotely, and take advantage of advanced editor features. No more
-copying files back and forth. No more repetitive file editing.
+ローカルでもリモートでも、コマンドラインからファイルを効率的に編集し、エディタの高度な機能を活用する方法。ファイルを行ったり来たりコピーするのはもう終わりです。同じようなファイル編集の繰り返しも、もうありません。
 
-Vim macros are one of its best features, in the example below we quickly convert an html table to csv format using a nested vim macro.
+Vimのマクロは最高の機能のひとつです。以下の例では、ネストしたVimマクロを使ってHTMLのテーブルをCSV形式にすばやく変換しています。
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
   <source src="/static/media/demos/vim.mp4" type="video/mp4">
 </video>
 
-## Remote machines
+## リモートマシン
 
-How to stay sane when working with remote machines using SSH keys and
-terminal multiplexing. No more keeping many terminals open just to
-run two commands at once. No more typing your password every time you
-connect. No more losing everything just because your Internet
-disconnected or you had to reboot your laptop.
+SSH鍵とターミナルマルチプレクサを使って、リモートマシンでの作業を快適に保つ方法。2つのコマンドを同時に実行するためだけにたくさんのターミナルを開いておくのはもう終わりです。接続のたびにパスワードを入力することも、インターネットが切断されたりラップトップを再起動しただけですべてを失うことも、もうありません。
 
-In the example below we use `tmux` to keep sessions alive in remote servers and `mosh` to support network roaming and disconnection.
+以下の例では、`tmux` を使ってリモートサーバー上のセッションを維持し、`mosh` でネットワークのローミングや切断に対応しています。
 
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
   <source src="/static/media/demos/ssh.mp4" type="video/mp4">
 </video>
 
-## Finding files
+## ファイル検索
 
-How to quickly find files that you are looking for. No
-more clicking through files in your project until you find the one
-that has the code you want.
+探しているファイルをすばやく見つける方法。目当てのコードがあるファイルを見つけるまで、プロジェクト内のファイルをクリックして回るのはもう終わりです。
 
-In the example below we quickly look for files with `fd` and for code snippets with `rg`. We also quickly `cd` and `vim` recent/frequent files/folder using `fasd`.
+以下の例では、`fd` でファイルを、`rg` でコード片をすばやく探しています。また、`fasd` を使って最近使った/よく使うファイルやフォルダにすばやく `cd` したり `vim` で開いたりしています。
 
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
   <source src="/static/media/demos/find.mp4" type="video/mp4">
 </video>
 
-## Data wrangling
+## データラングリング
 
-How to quickly and easily modify, view, parse, plot, and compute over
-data and files directly from the command-line. No more copy pasting
-from log files. No more manually computing statistics over data. No
-more spreadsheet plotting.
+コマンドラインから直接、データやファイルをすばやく簡単に変更・閲覧・パース・プロット・集計する方法。ログファイルからのコピペも、データの統計を手で計算することも、スプレッドシートでのプロットも、もう終わりです。
 
-## Code quality and continuous integration
+## コード品質と継続的インテグレーション
 
-How to use autoformatting, linting, testing, and code coverage tools to improve
-code quality. No more ugly code. No more regressions. No more code that works
-on your computer but crashes on everyone else's.
+自動フォーマット、リント、テスト、コードカバレッジのツールを使ってコード品質を高める方法。汚いコードも、リグレッションも、「自分のコンピュータでは動くのに他の人の環境ではクラッシュするコード」も、もう終わりです。
 
-## Beyond the code
+## コードの先へ
 
-How to write great documentation, communicate clearly with open-source
-maintainers, submit actionable issues, and contribute pull requests that get
-merged. No more confused users who can't get started using your software. No
-more ghosting from maintainers.
+優れたドキュメントを書き、オープンソースのメンテナと明確にコミュニケーションし、対応可能なIssueを提出し、マージされるプルリクエストを送る方法。あなたのソフトウェアの使い始め方が分からず戸惑うユーザーも、メンテナからの音信不通も、もう終わりです。
 
-# Conclusion
+# おわりに
 
-This, and more, will be covered across the 9 class lectures, each including
-exercises for you to get more familiar with the tools on your own. If you can't
-wait until January 2026, you can also take a look at the lectures from the
-[previous offering of the course](/2020/), which covers many of the same
-topics.
+以上のような内容(そしてそれ以上)を9回の講義で扱い、各講義には自分でツールに慣れるための演習が付いています。2026年1月まで待てないという方は、同じトピックの多くを扱っている[過去の開講](/2020/)の講義を見ることもできます。
 
-We hope to see you in January, whether virtually or in person!
+オンラインでも対面でも、1月にお会いできることを楽しみにしています!
 
 Happy hacking,<br>
-[Anish](https://anish.io/), [Jon](https://thesquareplanet.com/), and [Jose](https://josejg.com/)
+[Anish](https://anish.io/)、[Jon](https://thesquareplanet.com/)、[Jose](https://josejg.com/)

@@ -1,8 +1,8 @@
 ---
 layout: page
-title: "2026 Lectures"
+title: "2026年 講義一覧"
 description: >
-  Lecture notes and videos for Missing Semester, MIT IAP 2026.
+  Missing Semester(MIT IAP 2026)の講義ノートとビデオ。
 permalink: /2026/
 phony: true
 ---
@@ -16,9 +16,9 @@ phony: true
         {% if lecture.ready %}
           <a href="{{ lecture.url }}">{{ lecture.title }}</a>
         {% elsif lecture.noclass %}
-          {{ lecture.title }} [no class]
+          {{ lecture.title }} [休講]
         {% else %}
-          {{ lecture.title }} [coming soon]
+          {{ lecture.title }} [近日公開]
         {% endif %}
         {% if lecture.details %}
           <br>
@@ -29,11 +29,11 @@ phony: true
   {% endfor %}
 </ul>
 
-Video recordings of the lectures are available [on YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQunmnnTXrNbZnBaCA-ieK4L).
+講義のビデオ録画は [YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQunmnnTXrNbZnBaCA-ieK4L) で公開されています。
 
-# Beyond MIT
+# MITの外へ
 
-We've also shared this class beyond MIT in the hopes that others may benefit from these resources. You can find posts and discussion on
+この授業がMITの外の人々にも役立つことを願って、私たちはこの授業をMITの外にも公開しています。投稿や議論は以下で見ることができます。
 
 - [Hacker News](https://news.ycombinator.com/item?id=47124171)
 - [Lobsters](https://lobste.rs/s/q4ykw7/missing_semester_your_cs_education_2026)
@@ -44,6 +44,6 @@ We've also shared this class beyond MIT in the hopes that others may benefit fro
 - [LinkedIn](https://www.linkedin.com/posts/anishathalye_i-returned-to-mit-during-iap-january-term-activity-7430285026933522433-Ehr9)
 - [YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQunmnnTXrNbZnBaCA-ieK4L)
 
-# Acknowledgments
+# 謝辞
 
-We thank Elaine Mello and [MIT Open Learning](https://openlearning.mit.edu/) for making it possible for us to record lecture videos. We thank Luis Turino / [SIPB](https://sipb.mit.edu/) for supporting this class as part of [SIPB IAP 2026](https://sipb.mit.edu/iap/).
+講義ビデオの収録を可能にしてくださった Elaine Mello 氏と [MIT Open Learning](https://openlearning.mit.edu/) に感謝します。また、この授業を [SIPB IAP 2026](https://sipb.mit.edu/iap/) の一環として支援してくださった Luis Turino 氏 / [SIPB](https://sipb.mit.edu/) に感謝します。

@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Code Quality"
+title: "コード品質"
 description: >
-  Learn about formatting, linting, testing, continuous integration, and more.
+  フォーマット、リント、テスト、継続的インテグレーションなどについて学びます。
 thumbnail: /static/assets/thumbnails/2026/lec9.png
 date: 2026-01-23
 ready: true
@@ -11,124 +11,124 @@ video:
   id: XBiLUNx84CQ
 ---
 
-There are a variety of tools and techniques that support developers in writing high-quality code. In this lecture, we'll cover:
+高品質なコードを書く開発者を支援するツールやテクニックには、さまざまなものがあります。この講義では、以下を扱います。
 
-- [Formatting](#formatting)
-- [Linting](#linting)
-- [Testing](#testing)
-- [Pre-commit hooks](#pre-commit-hooks)
-- [Continuous integration](#continuous-integration)
-- [Command runners](#command-runners)
+- [フォーマット](#formatting)
+- [リント](#linting)
+- [テスト](#testing)
+- [pre-commitフック](#pre-commit-hooks)
+- [継続的インテグレーション](#continuous-integration)
+- [コマンドランナー](#command-runners)
 
-As a bonus topic, we'll also cover [regular expressions](#regular-expressions), a cross-cutting topic that has applications in code quality (e.g., for running a subset of tests that match a pattern) as well as other domains like IDEs (e.g., for search and replace).
+ボーナストピックとして、[正規表現](#regular-expressions)も扱います。これは分野横断的なトピックで、コード品質の分野での応用(たとえば、パターンにマッチするテストの一部だけを実行する)に加え、IDEなどの他の分野でも応用があります(たとえば、検索と置換)。
 
-Many of these tools will be language-specific (e.g., the [Ruff](https://docs.astral.sh/ruff/) linter/formatter for Python). In some cases, tools will support multiple languages (e.g., the [Prettier](https://prettier.io/) code formatter). The concepts, however, are near universal --- you can find code formatters, linters, testing libraries, and so on for any programming language.
+これらのツールの多くは言語固有のものです(たとえば、Python向けのリンタ/フォーマッタである[Ruff](https://docs.astral.sh/ruff/))。複数の言語に対応するツールもあります(たとえば、コードフォーマッタの[Prettier](https://prettier.io/))。しかし、概念自体はほぼ普遍的です --- コードフォーマッタ、リンタ、テストライブラリなどは、どのプログラミング言語にも見つかります。
 
-# Formatting
+# フォーマット
 
-Code auto-formatters automatically prettify surface syntax. This way, you can focus on the more deep and challenging problems, while the auto-formatting tool handles mundane details such as consistency of `'` versus `"` syntax for strings, having spaces surrounding binary operators (`x + y` instead of `x+y`), having `import` statements in sorted order, and avoiding over-length lines. One major benefit of code formatters is that they standardize code style across all developers working on a codebase.
+コードの自動フォーマッタは、表面的な構文を自動的に整えてくれます。これにより、文字列の `'` と `"` の使い分けの一貫性、二項演算子の前後にスペースを入れること(`x+y` ではなく `x + y`)、`import` 文をソートされた順序に保つこと、長すぎる行を避けることといった些末な詳細は自動フォーマットツールに任せて、より深く難しい問題に集中できます。コードフォーマッタの大きな利点のひとつは、コードベースに関わるすべての開発者の間でコードスタイルを標準化できることです。
 
-Some tools such as Prettier are [highly configurable](https://prettier.io/docs/configuration); you should check in the configuration file into [version control](/2026/version-control/) for your project. Other tools, such as [Black](https://github.com/psf/black) and [gofmt](https://pkg.go.dev/cmd/gofmt) have limited or no configurability, to reduce [bikeshedding](https://en.wikipedia.org/wiki/Law_of_triviality).
+Prettierのようなツールは[高度に設定可能](https://prettier.io/docs/configuration)です。設定ファイルはプロジェクトの[バージョン管理](/2026/version-control/)にチェックインすべきです。一方、[Black](https://github.com/psf/black)や[gofmt](https://pkg.go.dev/cmd/gofmt)のようなツールは、[つまらないことへの議論(bikeshedding)](https://en.wikipedia.org/wiki/Law_of_triviality)を減らすために、設定の余地が限られているか、まったくありません。
 
-You can set up [IDE integration](/2026/development-environment/#code-intelligence-and-language-servers) with your code formatter, so that your code will be auto-formatted as you type or when you save a file. You can also add an [EditorConfig](https://editorconfig.org/) file to your project, which communicates to your IDE certain project-level settings like indent size for each file type.
+コードフォーマッタは[IDEと統合](/2026/development-environment/#code-intelligence-and-language-servers)できます。そうすれば、入力中やファイル保存時にコードが自動フォーマットされます。また、プロジェクトに[EditorConfig](https://editorconfig.org/)ファイルを追加すると、ファイルタイプごとのインデント幅のようなプロジェクトレベルの設定をIDEに伝えられます。
 
-# Linting
+# リント
 
-Linters run static analysis (analyze your code without running it) to find antipatterns and potential issues in your code. These tools go deeper than autoformatters, looking beyond surface syntax. The depth of analysis varies by tool.
+リンタは静的解析(コードを実行せずに解析すること)を行い、コード内のアンチパターンや潜在的な問題を見つけます。これらのツールは自動フォーマッタよりも深く、表面的な構文の先まで踏み込みます。解析の深さはツールによって異なります。
 
-Linters come equipped with lists of _rules_, with presets that can be configured on a project-level basis. Some linter rules produce false positives, so you can disable them on a per-file or per-line basis.
+リンタには「ルール」の一覧が組み込まれており、プリセットをプロジェクト単位で設定できます。リンタのルールの中には誤検出を生むものもあるので、ファイル単位や行単位で無効化できます。
 
-Good linters will have built-in help or documentation that explains each linter rule --- what the rule is looking for, why it's bad, and what's a better alternative for the code pattern. For example, see the documentation for the [SIM102](https://docs.astral.sh/ruff/rules/collapsible-if/) rule in [Ruff](https://docs.astral.sh/ruff/) which catches unnecessarily nested `if` statements in Python code.
+優れたリンタには、各ルールを説明する組み込みのヘルプやドキュメントがあります --- そのルールが何を検出するのか、なぜそれが良くないのか、そのコードパターンのより良い代替は何か、といったことです。たとえば、[Ruff](https://docs.astral.sh/ruff/)の[SIM102](https://docs.astral.sh/ruff/rules/collapsible-if/)ルールのドキュメントを見てみてください。これはPythonコード内の不必要にネストした `if` 文を検出するルールです。
 
-Some linters can not only flag issues but also automatically fix certain issues for you.
+リンタの中には、問題を指摘するだけでなく、特定の問題を自動的に修正してくれるものもあります。
 
-Aside from language-specific linters, another tool that might come in handy is [semgrep](https://github.com/semgrep/semgrep), a "semantic grep" tool that works at the AST level (rather than character level, like grep) and supports many languages. You can use semgrep to easily write custom linter rules for your projects. For example, if you wanted to prevent the dangerous `subprocess.Popen(..., shell=True)` in Python, you could find that code pattern with:
+言語固有のリンタのほかに役立つかもしれないツールとして、[semgrep](https://github.com/semgrep/semgrep)があります。これは「セマンティックなgrep」ツールで、(grepのような文字レベルではなく)ASTレベルで動作し、多くの言語に対応しています。semgrepを使えば、プロジェクト向けのカスタムリンタルールを簡単に書けます。たとえば、Pythonで危険な `subprocess.Popen(..., shell=True)` を防ぎたい場合、次のようにしてそのコードパターンを見つけられます。
 
 ```bash
 semgrep -l python -e "subprocess.Popen(..., shell=True, ...)"
 ```
 
-# Testing
+# テスト
 
-Software testing is a standard technique to increase your confidence in the correctness of your code. You write code, and then you write code that exercises the code you wrote and raises an error if the code doesn't work as expected.
+ソフトウェアテストは、コードの正しさへの確信を高めるための標準的な手法です。コードを書いたら、そのコードを動かして、期待どおりに動作しなければエラーを発生させるコードを書きます。
 
-You can write tests for chunks of code at different levels of granularity: _unit tests_ for individual functions, _integration tests_ for interaction between modules or services, and _functional tests_ for end-to-end scenarios. You can do _test-driven development_, where you write tests before you write any implementation code. When you find bugs in your code, you can write _regression tests_, so you'll catch if the functionality ever breaks in the future. You can write _property-based tests_, pioneered in [QuickCheck](https://hackage.haskell.org/package/QuickCheck) in Haskell, and implemented in many libraries, like [Hypothesis](https://hypothesis.readthedocs.io/) for Python. Which approach to testing is right depends on your project; likely, you will adopt some combination.
+テストは、さまざまな粒度でコードのまとまりに対して書けます。個々の関数に対する「ユニットテスト」、モジュールやサービス間の相互作用に対する「統合テスト」、エンドツーエンドのシナリオに対する「機能テスト」です。実装コードを書く前にテストを書く「テスト駆動開発」を行うこともできます。コードにバグを見つけたら「回帰テスト」を書いておけば、その機能が将来壊れたときに検知できます。「プロパティベーステスト」を書くこともできます。これはHaskellの[QuickCheck](https://hackage.haskell.org/package/QuickCheck)で先駆的に導入され、Python向けの[Hypothesis](https://hypothesis.readthedocs.io/)など多くのライブラリで実装されています。どのテスト手法が適切かはプロジェクトによります。おそらく、いくつかを組み合わせて採用することになるでしょう。
 
-If your program has external dependencies like a database or web API, it may be helpful to _mock_ those dependencies in your tests, rather than have your code interact with third-party dependencies at test time.
+プログラムがデータベースやWeb APIのような外部依存を持つ場合、テスト時にコードがサードパーティの依存先と実際にやり取りするのではなく、それらの依存先を「モック」するのが役立つことがあります。
 
-## Code coverage
+## コードカバレッジ
 
-Code coverage is a metric by which you can measure how good your tests are. Code coverage looks at which lines of your code are executed when your tests are run, so you can ensure you are covering all code paths. Code coverage tools can show you line-by-line coverage to guide you in writing tests. Services such as [Codecov](https://app.codecov.io) provide web interfaces for tracking and viewing code coverage over the history of a project.
+コードカバレッジは、テストの良し悪しを測るための指標です。コードカバレッジは、テスト実行時にコードのどの行が実行されたかを調べるので、すべてのコードパスを網羅できているかを確認できます。コードカバレッジツールは行ごとのカバレッジを表示してくれるので、テストを書く際の指針になります。[Codecov](https://app.codecov.io)のようなサービスは、プロジェクトの歴史を通じたコードカバレッジの追跡と閲覧のためのWebインターフェースを提供しています。
 
-Like any metric, code coverage is not perfect; don't over-index on coverage, focus on writing high-quality tests.
+どんな指標でもそうであるように、コードカバレッジも完璧ではありません。カバレッジを過度に重視せず、高品質なテストを書くことに集中しましょう。
 
-# Pre-commit hooks
+# pre-commitフック
 
-Git pre-commit [hooks](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks), made easier by the [pre-commit](https://pre-commit.com/) framework, automatically run user-specified code prior to every Git commit. Projects commonly use pre-commit hooks to run formatters and linters, and sometimes tests, automatically before every commit, to ensure that committed code matches the project code style and is free of certain issues.
+Gitのpre-commit[フック](https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks)は([pre-commit](https://pre-commit.com/)フレームワークを使うとより簡単に扱えます)、Gitのコミットのたびに、その直前にユーザーが指定したコードを自動的に実行します。プロジェクトでは一般的に、pre-commitフックを使ってフォーマッタとリンタ、そして場合によってはテストを毎回のコミット前に自動実行し、コミットされるコードがプロジェクトのコードスタイルに適合し、特定の問題を含まないことを保証します。
 
-# Continuous integration
+# 継続的インテグレーション
 
-Continuous integration (CI) services like [GitHub Actions](https://github.com/features/actions) can run scripts for you every time you push code (or on every pull request, or on a schedule). Developers commonly use CI services to run code quality tools including formatters, linters, and tests. For compiled languages, you can ensure code compiles; for statically typed languages, you can make sure it type checks. Running CI every push of new commits can catch errors introduced into the main version of the code; running on pull requests can catch issues with contributor submissions; running on a schedule can catch issues with external dependencies (e.g., a developer accidentally releases a breaking change as [semver-compatible](/2026/shipping-code/#releases--versioning)).
+[GitHub Actions](https://github.com/features/actions)のような継続的インテグレーション(CI)サービスは、コードをプッシュするたびに(あるいはプルリクエストごとに、またはスケジュールに従って)スクリプトを実行してくれます。開発者は一般的に、CIサービスを使ってフォーマッタ、リンタ、テストなどのコード品質ツールを実行します。コンパイル言語ではコードがコンパイルできることを、静的型付き言語では型チェックが通ることを保証できます。新しいコミットのプッシュごとにCIを実行すれば、コードのメインバージョンに紛れ込んだエラーを検出できます。プルリクエストで実行すれば、コントリビューターの提出物の問題を検出できます。スケジュール実行すれば、外部依存の問題(たとえば、開発者が誤って破壊的変更を[semver互換](/2026/shipping-code/#releases--versioning)としてリリースしてしまった場合など)を検出できます。
 
-Because CI scripts run separately from developer machines, you can easily run long-running jobs there. This can be leveraged, for example, to run a _matrix_ of tests across different operating systems and programming language versions to ensure that the software works properly across all of them.
+CIスクリプトは開発者のマシンとは別の場所で実行されるので、長時間かかるジョブも気軽に実行できます。これを活用して、たとえば、異なるOSやプログラミング言語のバージョンにわたるテストの「マトリックス」を実行し、ソフトウェアがそのすべてで正しく動作することを保証できます。
 
-Generally, the script running in CI will not directly make changes to your code: it will run tools in "check-only" mode rather than "fix" mode, so for example, the auto-formatter will raise an error when the code is not compliant with the format.
+一般的に、CIで実行されるスクリプトはコードに直接変更を加えません。ツールを「修正」モードではなく「チェックのみ」モードで実行します。たとえば自動フォーマッタは、コードがフォーマットに準拠していない場合にエラーを発生させます。
 
-Repositories often include [status badges](https://docs.github.com/en/actions/how-tos/monitor-workflows/add-a-status-badge) in their README, showing CI status and other information such as code coverage. For example, below is Missing Semester's current build status.
+リポジトリのREADMEには、CIのステータスやコードカバレッジなどの情報を示す[ステータスバッジ](https://docs.github.com/en/actions/how-tos/monitor-workflows/add-a-status-badge)が含まれていることがよくあります。たとえば、以下はMissing Semesterの現在のビルドステータスです。
 
 [![Build Status](https://github.com/missing-semester/missing-semester/actions/workflows/build.yml/badge.svg)](https://github.com/missing-semester/missing-semester/actions/workflows/build.yml) [![Links Status](https://github.com/missing-semester/missing-semester/actions/workflows/links.yml/badge.svg)](https://github.com/missing-semester/missing-semester/actions/workflows/links.yml)
 
-> Our [links checker](https://github.com/missing-semester/missing-semester/blob/master/.github/workflows/links.yml), which uses the [proof-html](https://github.com/anishathalye/proof-html) GitHub Action is often failing, usually due to issues with third-party websites. Still, it has helped us catch and fix many broken links (sometimes due to typos, most of the time due to websites moving around content without adding redirects or websites disappearing).
+> 私たちの[リンクチェッカー](https://github.com/missing-semester/missing-semester/blob/master/.github/workflows/links.yml)は、[proof-html](https://github.com/anishathalye/proof-html) GitHub Actionを使っていますが、たいていはサードパーティのWebサイト側の問題により、よく失敗します。それでも、多くのリンク切れの発見と修正に役立ってきました(タイプミスが原因のこともありますが、大半はWebサイトがリダイレクトを追加せずにコンテンツを移動したり、Webサイト自体が消滅したりしたことが原因です)。
 
-A good way to learn the particulars of CI services, formatters, linters, and testing libraries is by example. Find high-quality open-source projects on GitHub---the more similar to your project in programming language, domain, size and scope, and so on, the better---and study their `pyproject.toml`, `.github/workflows/`, `DEVELOPMENT.md`, and other relevant files.
+CIサービス、フォーマッタ、リンタ、テストライブラリの詳細を学ぶ良い方法は、実例から学ぶことです。GitHub上で高品質なオープンソースプロジェクトを見つけて---プログラミング言語、分野、規模や範囲などが自分のプロジェクトに似ているほど良いでしょう---その `pyproject.toml`、`.github/workflows/`、`DEVELOPMENT.md` などの関連ファイルを研究してみてください。
 
-## Continuous deployment
+## 継続的デプロイ
 
-Continuous deployment makes use of CI infrastructure to actually _deploy_ changes. For example, the Missing Semester repository uses continuous deployment to GitHub pages so that whenever we `git push` updated lecture notes, the site is automatically built and deployed. You can build other types of [artifacts](/2026/shipping-code/) in CI, such as binaries for applications or Docker images for services.
+継続的デプロイは、CIのインフラを活用して、実際に変更を「デプロイ」します。たとえば、Missing SemesterのリポジトリはGitHub Pagesへの継続的デプロイを使っているので、更新した講義ノートを `git push` するたびに、サイトが自動的にビルドされてデプロイされます。CIでは、アプリケーションのバイナリやサービス用のDockerイメージなど、他の種類の[成果物](/2026/shipping-code/)をビルドすることもできます。
 
-# Command runners
+# コマンドランナー
 
-Command runners like [just](https://github.com/casey/just) simplify the task of running commands in the context of a project. As you build up code quality infrastructure for your project, you don't want to make your developers memorize commands like `uv run ruff check --fix`. With a command runner, this can turn into `just lint`, and you can have analogous invocations like `just format`, `just typecheck`, etc., for all the different tools a developer might want to run for your project.
+[just](https://github.com/casey/just)のようなコマンドランナーは、プロジェクトの文脈でコマンドを実行するタスクを簡単にしてくれます。プロジェクトのコード品質インフラを整備していくと、開発者に `uv run ruff check --fix` のようなコマンドを暗記させたくはなくなります。コマンドランナーを使えば、これを `just lint` にでき、プロジェクトで開発者が実行したいさまざまなツールに対して `just format` や `just typecheck` などの同様の呼び出しを用意できます。
 
-Some language-specific project or package managers have built-in support for such functionality, which means you don't need to use a language-agnostic tool like `just`. For example, the `scripts` section of a `package.json` for [npm](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager) (Node.js) and the `tool.hatch.envs.*.scripts` sections of a `pyproject.toml` for [Hatch](https://hatch.pypa.io/) (Python) support this functionality.
+言語固有のプロジェクトマネージャやパッケージマネージャの中には、こうした機能を組み込みでサポートしているものもあり、その場合は `just` のような言語非依存のツールを使う必要はありません。たとえば、[npm](https://nodejs.org/en/learn/getting-started/an-introduction-to-the-npm-package-manager)(Node.js)の `package.json` の `scripts` セクションや、[Hatch](https://hatch.pypa.io/)(Python)の `pyproject.toml` の `tool.hatch.envs.*.scripts` セクションがこの機能をサポートしています。
 
-# Regular expressions
+# 正規表現
 
-_Regular expressions_, commonly abbreviated as "regex", is a language used to represent sets of strings. Regex patterns are commonly used for pattern matching in various contexts such as command-line tools and IDEs. For example, [ag](https://github.com/ggreer/the_silver_searcher) supports regex patterns for codebase-wide search (e.g., `ag "import .* as .*"` will find all renamed imports in Python), and [go test](https://pkg.go.dev/cmd/go#hdr-Test_packages) supports a `-run [regexp]` option for selecting a subset of tests. Furthermore, programming languages have built-in support or third-party libraries for regular expression matching, so you can use regexes for functionality such as pattern matching, validation, and parsing.
+「正規表現」(一般に「regex」と略されます)は、文字列の集合を表現するための言語です。正規表現パターンは、コマンドラインツールやIDEなど、さまざまな文脈でのパターンマッチングによく使われます。たとえば、[ag](https://github.com/ggreer/the_silver_searcher)はコードベース全体の検索で正規表現パターンに対応しており(たとえば `ag "import .* as .*"` はPythonの名前を変更したインポートをすべて見つけます)、[go test](https://pkg.go.dev/cmd/go#hdr-Test_packages)はテストの一部を選択するための `-run [regexp]` オプションに対応しています。さらに、プログラミング言語には正規表現マッチングの組み込みサポートやサードパーティライブラリがあるので、パターンマッチング、バリデーション、パースといった機能に正規表現を使えます。
 
-To help build intuition, below are some examples of regex patterns. In this lecture, we use [Python regex syntax](https://docs.python.org/3/library/re.html). There are many flavors of regex, with slight variation between them, especially in the more sophisticated functionality. You can use an online regex tester like [regex101](https://regex101.com/) to develop and debug regular expressions.
+直観をつかむために、正規表現パターンの例をいくつか以下に示します。この講義では、[Pythonの正規表現構文](https://docs.python.org/3/library/re.html)を使います。正規表現には多くの方言があり、特に高度な機能では方言間で微妙な違いがあります。正規表現の開発とデバッグには、[regex101](https://regex101.com/)のようなオンラインの正規表現テスターが使えます。
 
-- `abc` --- matches the literal "abc".
-- `missing|semester` --- matches the string "missing" or the string "semester".
-- `\d{4}-\d{2}-\d{2}` --- matches dates in YYYY-MM-DD format, such as "2026-01-14". Beyond ensuring that the string consists of four digits, a dash, two digits, a dash, and two digits, this does not validate the date, so "2026-01-99" matches this regex pattern too.
-- `.+@.+` --- matches email addresses, strings that contain some text, then an "@", and then some more text. This does only the most basic validation and matches strings like "nonsense@@@email". A regex that matches email addresses with no false positives or negatives [exists](https://pdw.ex-parrot.com/Mail-RFC822-Address.html) but is impractical.
+- `abc` --- リテラルの「abc」にマッチします。
+- `missing|semester` --- 文字列「missing」または文字列「semester」にマッチします。
+- `\d{4}-\d{2}-\d{2}` --- 「2026-01-14」のような、YYYY-MM-DD形式の日付にマッチします。文字列が4桁の数字、ダッシュ、2桁の数字、ダッシュ、2桁の数字で構成されていることを保証するだけで、日付として妥当かどうかは検証しないので、「2026-01-99」もこの正規表現パターンにマッチします。
+- `.+@.+` --- メールアドレス、つまり何らかのテキストの後に「@」、その後にさらにテキストが続く文字列にマッチします。これはごく基本的な検証しか行わず、「nonsense@@@email」のような文字列にもマッチします。誤検出も見逃しもなくメールアドレスにマッチする正規表現は[存在します](https://pdw.ex-parrot.com/Mail-RFC822-Address.html)が、実用的ではありません。
 
-## Regex syntax
+## 正規表現の構文
 
-You can find a comprehensive guide to regex syntax in [this documentation](https://docs.python.org/3/library/re.html#regular-expression-syntax) (or one of many other resources available online). Here are some of the basic building blocks:
+正規表現構文の包括的なガイドは、[このドキュメント](https://docs.python.org/3/library/re.html#regular-expression-syntax)(あるいはオンラインで入手できる他の多くのリソース)にあります。基本的な構成要素をいくつか紹介します。
 
-- `abc` matches the literal string, when the characters have no special meaning (in this example, "abc")
-- `.` matches any single character
-- `[abc]` matches a single character contained in the brackets (in this example, "a", "b", or "c")
-- `[^abc]` matches a single character except those contained in the brackets (e.g., "d")
-- `[a-f]` matches a single character contained in the range indicated in the brackets (e.g., "c", but not "q")
-- `a|b` matches either pattern (e.g., "a" or "b")
-- `\d` matches any digit character (e.g., "3")
-- `\w` matches any word character (e.g., "x")
-- `\b` matches any word _boundary_ (e.g., in the string "missing semester", matches just before the "m", just after the "g", just before the "s", and just after the "r")
-- `(...)` matches the group of a pattern
-- `...?` matches zero or one of a pattern, such as `words?` to match "word" or "words"
-- `...*` matches any number of a pattern, such as `.*` to match any number of any character
-- `...+` matches one or more of a pattern, such as `\d+` to match any non-zero number of digits
-- `...{N}` matches exactly N of a pattern, such as `\d{4}` for 4 digits
-- `\.` matches a literal "."
-- `\\` matches a literal "\\"
-- `^` matches the start of the line
-- `$` matches the end of the line
+- `abc` は、文字に特別な意味がない場合、そのリテラル文字列にマッチします(この例では「abc」)
+- `.` は任意の1文字にマッチします
+- `[abc]` は括弧内に含まれる1文字にマッチします(この例では「a」「b」「c」のいずれか)
+- `[^abc]` は括弧内に含まれる文字以外の1文字にマッチします(例:「d」)
+- `[a-f]` は括弧内で示された範囲に含まれる1文字にマッチします(例:「c」はマッチしますが「q」はマッチしません)
+- `a|b` はいずれかのパターンにマッチします(例:「a」または「b」)
+- `\d` は任意の数字にマッチします(例:「3」)
+- `\w` は任意の単語構成文字にマッチします(例:「x」)
+- `\b` は単語の「境界」にマッチします(例: 文字列「missing semester」では、「m」の直前、「g」の直後、「s」の直前、「r」の直後にマッチします)
+- `(...)` はパターンのグループにマッチします
+- `...?` はパターンの0回または1回の出現にマッチします。たとえば `words?` は「word」または「words」にマッチします
+- `...*` はパターンの任意回の出現にマッチします。たとえば `.*` は任意の文字の任意回の繰り返しにマッチします
+- `...+` はパターンの1回以上の出現にマッチします。たとえば `\d+` は1桁以上の数字にマッチします
+- `...{N}` はパターンのちょうどN回の出現にマッチします。たとえば `\d{4}` は4桁の数字にマッチします
+- `\.` はリテラルの「.」にマッチします
+- `\\` はリテラルの「\\」にマッチします
+- `^` は行の先頭にマッチします
+- `$` は行の末尾にマッチします
 
-## Capture groups and references
+## キャプチャグループと参照
 
-If you use regex groups `(...)`, you can refer to sub-parts of the match for extraction or search-and-replace purposes. For example, to extract just the month from a YYYY-MM-DD style date, you can use the following Python code:
+正規表現のグループ `(...)` を使うと、抽出や検索置換の目的で、マッチの一部分を参照できます。たとえば、YYYY-MM-DD形式の日付から月だけを抽出するには、次のPythonコードが使えます。
 
 ```python
 >>> import re
@@ -136,17 +136,17 @@ If you use regex groups `(...)`, you can refer to sub-parts of the match for ext
 '01'
 ```
 
-In your text editor, you can use reference capture groups in replace patterns. The syntax might vary between IDEs. For example, in VS Code, you can use variables like `$1`, `$2`, etc., and in Vim, you can use `\1`, `\2`, etc., to reference groups.
+テキストエディタでは、置換パターンの中でキャプチャグループを参照できます。構文はIDEによって異なる場合があります。たとえば、VS Codeでは `$1`、`$2` などの変数を、Vimでは `\1`、`\2` などを使ってグループを参照できます。
 
-## Limitations
+## 限界
 
-[Regular languages](https://en.wikipedia.org/wiki/Regular_language) are powerful but limited; there are classes of strings that cannot be expressed as a standard regex (e.g., it is [not possible](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages) to write a regular expression that matches the set of strings {a^n b^n \| n &ge; 0}, the set of strings of a number of "a"s followed by the same number of "b"s; more practically, languages like HTML are not regular languages). In practice, modern regex engines support features like lookahead and backreferences that extend support beyond regular languages, and they are practically extremely useful, but it is important to know that they are still limited in their expressive power. For more sophisticated languages, you might need to reach for a more capable type of parser (for one example, see [pyparsing](https://github.com/pyparsing/pyparsing), a [PEG](https://en.wikipedia.org/wiki/Parsing_expression_grammar) parser).
+[正規言語](https://en.wikipedia.org/wiki/Regular_language)は強力ですが限界もあります。標準的な正規表現では表現できない文字列のクラスが存在します(たとえば、文字列の集合 {a^n b^n \| n &ge; 0}、つまり何個かの「a」の後に同じ個数の「b」が続く文字列の集合にマッチする正規表現を書くことは[不可能](https://en.wikipedia.org/wiki/Pumping_lemma_for_regular_languages)です。より実践的な例としては、HTMLのような言語は正規言語ではありません)。実際には、現代の正規表現エンジンは先読みや後方参照といった、正規言語を超える機能をサポートしており、それらは実用上きわめて有用ですが、それでも表現力に限界があることは知っておくべきです。より高度な言語を扱うには、より能力の高い種類のパーサに頼る必要があるかもしれません(一例として、[PEG](https://en.wikipedia.org/wiki/Parsing_expression_grammar)パーサである[pyparsing](https://github.com/pyparsing/pyparsing)を見てみてください)。
 
-## Learning regex
+## 正規表現の学び方
 
-We recommend learning the fundamentals (what we have covered in this lecture), and then looking at regex references as you need them, rather than memorizing the entirety of the language.
+言語全体を丸暗記するのではなく、基礎(この講義で扱った内容)を学び、あとは必要に応じて正規表現のリファレンスを参照することをおすすめします。
 
-Conversational AI tools can be effective at helping you generating regex patterns. For example, try prompting your favorite LLM with the following query:
+対話型のAIツールは、正規表現パターンの生成を手伝ってもらうのに効果的です。たとえば、お気に入りのLLMに次のクエリを与えてみてください。
 
 ```
 Write a Python-style regex pattern that matches the requested path from log lines from Nginx. Here is an example log line:
@@ -154,13 +154,13 @@ Write a Python-style regex pattern that matches the requested path from log line
 169.254.1.1 - - [09/Jan/2026:21:28:51 +0000] "GET /feed.xml HTTP/2.0" 200 2995 "-" "python-requests/2.32.3"
 ```
 
-# Exercises
+# 演習
 
-1. Configure a formatter, linter, and pre-commit hooks for a project you're working on. If you have lots of errors: autoformatting should take care of the format errors. For the linter errors, try using an [AI agent](/2026/agentic-coding/) to fix all the linter errors. Make sure the AI agent can run the linter and observe the results, so that it can run in an iterative loop to fix all the issues. Check the results carefully to ensure the AI doesn't break your code!
-1. Learn a testing library for a language you know and write a unit test for a project you're working on. Run a code coverage tool, generate an HTML-formatted coverage report, and observe the results. Can you find the lines that are covered? Your code coverage will likely be very low. Try manually writing some tests to improve it. Try using an [AI agent](/2026/agentic-coding/) to improve coverage; make sure the coding agent can run tests with coverage and produce a line-by-line coverage report, so it knows where to focus. Are the AI-generated tests actually good?
-1. Set up continuous integration to run on every push for a project you're working on. Have CI run formatting, linting, and tests. Break your code on purpose (e.g., introduce a linter violation), and ensure that CI catches it.
-1. Try writing a [regex pattern](#regular-expressions) and use the `grep` [command-line tool](/2026/course-shell/) to find occurrences of `subprocess.Popen(..., shell=True)` in your code. Now, try to "break" the regex pattern. Does [semgrep](#linting) still successfully match the dangerous code that trips up your grep invocation?
-1. Practice regex search-and-replace in your IDE or text editor by replacing the `-` [Markdown bullet markers](https://spec.commonmark.org/0.31.2/#bullet-list-marker) with `*` bullet markers in [these lecture notes](https://raw.githubusercontent.com/missing-semester/missing-semester/refs/heads/master/_2026/code-quality.md). Note that just replacing all the "-" characters in the file would be incorrect, as there are many uses of that character that are not bullet markers.
-1. Write a regex to capture from JSON structures of the form `{"name": "Alyssa P. Hacker", "college": "MIT"}` the name (e.g., `Alyssa P. Hacker`, in this example). Hint: in your first attempt, you might end up writing a regex that extracts `Alyssa P. Hacker", "college": "MIT`; read about greedy quantifiers in the [Python regex docs](https://docs.python.org/3/library/re.html) to figure out how to fix it.
-    1. Make the regex pattern work even in situations where the name has a `"` character in it (double quotes can be escaped in JSON with `\"`).
-    1. We do **not** recommend using regular expressions for sophisticated parsing problems in practice. Figure out how to use your programming language's JSON parser for this task. Write a command-line program that takes as input, on stdin, a JSON structure of the form described above, and output, on stdout, the name. You should only need a couple lines of code to do this. In Python, you can do it easily in one line of code beyond `import json`.
+1. 取り組んでいるプロジェクトに、フォーマッタ、リンタ、pre-commitフックを設定してみましょう。エラーが大量に出る場合: フォーマットのエラーは自動フォーマットで解決できるはずです。リンタのエラーについては、[AIエージェント](/2026/agentic-coding/)を使ってすべてのリンタエラーを修正してみましょう。AIエージェントがリンタを実行して結果を観察できるようにし、反復ループの中ですべての問題を修正できるようにしてください。AIがコードを壊していないか、結果を注意深く確認しましょう!
+1. 知っている言語のテストライブラリを学び、取り組んでいるプロジェクトのユニットテストを書いてみましょう。コードカバレッジツールを実行し、HTML形式のカバレッジレポートを生成して、結果を観察してください。カバーされている行を見つけられますか?コードカバレッジはおそらく非常に低いはずです。手動でテストを書いてカバレッジを改善してみましょう。次に、[AIエージェント](/2026/agentic-coding/)を使ってカバレッジを改善してみましょう。コーディングエージェントがカバレッジ付きでテストを実行し、行ごとのカバレッジレポートを生成できるようにして、どこに注力すべきか分かるようにしてください。AIが生成したテストは、実際に良いテストになっているでしょうか?
+1. 取り組んでいるプロジェクトで、プッシュごとに実行される継続的インテグレーションを設定してみましょう。CIでフォーマット、リント、テストを実行するようにします。わざとコードを壊して(たとえばリンタ違反を仕込んで)、CIがそれを検出することを確かめてください。
+1. [正規表現パターン](#regular-expressions)を書いて、`grep` [コマンドラインツール](/2026/course-shell/)を使い、コード内の `subprocess.Popen(..., shell=True)` の出現箇所を見つけてみましょう。次に、その正規表現パターンを「破る」ことを試みてください。あなたのgrepの呼び出しをすり抜ける危険なコードを、[semgrep](#linting)は依然として正しくマッチできるでしょうか?
+1. IDEやテキストエディタで正規表現による検索置換を練習しましょう。[この講義ノート](https://raw.githubusercontent.com/missing-semester/missing-semester/refs/heads/master/_2026/code-quality.md)内の `-` の[Markdown箇条書きマーカー](https://spec.commonmark.org/0.31.2/#bullet-list-marker)を `*` の箇条書きマーカーに置換してみてください。ファイル内の「-」文字をすべて置換するだけでは正しくないことに注意しましょう。箇条書きマーカーではない用途でこの文字が多く使われているからです。
+1. `{"name": "Alyssa P. Hacker", "college": "MIT"}` のような形式のJSON構造から名前(この例では `Alyssa P. Hacker`)を抽出する正規表現を書いてみましょう。ヒント: 最初の試みでは、`Alyssa P. Hacker", "college": "MIT` を抽出してしまう正規表現を書いてしまうかもしれません。[Pythonの正規表現ドキュメント](https://docs.python.org/3/library/re.html)で貪欲な量指定子について読み、修正方法を考えてください。
+    1. 名前に `"` 文字が含まれる場合(JSONではダブルクォートを `\"` でエスケープできます)でも動作するように、正規表現パターンを改良してみましょう。
+    1. 実務では、高度なパース問題に正規表現を使うことは**おすすめしません**。このタスクに、あなたのプログラミング言語のJSONパーサを使う方法を考えてみましょう。標準入力(stdin)から上記の形式のJSON構造を受け取り、標準出力(stdout)に名前を出力するコマンドラインプログラムを書いてください。数行のコードで書けるはずです。Pythonなら、`import json` を除けば1行で簡単に書けます。

@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Beyond the Code"
+title: "コードの先へ"
 description: >
-  Learn about essential soft skills including documentation, open-source community norms, and AI etiquette.
+  ドキュメンテーション、オープンソースコミュニティの規範、AIのエチケットなど、エンジニアに欠かせないソフトスキルについて学びます。
 thumbnail: /static/assets/thumbnails/2026/lec8.png
 date: 2026-01-22
 ready: true
@@ -11,408 +11,156 @@ video:
   id: 2DOEATfXT8k
 ---
 
-Being a good software engineer isn't just about writing code that
-works. It's about writing code that others (including future you) can
-understand, maintain, and build upon. It's about communicating
-clearly, contributing thoughtfully, and being a good citizen in the
-ecosystems you participate in—whether open source or proprietary.
+優れたソフトウェアエンジニアであるということは、動くコードを書けることだけを意味するのではありません。他の人(未来の自分自身も含みます)が理解し、保守し、その上に積み重ねていけるコードを書くこと。明確にコミュニケーションを取り、思慮深く貢献し、オープンソースであれプロプライエタリであれ、自分が参加するエコシステムの良き一員であること。そういったことも含まれるのです。
 
-# One-way communication
+# 一方向のコミュニケーション
 
-Much of software engineering involves writing for people who lack your
-current context: teammates who join later, maintainers who inherit
-your code, or yourself in six months when you've forgotten why you
-made a particular choice. A key piece of advice for all this kind of
-writing is that your goal is to capture and convey the *why*, not just
-the *what*. The what tends to be self-explanatory, while the *why* is
-hard-earned knowledge that is easily lost to time.
+ソフトウェアエンジニアリングの多くの部分は、あなたの今の文脈を持たない人々に向けて書くことです。後から加わるチームメイト、あなたのコードを引き継ぐメンテナ、あるいは、なぜその選択をしたのかを忘れてしまった半年後のあなた自身などです。この種の文章すべてに共通する重要なアドバイスは、単なる *what*(何をしたか)ではなく、*why*(なぜそうしたか)を記録し伝えることを目標にする、ということです。what は自明であることが多い一方で、*why* は苦労して得た知識であり、時とともに簡単に失われてしまいます。
 
-Perhaps the most common form of engineer-to-engineer communication
-(apart from the code itself) is code comments. I've personally found
-that a lot of code comments are useless. But they don't have to be! Good
-comments explain things that the code itself cannot: *why* something is
-done a particular way, not *how* it works (which is what the code
-shows). They can save hours of confusion, while bad comments add noise
-or, worse, mislead.
+エンジニア同士のコミュニケーションとして(コードそのものを除けば)おそらく最も一般的なのはコードコメントです。個人的には、コードコメントの多くは役に立たないと感じています。しかし、そうである必要はありません! 良いコメントは、コード自体では説明できないこと、つまり *どのように* 動くか(それはコードが示しています)ではなく、*なぜ* 特定のやり方をしているのかを説明します。良いコメントは何時間もの混乱を防いでくれますが、悪いコメントはノイズを増やし、最悪の場合、読み手を誤解させます。
 
-Types of comments that are nearly always worthwhile:
+ほぼ常に書く価値のあるコメントの種類を挙げます。
 
-- **TODOs**: Mark incomplete or unpolished code, but leave enough
-  context for someone else to understand what's outstanding and why it
-  was deferred. "TODO: optimize" is useless; "TODO: this O(n²) loop is
-  fine for `n<100`, but will need indexing if we scale" is actionable.
-- **References**: Link to external sources when code implements an
-  algorithm from a paper, adapts code from elsewhere, or encodes
-  behaviour specified in documentation. Use permalinks. Note any
-  divergences from the reference.
-- **Correctness arguments**: Explain *why* non-trivial code produces
-  correct results. The code shows the steps; a comment explains why
-  those steps work.
-- **Hard-learned lessons**: If you spent 30+ minutes debugging something
-  and the fix is a non-obvious incantation, document it. Your past self
-  didn't realize it was needed; future readers won't either.
-- **Rationale for constants**: Magic numbers deserve explanation. Why
-  1492? Why 16 bits? Was it chosen randomly, derived from testing, or
-  required for correctness? Even "chosen arbitrarily" is useful
-  information.
-- **Load-bearing choices**: If correctness depends on a
-  seemingly-innocent implementation detail (e.g., "must be a BTreeSet
-  because iteration order matters below"), call it out explicitly.
-- **"Why not"s**: When you deliberately avoid the obvious approach,
-  explain why. Otherwise someone will "fix" it later and break things.
+- **TODO**: 未完成または未整理のコードに印を付けます。ただし、何が残っていて、なぜ後回しにしたのかを他の人が理解できるだけの文脈を残しましょう。「TODO: 最適化する」は役に立ちません。「TODO: この O(n²) のループは `n<100` なら問題ないが、スケールさせるならインデックスが必要になる」なら行動に移せます。
+- **参照**: コードが論文のアルゴリズムを実装している場合、他所のコードを流用している場合、ドキュメントで規定された挙動を実装している場合は、外部ソースへのリンクを付けます。パーマリンクを使いましょう。参照元との差異があれば書き添えます。
+- **正しさの根拠**: 自明でないコードが *なぜ* 正しい結果を生むのかを説明します。コードは手順を示し、コメントはその手順がなぜうまくいくのかを説明します。
+- **苦労して得た教訓**: 30分以上かけてデバッグし、その修正が一見して分からないおまじないのようなものだったなら、それを記録しておきましょう。過去のあなたがそれが必要だと気づけなかったのなら、将来の読み手も気づけません。
+- **定数の根拠**: マジックナンバーには説明が必要です。なぜ 1492 なのか? なぜ 16 ビットなのか? 適当に選んだのか、テストから導いたのか、それとも正しさのために必須なのか? 「恣意的に選んだ」というだけでも有用な情報です。
+- **要となる選択**: 一見何の変哲もない実装の詳細に正しさが依存している場合(例:「後段でイテレーション順序が重要なので BTreeSet でなければならない」)は、それを明示的に指摘しておきましょう。
+- **「なぜやらないか」**: 明白なアプローチを意図的に避けた場合は、その理由を説明しましょう。さもないと、後で誰かがそれを「修正」して壊してしまいます。
 
-READMEs (you have one, right?) are also a common first touch-point with
-other developers. A good one answers four questions immediately: What
-does this do? Why should I care? How do I use it? How do I install it?
-In that order. Structure it like a funnel: a one-liner and maybe a
-visual demo at the top so someone can decide in seconds if this solves
-their problem, then progressively add depth. Show usage before
-installation — people want to see what they're getting before committing
-to setup steps.
+README(ありますよね?)も、他の開発者との最初の接点になることが多いものです。良い README は次の4つの質問に即座に答えます。これは何をするものか? なぜ気にかけるべきか? どう使うのか? どうインストールするのか? この順番です。じょうごのような構造にしましょう。冒頭に1行の説明と、できれば視覚的なデモを置いて、これが自分の問題を解決するかどうかを数秒で判断できるようにし、そこから徐々に深い内容へと進めます。インストール方法より先に使い方を見せましょう。人はセットアップ手順に踏み出す前に、何が得られるのかを見たいものです。
 
-Commit messages are another kind of "writing for others" that is often
-neglected. They are often written as "fixed blah" or "added foo", and
-while that may be sufficient in some cases, it's easy to forget that
-they form the historical record of *why* the codebase evolved the way it
-did. When someone (including you!) runs `git blame` trying to understand
-a confusing change, good commit messages should give them answers.
+コミットメッセージも「他者のために書く」ことの一種でありながら、しばしばおろそかにされます。「fixed blah」や「added foo」のように書かれがちで、それで十分な場合もありますが、コミットメッセージがコードベースが *なぜ* そのように進化してきたのかという歴史的記録を形作ることは忘れられがちです。誰か(あなた自身も含みます!)が分かりにくい変更を理解しようと `git blame` を実行したとき、良いコミットメッセージは答えを与えてくれるはずです。
 
-In general, the body should answer:
-- What problem forced this change?
-- What alternatives did you consider?
-- What are the trade-offs or implications?
-- What might be surprising about this approach?
+一般に、本文は次の問いに答えるべきです。
+- どんな問題がこの変更を必要としたのか?
+- どんな代替案を検討したのか?
+- トレードオフや影響は何か?
+- このアプローチで意外に思われる点は何か?
 
-> Obviously you should scale detail with complexity. A one-line typo fix
-> needs only a subject. A subtle race condition fix that took hours to
-> debug deserves paragraphs explaining the problem and solution.
+> 当然ながら、詳しさは複雑さに応じて調整すべきです。1行のタイポ修正なら件名だけで十分です。デバッグに何時間もかかった微妙な競合状態の修正なら、問題と解決策を説明する数段落を書く価値があります。
 
-For complex changes, it can be useful to follow a Problem → Solution →
-Implications structure: Start with the forcing function or limitation,
-then explain what changed and the key design decisions, and then list
-noteworthy consequences (positive and negative). That last part is
-particularly important; real engineering involves balancing concerns,
-and documenting that a trade-off was intentional prevents future
-developers from thinking you missed the problem.
+複雑な変更については、「問題 → 解決策 → 影響」という構造に従うと便利です。まず変更を強いた要因や制約から始め、次に何を変更したのかと重要な設計判断を説明し、最後に特筆すべき帰結(良いものも悪いものも)を列挙します。この最後の部分が特に重要です。実際のエンジニアリングとは様々な懸念のバランスを取ることであり、トレードオフが意図的なものだったと記録しておくことで、将来の開発者に「この問題を見落としていたのでは」と思われることを防げます。
 
-LLMs _can_ be helpful in writing commit messages. However, if you simply
-point one at your change and ask it to write the commit message for the
-change, the LLM will only have access to the _what_, not the _why_. And
-the resulting commit message will thus be mostly descriptive (the
-opposite of what we want!). If you used an LLM to help you make the
-change in the first place, asking the LLM to write the commit in that
-same session can be a much better option since your conversation with
-the LLM is inherently a rich source of context about the change!
-Otherwise, or in addition, a useful trick is to specifically tell the
-LLM you'd like a commit message focused on the "why" (and other nuances
-from the notes above), and then _tell it to query you for missing
-context_. Essentially, you're acting like a MCP "tool" for the coding
-agent that it can use to "read" context.
+LLM はコミットメッセージを書く助けに _なり得ます_。しかし、変更をただ LLM に見せてコミットメッセージを書くよう頼むだけでは、LLM は _what_ にしかアクセスできず、_why_ にはアクセスできません。その結果、出来上がるコミットメッセージはほとんど記述的なもの(私たちが望むものの正反対!)になってしまいます。そもそも変更を作るのに LLM を使ったのであれば、同じセッションでその LLM にコミットメッセージを書かせるのは、はるかに良い選択肢になり得ます。LLM とのやり取り自体が、その変更に関する文脈の豊かな情報源だからです! そうでない場合、あるいはそれに加えて有用なテクニックは、「why」(および上記の注意点にあるその他のニュアンス)に焦点を当てたコミットメッセージが欲しいと LLM に明確に伝えたうえで、_足りない文脈についてあなたに質問するよう指示する_ ことです。要するに、あなた自身がコーディングエージェントにとっての MCP の「ツール」のようになり、エージェントが文脈を「読み取る」ために使えるようにするのです。
 
-As your changes get more complex, make sure to also break up commits
-logically (`git add -p` is your friend). Each commit should represent
-one coherent change that could be understood and reviewed independently.
-Don't mix refactoring with new features or combine unrelated bug fixes,
-as this muddies the story for which changes fixed what problem, and will
-almost certainly slow down the eventual review of your changes. It also
-gives you superpowers through `git bisect`, but that's a story for
-another time.
+変更が複雑になってきたら、コミットを論理的に分割することも忘れないでください(`git add -p` が役に立ちます)。各コミットは、単独で理解しレビューできる、ひとまとまりの一貫した変更を表すべきです。リファクタリングと新機能を混ぜたり、無関係なバグ修正をまとめたりしてはいけません。どの変更がどの問題を修正したのかという物語が濁ってしまい、変更のレビューがほぼ確実に遅くなります。またコミットを適切に分割しておくと `git bisect` によって超能力も手に入るのですが、それはまた別の機会の話です。
 
-> One note as you start being more diligent about technical writing, and
-> using it more extensively, make sure you respect the reader. It's easy
-> to end up over-explaining once you start, but you have to resist that
-> urge lest the reader read _none_ of what you've written. Explain the
-> "why" and trust them to figure out the "how" for their situation.
+> 技術文書をより丁寧に、より広範囲に書くようになったときの注意点をひとつ。読み手を尊重することを忘れないでください。書き始めると説明過剰になりがちですが、その衝動には抗わなければなりません。さもないと、読み手はあなたが書いたものを _何一つ_ 読まなくなってしまいます。「why」を説明し、「how」は読み手が自分の状況に合わせて考え出せると信頼しましょう。
 
-# Collaboration
+# コラボレーション
 
-As engineers, we may spend a large part of our job coding at our own
-keyboard, but a sizeable chunk of our time is also taken up by
-communicating with others. That time is usually split into collaboration
-and education, and the payoff from investing in getting better at both is
-significant.
+エンジニアとしての仕事の大部分は自分のキーボードに向かってコードを書くことかもしれませんが、他者とのコミュニケーションにもかなりの時間が費やされます。その時間は通常、コラボレーションと教育に分けられ、どちらも上達に投資することの見返りは大きなものです。
 
-## Contributing
+## 貢献する
 
-Whether you are submitting a bug report, contributing a simple bug fix,
-or implementing a huge feature, it's worth keeping in mind that there
-are usually orders of magnitude more users than there are contributors,
-and an order of magnitude more contributors than there are maintainers.
-As a result, maintainer time is highly oversubscribed. If you want to
-increase the likelihood that your contribution goes somewhere
-productive, you have to ensure that your contributions carry a high
-signal-to-noise ratio and are worth the maintainers' time.
+バグ報告を出すにせよ、簡単なバグ修正を貢献するにせよ、大きな機能を実装するにせよ、覚えておくべきことがあります。通常、コントリビュータよりも桁違いに多くのユーザーがいて、メンテナよりも桁違いに多くのコントリビュータがいます。その結果、メンテナの時間は極端に不足しています。あなたの貢献が実を結ぶ可能性を高めたいなら、貢献のシグナル・ノイズ比を高く保ち、メンテナの時間を割く価値のあるものにしなければなりません。
 
-For example, a good bug report respects the maintainer's time by
-providing everything needed to understand and reproduce the problem:
+たとえば、良いバグ報告は、問題を理解し再現するために必要なすべてを提供することで、メンテナの時間を尊重します。
 
-- **Environment**: OS, version numbers, relevant configuration
-- **What you expected** vs **what actually happened**
-- **Steps to reproduce**: Be specific. "Click the button" is less useful
-  than "Click the Submit button on the /settings page while logged in as
-  an admin."
-- **What you've already tried**: This prevents duplicate suggestions and
-  shows you've done some investigation
+- **環境**: OS、バージョン番号、関連する設定
+- **期待した動作**と**実際に起きたこと**
+- **再現手順**: 具体的に書きましょう。「ボタンをクリックする」よりも「管理者としてログインした状態で /settings ページの Submit ボタンをクリックする」の方が有用です。
+- **すでに試したこと**: 重複した提案を防ぎ、あなた自身がある程度調査したことを示せます
 
-> If you find a security vulnerability, don't post it publicly. Contact
-> the maintainers privately first and give them reasonable time to fix
-> it before disclosure. Many projects have a SECURITY.md file or
-> similar for this purpose.
+> セキュリティ脆弱性を見つけた場合は、公開の場に投稿しないでください。まずメンテナに非公開で連絡し、公表前に修正のための妥当な時間を与えましょう。多くのプロジェクトには、この目的のための SECURITY.md ファイルなどが用意されています。
 
-**Make sure you search for existing issues.** Your bug or feature
-request may already be reported, and it's far better to add information
-to existing discussions rather than creating duplicates. Not to mention,
-it reduces noise for the maintainers.
+**必ず既存の Issue を検索してください。**あなたのバグや機能要望はすでに報告されているかもしれません。重複を作るよりも、既存の議論に情報を追加する方がずっと良いのです。言うまでもなく、メンテナにとってのノイズも減らせます。
 
-Minimal reproducible examples are gold, if you can come up with one.
-They save the maintainer a huge amount of time and effort, and
-reliably reproducing the bug is often the hardest part of fixing it. Not
-to mention, the effort you put into isolating the problem often helps
-you understand it better too, and sometimes leads you to find a fix
-yourself.
+最小限の再現可能な例を用意できるなら、それは黄金に値します。メンテナの膨大な時間と労力を節約できますし、バグを確実に再現することは、修正の中で最も難しい部分であることが多いのです。それだけでなく、問題を切り分ける過程での努力は、あなた自身の理解を深めることにもつながり、時には自分で修正を見つけることにもつながります。
 
-If you don't hear back right away, keep in mind that maintainers are
-often volunteers with limited time. If you're waiting for a reply from
-them, a polite follow-up after a couple weeks is fine; daily pings are
-not. Similarly, "me too" comments, or bug reports that are just a
-copy-paste of some terminal output tend to be a net-negative in terms of
-getting traction for your issue.
+すぐに返事がなくても、メンテナは多くの場合、時間の限られたボランティアであることを心に留めておいてください。返信を待っているなら、2週間ほど経ってから丁寧にフォローアップするのは問題ありませんが、毎日の催促はいけません。同様に、「me too」というだけのコメントや、ターミナル出力をコピペしただけのバグ報告は、Issue に注目を集めるうえでむしろマイナスに働きがちです。
 
-If you're looking to make a code contribution, you'll also want to
-familiarize yourself with the contribution guidelines. Many projects
-have a `CONTRIBUTING.md` — follow it. You'll also usually want to start
-small; a typo fix or documentation improvement is a great first
-contribution as it helps you learn the project's processes without also
-having to go through lots of back and forth on the content.
+コードでの貢献をしたいのであれば、コントリビューションガイドラインにも目を通しておきましょう。多くのプロジェクトには `CONTRIBUTING.md` があります。それに従ってください。また、通常は小さく始めるのがよいでしょう。タイポの修正やドキュメントの改善は、内容について何度もやり取りを重ねることなくプロジェクトのプロセスを学べるので、最初の貢献として最適です。
 
-> Check what license the project uses, as any code you contribute will
-> fall under the same license. In particular, look out for copyleft
-> licenses (like GPL), which requires derivatives to also be open source
-> and may have implications for your employer if you touch it!
-> [choosealicense.com](https://choosealicense.com/) has more useful
-> information.
+> プロジェクトがどのライセンスを使っているか確認しましょう。あなたが貢献したコードも同じライセンスの下に置かれることになります。特に、コピーレフト系のライセンス(GPL など)には注意してください。派生物もオープンソースにすることが要求されるため、あなたが触れることで雇用主に影響が及ぶ可能性があります!
+> [choosealicense.com](https://choosealicense.com/) に有用な情報があります。
 
-When you've decided to open a pull request ("PR"), first make sure you
-isolate the change you actually want to be accepted. If your PR changes
-lots of other unrelated things at the same time, chances are the
-reviewer will send it back to you asking you to clean it up. This is
-similar to how you should break down your git commits into semantically
-related chunks.
+プルリクエスト(「PR」)を開くと決めたら、まず、本当に受け入れてほしい変更だけを切り出しましょう。PR が同時に無関係な多くの変更を含んでいると、レビュアーから整理し直すよう差し戻される可能性が高くなります。これは、git のコミットを意味的に関連するまとまりに分割すべきなのと同じ考え方です。
 
-In some cases, if you have many seemingly-disparate changes but
-they're all needed to enable one feature, it may be okay to open a
-larger PR that captures all the changes. However, in this case, commit
-hygiene is particularly important so that maintainers have the option
-to review the change "commit by commit".
+一見バラバラに見える多くの変更があっても、それらすべてが1つの機能を実現するために必要な場合には、すべての変更をまとめた大きめの PR を開いても構わないことがあります。ただしその場合、メンテナが「コミットごと」に変更をレビューできる選択肢を持てるよう、コミットの整理整頓が特に重要になります。
 
-Next, make sure you explain the "why" behind the change well. Don't just
-describe _what_ changed — explain _why_ the change is needed and _why_
-this is a good way to address the problem. You should also proactively
-call out parts of the change that warrant special attention in the
-review, if any. Depending on `CONTRIBUTING.md` and the nature of your
-change, reviewers may also expect to see additional information like
-trade-offs you made or how to test the change.
+次に、変更の背後にある「why」をしっかり説明しましょう。_何が_ 変わったかを述べるだけでなく、_なぜ_ その変更が必要で、_なぜ_ これが問題への良い対処方法なのかを説明してください。また、レビューで特に注意を払うべき箇所があれば、自分から積極的に指摘すべきです。`CONTRIBUTING.md` の内容や変更の性質によっては、レビュアーは行ったトレードオフや変更のテスト方法といった追加情報も期待するかもしれません。
 
-> We recommend contributing back to upstream projects rather than
-> "forking" the project, at least as a first approach. Forking (license
-> permitting) should be reserved for when the contributions you want to
-> make are out of scope for the original project. If you do fork, make
-> sure you acknowledge the original project!
+> 少なくとも最初のアプローチとしては、プロジェクトを「フォーク」するのではなく、上流のプロジェクトに貢献し返すことをお勧めします。フォークは(ライセンスが許す場合に)、行いたい貢献が元のプロジェクトのスコープ外である場合のために取っておくべきです。フォークする場合は、必ず元のプロジェクトへの謝辞を示しましょう!
 
-AI makes it incredibly easy to generate plausible-looking code and PRs
-quickly, but this doesn't excuse you from understanding what you're
-contributing. Submitting AI-generated code you can't explain burdens
-maintainers with reviewing and potentially maintaining code that even
-its author doesn't understand. It's fine to use AI to help you
-identify issues and produce fixes/features, **so long as you still do
-the due diligence** to polish it into a worthwhile contribution, rather
-than passing that work on to the (already-overloaded) maintainers.
+AI のおかげで、もっともらしく見えるコードや PR を素早く生成することは驚くほど簡単になりましたが、だからといって、自分が貢献するものを理解する責任を免れるわけではありません。自分で説明できない AI 生成コードを提出することは、作者本人ですら理解していないコードのレビューと、場合によっては保守という負担をメンテナに負わせることになります。問題の特定や修正・機能の作成に AI を使うこと自体は問題ありません。**ただし、しかるべき検証を自分で行い**、価値ある貢献へと磨き上げることが条件です。その作業を(ただでさえ手一杯の)メンテナに押し付けてはいけません。
 
-Remember that for maintainers, accepting a PR means accepting long-term
-responsibility. They will be maintaining this code long after the
-contributor has moved on, and so may decline changes that are
-well-intentioned but don't fit the project's direction, add complexity
-they don't want to maintain, or where the need simply isn't sufficiently
-well-documented. It's on _you_ as the contributor to make the case for
-why accepting the contribution is worth the maintenance burden.
+メンテナにとって、PR を受け入れることは長期的な責任を引き受けることだと覚えておいてください。コントリビュータが去った後も、メンテナはそのコードを保守し続けることになります。そのため、善意によるものであっても、プロジェクトの方向性に合わない変更、保守したくない複雑さを持ち込む変更、あるいは必要性が十分に文書化されていない変更は、却下されることがあります。その貢献を受け入れることが保守の負担に見合う価値がある理由を主張するのは、コントリビュータである _あなた_ の責任です。
 
-> When receiving feedback on a PR, remember that your code is not you!
-> Reviewers are trying to make the code better, not criticizing you
-> personally. Ask clarifying questions if you disagree — you might learn
-> something, or maybe they will.
+> PR にフィードバックを受け取ったときは、あなたのコードはあなた自身ではないことを思い出してください! レビュアーはコードを良くしようとしているのであって、あなた個人を批判しているのではありません。納得できない場合は明確化のための質問をしましょう。何かを学べるかもしれませんし、逆に相手が学ぶかもしれません。
 
-## Reviewing
+## レビューする
 
-You might think code review is something senior developers do, but
-you'll likely be asked to review code much earlier than you expect, and
-your perspective is valuable. Fresh eyes catch things that experienced
-developers overlook, and questions from someone less familiar with the
-code often reveal assumptions that should be documented or simplified.
+コードレビューはシニア開発者がやるものだと思うかもしれませんが、おそらく予想よりずっと早い段階でレビューを頼まれることになりますし、あなたの視点には価値があります。新鮮な目は経験豊富な開発者が見落とすことに気づきますし、コードに詳しくない人からの質問は、文書化や簡素化が必要な暗黙の前提を明らかにすることがよくあります。
 
-Review is also one of the fastest ways to learn. You'll see how others
-approach problems, pick up patterns and idioms, and develop intuition
-for what makes code readable. Beyond personal growth, reviews catch bugs
-before they reach production, spread knowledge across the team, and
-improve code quality through collaboration. They are not merely
-bureaucratic overhead.
+レビューは、最も速い学習手段のひとつでもあります。他の人が問題にどう取り組むかを見て、パターンやイディオムを吸収し、何がコードを読みやすくするのかの直感を養えます。個人の成長にとどまらず、レビューはバグが本番環境に到達する前に捕まえ、チーム全体に知識を広め、コラボレーションを通じてコード品質を向上させます。レビューは単なる官僚的なオーバーヘッドではないのです。
 
-Good code review is a skill you need to hone over time, but there are
-some tips that can make them much better much faster:
+良いコードレビューは時間をかけて磨くべきスキルですが、より早く格段に上達するためのコツがいくつかあります。
 
-- **Review the code, not the person**:
-  "This function is confusing" vs "You wrote confusing code."
-- **Prefer actionable comments**:
-  "Can you replace these globals with a config dataclass" is an easier
-  comment to address than "Don't use globals here"
-- **Ask questions rather than making demands**:
-  "What happens if X is null here?" invites discussion better than
-  "Handle the null case."
-- **Explain the "why"**:
-  "Consider using a constant here" is less useful than "Consider using a
-  constant here so we can easily adjust the timeout based on
-  environment."
-- **Distinguish blocking issues from suggestions**:
-  Be clear about what must change versus what's a matter of preference.
-- **Acknowledge what's good**:
-  Pointing out clever solutions or clean implementations is encouraging
-  and helps the author know what to continue doing.
-- **Know when to stop**:
-  Contributors only have so much time and patience, and it's not always
-  best spent handling all the nits. Focus on the big things, and
-  consider tidying up nits yourself after the fact.
+- **人ではなくコードをレビューする**:
+  「この関数は分かりにくいです」と「あなたは分かりにくいコードを書きましたね」の違いです。
+- **行動に移せるコメントを心がける**:
+  「これらのグローバル変数を設定用の dataclass に置き換えられますか」というコメントは、「ここでグローバル変数を使わないで」よりも対応しやすいものです。
+- **要求ではなく質問の形にする**:
+  「ここで X が null だったらどうなりますか?」は、「null のケースを処理してください」よりも議論を招きやすい言い方です。
+- **「why」を説明する**:
+  「ここは定数を使うことを検討してください」よりも、「環境に応じてタイムアウトを簡単に調整できるよう、ここは定数を使うことを検討してください」の方が有用です。
+- **ブロッキングな問題と提案を区別する**:
+  必ず変更すべきことと、好みの問題にすぎないことを明確に分けましょう。
+- **良い点を認める**:
+  巧みな解決策やきれいな実装を指摘することは励みになり、作者が何を続ければよいかを知る助けになります。
+- **やめどきを知る**:
+  コントリビュータの時間と忍耐には限りがあり、細かい指摘をすべて対応してもらうことが常に最善とは限りません。大きなことに集中し、細かい部分は後で自分で整えることも検討しましょう。
 
-> AI tools can catch certain issues, but they're not a substitute for
-> human review. They miss context, don't understand product
-> requirements, and can confidently suggest wrong things. They're worth
-> using as a first pass, but not a replacement for thoughtful human
-> review.
+> AI ツールはある種の問題を捕まえられますが、人間によるレビューの代わりにはなりません。文脈を見落とし、プロダクト要件を理解せず、間違ったことを自信満々に提案することもあります。最初のひととおりのチェックとして使う価値はありますが、思慮深い人間のレビューの代替にはなりません。
 
-# Education
+# 教育
 
-A lot of our non-coding time as engineers is spent either asking or
-answering questions, possibly a mixture of both; during collaboration,
-in dialogue with peers, or while trying to learn. Asking good questions
-is a skill that makes you better at learning from anyone, not just
-perfect explainers. Julia Evans has some excellent blog posts on "[How
-to ask good questions](https://jvns.ca/blog/good-questions/)" and "[How
-to get useful answers to your
-questions](https://jvns.ca/blog/2021/10/21/how-to-get-useful-answers-to-your-questions/)"
-that are worth reading.
+エンジニアとしてのコーディング以外の時間の多くは、質問をするか、質問に答えるか、あるいはその両方に費やされます。コラボレーションの中で、同僚との対話の中で、あるいは学ぼうとしている最中に。良い質問をすることは、完璧な説明者からだけでなく、誰からでもうまく学べるようになるスキルです。Julia Evans による「[How to ask good questions](https://jvns.ca/blog/good-questions/)」と「[How to get useful answers to your questions](https://jvns.ca/blog/2021/10/21/how-to-get-useful-answers-to-your-questions/)」という優れたブログ記事があり、一読の価値があります。
 
-Some particularly valuable pieces of advice are:
+特に価値のあるアドバイスをいくつか挙げます。
 
-- **State your understanding first**: Say what you think you know and
-  ask "is that right?" This helps the answerer identify your actual
-  knowledge gaps.
-- **Ask yes/no questions**: "Is X true?" prevents tangential
-  explanations and usually prompts useful elaboration anyway.
-- **Be specific**: "How do SQL joins work?" is too vague. "Does a LEFT
-  JOIN include rows where the right table has no match?" is answerable.
-- **Admit when you don't understand**: Interrupt to ask about unfamiliar
-  terms. This reflects confidence, not weakness. Similarly, if they ask
-  questions of you that you do not know the answer to, it's best to say
-  "I don't know", and possibly follow up with "but I think ..." or even
-  "but I can find out".
-- **Don't accept incomplete answers**: Keep asking follow-ups until you
-  actually understand.
-- **Do some research first**: Basic investigation helps you ask more
-  targeted questions (though casual questions among colleagues are
-  fine).
+- **まず自分の理解を述べる**: 自分が知っていると思うことを述べたうえで「これで合っていますか?」と尋ねます。これにより、答える側はあなたの実際の知識のギャップを特定できます。
+- **yes/no で答えられる質問をする**: 「X は正しいですか?」という形は話が脇道に逸れるのを防ぎ、たいていの場合、有用な補足説明も引き出せます。
+- **具体的にする**: 「SQL の JOIN はどう動きますか?」は曖昧すぎます。「LEFT JOIN は右のテーブルにマッチがない行も含みますか?」なら答えられます。
+- **理解できていないことを認める**: 知らない用語が出てきたら、話を遮ってでも質問しましょう。これは弱さではなく自信の表れです。同様に、相手から答えの分からない質問をされたら、「分かりません」と言うのが一番で、必要なら「でも、こう思います……」や「でも、調べてみます」と続けましょう。
+- **不完全な答えで納得しない**: 本当に理解できるまでフォローアップの質問を重ねましょう。
+- **まず自分で調べる**: 基本的な調査をしておくと、より的を絞った質問ができます(とはいえ、同僚同士の気軽な質問は問題ありません)。
 
-Remember: well-crafted questions benefit entire communities. They
-surface hidden assumptions that others need to understand too.
+覚えておいてください。よく練られた質問はコミュニティ全体の利益になります。他の人も理解しておくべき隠れた前提を浮かび上がらせるのです。
 
-> Note that this advice applies just as much when communicating with
-> LLMs!
+> このアドバイスは、LLM とコミュニケーションするときにもまったく同じように当てはまります!
 
-# AI etiquette
+# AI のエチケット
 
-With the growing use of LLMs and AI across software engineering, the
-social and professional norms around are still in flux. We already
-covered many of the tactical considerations in the [agentic coding
-lecture](/2026/agentic-coding/), but there are also "softer" parts of
-their use that are worth discussing.
+ソフトウェアエンジニアリング全般で LLM や AI の利用が拡大するなか、それを取り巻く社会的・職業的な規範はまだ流動的です。戦術的な考慮事項の多くは[エージェンティックコーディングの講義](/2026/agentic-coding/)ですでに扱いましたが、AI 利用にはもっと「ソフトな」側面もあり、議論する価値があります。
 
-The first of these is that when AI meaningfully contributed to your
-work, **disclose it**. This isn't about shame — it's about honesty,
-setting appropriate expectations, and ensuring the resulting work gets
-the appropriate level of review. It's also worthwhile to disclose which
-_parts_ you use AI for — there's a meaningful distinction between "this
-whole thing is vibecoded" and "I wrote this backup tool and used an LLM
-to style the web frontend". For example, we've used LLMs to help write
-some of these lecture notes, including proofreading, brainstorming, and
-generating first drafts of code snippets and exercises.
+まず第一に、AI があなたの仕事に有意義な貢献をした場合は、**それを開示しましょう**。これは恥の問題ではありません。誠実さの問題であり、適切な期待値を設定し、成果物が適切なレベルのレビューを受けられるようにするためのものです。どの _部分_ に AI を使ったかを開示することにも価値があります。「これは全部 vibecoding で作った」と「このバックアップツールは自分で書き、Web フロントエンドのスタイリングに LLM を使った」との間には意味のある違いがあります。たとえば、この講義ノートの一部の執筆にも LLM を活用しています。校正、ブレインストーミング、コードスニペットや演習の初稿の生成などです。
 
-You'll also want to follow the norms of the teams and projects you're
-contributing to here. Some teams have stricter policies around the use
-of AI than others (e.g., for compliance or data residency reasons), and
-you don't want to accidentally run afoul of that. Being open about your
-use helps prevent potentially costly mistakes.
+また、貢献先のチームやプロジェクトの規範にも従いましょう。チームによっては(コンプライアンスやデータ所在地の理由などで)AI 利用について他より厳しいポリシーを持つところもあり、うっかりそれに抵触したくはないはずです。利用についてオープンでいることが、大きな代償を伴いかねないミスの防止につながります。
 
-> If you're aiming to learn as part of the work you're doing, keep in
-> mind that if you have AI do all or most of the work for you can be
-> self-defeating; you're likely to learn more about prompting (and maybe
-> reviewing AI output) than the task itself. Especially when you're
-> learning, the point may be the journey, not the destination, so using
-> AI to "get the solution quickly" is an anti-goal.
+> 取り組んでいる仕事の一環として学習することを目指しているなら、仕事のすべて、あるいは大半を AI にやらせてしまうのは本末転倒になり得ることを心に留めておいてください。そのタスク自体よりも、プロンプトの書き方(と、せいぜい AI の出力のレビューの仕方)を学ぶことになりがちです。特に学習中は、目的地ではなく道のりにこそ意味があるかもしれず、「素早く解答を得る」ために AI を使うのはアンチゴールです。
 
-A related concern comes up in interviews and other assessment
-situations. These are often intended to specifically evaluate _your_
-skills and abilities, not those of an LLM. More companies now allow you
-to use LLMs and other AI-assisted tooling in interviews as long as you
-let them observe those interactions as part of the interview (i.e., they
-are evaluating your skill in making use of those tools too!), but those
-are still in the minority. If you are unsure about whether AI assistance
-is in scope for a particular task, ask!
+関連する懸念は、面接などの評価の場でも生じます。これらは多くの場合、LLM のスキルではなく、_あなた自身の_ スキルと能力を評価することを目的としています。面接中の LLM などの AI 支援ツールの使用を、そのやり取りを面接の一部として観察させることを条件に認める企業も増えています(つまり、それらのツールを使いこなすスキルも評価対象なのです!)が、まだ少数派です。特定のタスクで AI の支援が許容範囲かどうか分からない場合は、尋ねましょう!
 
-> It should go without saying that if an assessment situation explicitly
-> calls for no external tools, no LLMs, etc., you should not use them.
-> Trying to do so discretely without getting caught **will** come back
-> to bite you.
+> 言うまでもないことですが、評価の場で外部ツールや LLM などの使用が明示的に禁止されているなら、使ってはいけません。バレないようにこっそり使おうとすれば、**必ず**あとで痛い目に遭います。
 
-# Exercises
+# 演習
 
-1. Browse the source code of a well-known project (e.g.,
-   [Redis](https://github.com/redis/redis) or
-   [curl](https://github.com/curl/curl)). Find examples of some of the
-   comment types mentioned in the lecture: a useful TODO, a reference to
-   external documentation, a "why not" comment explaining an avoided
-   approach, or a hard-learned lesson. What would be lost if that
-   comment was not there?
+1. 有名なプロジェクト(例:
+   [Redis](https://github.com/redis/redis) や
+   [curl](https://github.com/curl/curl))のソースコードを眺めてみましょう。講義で紹介したコメントの種類の実例を探してください。有用な TODO、外部ドキュメントへの参照、避けたアプローチを説明する「なぜやらないか」のコメント、苦労して得た教訓など。そのコメントがなかったら、何が失われるでしょうか?
 
-1. Pick an open-source project you're interested in and look at its
-   recent commit history (`git log`). Find one commit with a good
-   message that explains *why* the change was made, and one with a weak
-   message that only describes *what* changed. For the weak one, look at
-   the diff (`git show <hash>`) and try to write a better commit message
-   following the Problem → Solution → Implications structure. Notice how
-   much work is required to reassemble the necessary context after the
-   fact!
+1. 興味のあるオープンソースプロジェクトを選び、最近のコミット履歴(`git log`)を見てみましょう。変更が *なぜ* 行われたのかを説明している良いメッセージのコミットと、*何が* 変わったかしか述べていない弱いメッセージのコミットを1つずつ見つけてください。弱い方については、差分(`git show <hash>`)を見て、「問題 → 解決策 → 影響」の構造に従って、より良いコミットメッセージを書いてみましょう。後から必要な文脈を組み立て直すのにどれだけの労力がかかるかを実感してください!
 
-1. Compare the READMEs of three GitHub projects with 1000+ stars. Are
-   all of them equally useful? Look for things that come across mostly
-   as noise to you as a lesson for future READMEs you write yourself.
+1. スター数 1000 以上の GitHub プロジェクトを3つ選び、README を比較してみましょう。どれも同じくらい有用でしょうか? あなたにとって主にノイズにしか感じられない部分を探し、将来自分が README を書くときの教訓にしましょう。
 
-1. Find an open issue on a project you use (check the "good first issue"
-   or "help wanted" labels if they have it). Evaluate the issue against
-   the criteria from the lecture: does it seem like it values the
-   maintainer's time and contains all the information necessary to debug
-   it, or do you expect that the maintainer may need to go multiple
-   rounds of questions with the submitter to get to the root problem?
+1. 自分が使っているプロジェクトで、オープンな Issue を見つけてください(「good first issue」や「help wanted」のラベルがあればチェックしてみましょう)。その Issue を講義の基準に照らして評価してください。メンテナの時間を尊重し、デバッグに必要な情報がすべて含まれているように見えますか? それとも、根本の問題にたどり着くまでに、メンテナが報告者と何往復も質問を重ねる必要がありそうですか?
 
-1. Think of a bug you've encountered in software you use (or find one in
-   an issue tracker). Practice creating a minimal reproducible example:
-   strip away everything unrelated to the bug until you have the
-   smallest case that still demonstrates the problem. Write up what you
-   removed and why.
+1. 自分が使っているソフトウェアで遭遇したバグを思い出してください(あるいは Issue トラッカーから1つ見つけてください)。最小限の再現可能な例を作る練習をしましょう。問題を再現できる最小のケースになるまで、バグに関係のないものをすべて削ぎ落としていきます。何を取り除いたか、なぜ取り除いたかを書き出してみましょう。
 
-1. Find a merged pull request on a project you're familiar with that has
-   substantive review comments (not just "LGTM"). Read through the
-   review. Were all the comments equally productive? If you were the PR
-   author, how would you find the experience of getting all those
-   comments?
+1. よく知っているプロジェクトで、実質的なレビューコメント(単なる「LGTM」ではないもの)が付いたマージ済みのプルリクエストを見つけてください。レビューを読み通してみましょう。すべてのコメントは同じくらい生産的でしたか? もしあなたが PR の作者だったら、それらのコメントをすべて受け取る体験をどう感じるでしょうか?
 
-1. Go to Stack Overflow and find a question in a technology you know
-   that has a highly-voted answer. Then find one that was closed or
-   heavily downvoted. Compare them against the advice from the lecture;
-   was it predictable which question would get better answers?
+1. Stack Overflow で、自分の知っている技術に関する、高評価の回答が付いた質問を見つけてください。次に、クローズされたり大きくマイナス評価されたりした質問を見つけてください。講義のアドバイスと照らし合わせて比較してみましょう。どちらの質問がより良い回答を得られるか、予測できるものだったでしょうか?

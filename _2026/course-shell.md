@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Course Overview + Introduction to the Shell"
+title: "コース概要 + シェル入門"
 description: >
-  Learn about the motivation for this class, and get started with the shell.
+  この授業が生まれた背景を知り、シェルを使い始めましょう。
 thumbnail: /static/assets/thumbnails/2026/lec1.png
 date: 2026-01-12
 ready: true
@@ -11,156 +11,159 @@ video:
   id: MSgoeuMqUmU
 ---
 
-# Who are we?
+# 私たちは誰?
 
-This class is co-taught by [Anish](https://anish.io/),
-[Jon](https://thesquareplanet.com/), and [Jose](http://josejg.com/). We
-are all ex-MIT students who started this MIT IAP class back when we were
-students. You can reach us collectively at
-[missing-semester@mit.edu](mailto:missing-semester@mit.edu).
+この授業は [Anish](https://anish.io/)、[Jon](https://thesquareplanet.com/)、
+[Jose](http://josejg.com/) が共同で教えています。私たちは全員、元MITの学生で、
+在学中にこの MIT IAP の授業を始めました。私たち宛の連絡は
+[missing-semester@mit.edu](mailto:missing-semester@mit.edu) までまとめてどうぞ。
 
-We are not paid to teach this class, and do not monetize the class in
-any way. We make all the [course
-materials](https://missing.csail.mit.edu/) and [recordings of the
-lectures](https://www.youtube.com/@MissingSemester) freely available
-online. If you want to support our work, the best way to do so is to
-simply spread the word about the class. If you're a company, university,
-or other organization that runs this content past larger cohorts, please
-send us experience reports/testimonials by email so we get to hear about
-it :)
+私たちはこの授業を教えることで報酬を得ておらず、授業を収益化することも
+一切していません。[授業資料](https://missing.csail.mit.edu/)や
+[講義の録画](https://www.youtube.com/@MissingSemester)は、すべて無料で
+オンラインに公開しています。私たちの活動を支援したいと思ったら、
+一番の方法はこの授業のことを周りに広めていただくことです。企業や大学、
+その他の組織でこのコンテンツを大人数の受講者に使っている場合は、
+ぜひ体験レポートや感想をメールで送ってください。私たちがその話を
+聞けるととても嬉しいです :)
 
-# Motivation
+# モチベーション
 
-As computer scientists, we know that computers are great at aiding in
-repetitive tasks. However, far too often, we forget that this applies
-just as much to our _use_ of the computer as it does to the computations
-we want our programs to perform. We have a vast range of tools available
-at our fingertips that enable us to be more productive and solve more
-complex problems when working on any computer-related problem. Yet many
-of us utilize only a small fraction of those tools; we only know enough
-magical incantations by rote to get by, and blindly copy-paste commands
-from the internet when we get stuck.
+コンピュータ科学者である私たちは、コンピュータが反復的な作業の手助けを
+得意としていることを知っています。しかし、それがプログラムに実行させたい
+計算だけでなく、私たち自身のコンピュータの「使い方」にも同じように
+当てはまることを、あまりにも頻繁に忘れてしまいます。コンピュータに関わる
+あらゆる問題に取り組むとき、生産性を高め、より複雑な問題を解決できるように
+してくれる膨大なツール群が、私たちの手の届くところにあります。それにも
+かかわらず、多くの人はそのツールのほんの一部しか活用していません。
+なんとかやり過ごせる程度の魔法の呪文を丸暗記しているだけで、行き詰まると
+インターネットからコマンドを盲目的にコピペしてしまうのです。
 
-This class is an attempt to [address this](/about/).
+この授業は[この問題に取り組む](/about/)試みです。
 
-We want to teach you how to make the most of the tools you know, show
-you new tools to add to your toolbox, and hopefully instill in you some
-excitement for exploring (and perhaps building) more tools on your own.
-This is what we believe to be the missing semester from most Computer
-Science curricula.
+私たちは、すでに知っているツールを最大限に活用する方法を教え、
+ツールボックスに加えるべき新しいツールを紹介し、そして願わくは、
+自分自身でさらに多くのツールを探求する(そしておそらくは作る)ことへの
+ワクワク感を植え付けたいと思っています。これこそが、ほとんどの
+コンピュータサイエンスのカリキュラムから欠けている学期
+(missing semester)だと私たちは考えています。
 
-# Class structure
+# 授業の構成
 
-The not-for-credit class consists of nine 1-hour lectures, each one
-centering on a [particular topic](/2026/). The lectures are largely
-independent, though as the semester goes on we will presume that you are
-familiar with the content from the earlier lectures. We have lecture
-notes online, but there may be content covered in class (e.g. in the
-form of demos) that may not be in the notes. As for past years, we will
-be recording lectures and posting the recordings
-[online](https://www.youtube.com/@MissingSemester).
+この単位認定のない授業は、それぞれが[特定のトピック](/2026/)を中心とする
+9回の1時間の講義で構成されています。各講義はおおむね独立していますが、
+学期が進むにつれて、それ以前の講義の内容には慣れているものとして
+進めていきます。講義ノートはオンラインで公開していますが、授業中に
+扱う内容(たとえばデモなど)の中にはノートに載っていないものも
+あるかもしれません。例年どおり、講義は録画して
+[オンライン](https://www.youtube.com/@MissingSemester)に公開する予定です。
 
-We are trying to cover a lot of ground over the course of just a few
-1-hour lectures, so the lectures are fairly dense. To allow you some
-time to get familiar with the content at your own pace, each lecture
-includes a set of exercises that guide you through the lecture's key
-points. We will not be running dedicated office hours, but we encourage
-you to ask questions on the [OSSU Discord](https://ossu.dev/#community),
-in `#missing-semester-forum`, or email us at
-[missing-semester@mit.edu](mailto:missing-semester@mit.edu).
+わずか数回の1時間講義で多くの内容をカバーしようとしているため、講義は
+かなり密度が高くなっています。自分のペースで内容に慣れる時間を取れるよう、
+各講義には、その講義の要点をたどれる演習を用意しています。専用の
+オフィスアワーは設けませんが、[OSSU Discord](https://ossu.dev/#community) の
+`#missing-semester-forum` で質問するか、
+[missing-semester@mit.edu](mailto:missing-semester@mit.edu) 宛にメールを
+送ることをおすすめします。
 
-Due to the limited time we have, we won't be able to cover all the tools
-in the same level of detail a full-scale class might. Where possible, we
-will try to point you towards resources for digging further into a tool
-or topic, but if something particularly strikes your fancy, don't
-hesitate to reach out to us and ask for pointers!
+時間が限られているため、本格的な授業のようにすべてのツールを同じ
+詳しさで扱うことはできません。可能な限り、ツールやトピックをさらに
+深掘りするためのリソースを紹介するようにしますが、特に興味を惹かれる
+ものがあれば、遠慮なく私たちに連絡して手がかりを尋ねてください!
 
-Finally, if you have feedback about the class, please send it to us by
-email at [missing-semester@mit.edu](mailto:missing-semester@mit.edu).
+最後に、この授業についてフィードバックがあれば、
+[missing-semester@mit.edu](mailto:missing-semester@mit.edu) 宛にメールで
+送ってください。
 
-# Topic 1: The Shell
+# トピック1: シェル
 
 {% comment %}
 lecturer: Jon
 {% endcomment %}
 
-## What is the shell?
+## シェルとは何か?
 
-Computers these days have a variety of interfaces for giving them
-commands; fanciful graphical user interfaces, voice interfaces, AR/VR,
-and more recently: LLMs. These are great for 80% of use-cases, but they
-are often fundamentally restricted in what they allow you to do — you
-cannot press a button that isn't there or give a voice command that
-hasn't been programmed. To take full advantage of the tools your
-computer provides, we have to go old-school and drop down to a textual
-interface: The Shell.
+最近のコンピュータには、命令を与えるためのさまざまなインターフェースが
+あります。華やかなグラフィカルユーザーインターフェース、音声
+インターフェース、AR/VR、そして最近では LLM もそうです。これらは
+ユースケースの80%には最適ですが、できることが根本的に制限されている
+ことがよくあります。存在しないボタンを押すことはできませんし、
+プログラムされていない音声コマンドを与えることもできません。
+コンピュータが提供するツールを最大限に活用するには、昔ながらの方法に
+立ち返り、テキストベースのインターフェースまで降りていく必要があります。
+それがシェルです。
 
-Nearly all platforms you can get your hands on have a shell in one form
-or another, and many of them have several shells for you to choose from.
-While they may vary in the details, at their core they are all roughly
-the same: they allow you to run programs, give them input, and inspect
-their output in a semi-structured way.
+手に入るほぼすべてのプラットフォームには、何らかの形でシェルが搭載
+されており、その多くでは複数のシェルから選ぶことができます。細部は
+異なるかもしれませんが、その核心はどれもほぼ同じです。プログラムを
+実行し、入力を与え、その出力を半構造化された形で調べられるように
+してくれるのです。
 
-To open a shell _prompt_ (where you can type commands), you first need a
-_terminal_, which is the visual interface to a shell. Your device
-probably shipped with one installed, or you can install one fairly
-easily:
+シェルの _プロンプト_(コマンドを入力する場所)を開くには、まず
+_ターミナル_ が必要です。ターミナルはシェルへの視覚的なインターフェース
+です。お使いのデバイスにはおそらく最初からインストールされているか、
+簡単にインストールできます。
 
 - **Linux:**
-  Press `Ctrl + Alt + T` (works on most distributions). Or search for
-  "Terminal" in your applications menu.
+  `Ctrl + Alt + T` を押します(ほとんどのディストリビューションで
+  動作します)。または、アプリケーションメニューで「Terminal」を
+  検索してください。
 - **Windows:**
-  Press `Win + R`, type `cmd` or `powershell`, and press Enter.
-  Alternatively, search "Terminal" or "Command Prompt" in the Start menu.
+  `Win + R` を押し、`cmd` または `powershell` と入力して Enter を
+  押します。あるいは、スタートメニューで「Terminal」または
+  「Command Prompt」を検索してください。
 - **macOS:**
-  Press `Cmd + Space` to open Spotlight, type "Terminal", and press Enter.
-  Or find it in Applications → Utilities → Terminal.
+  `Cmd + Space` を押して Spotlight を開き、「Terminal」と入力して
+  Enter を押します。または、アプリケーション → ユーティリティ →
+  ターミナル から見つけられます。
 
-On Linux and macOS, this will usually open the Bourne Again SHell, or
-"bash" for short. This is one of the most widely used shells, and its
-syntax is similar to what you will see in many other shells. On Windows,
-you'll be greeted by the "batch" or "powershell" shells, depending on
-which command you ran. These are Windows-specific, and not what we'll be
-focusing on in this class, although it has analogues for most of what
-we'll be teaching. You'll instead want the [Windows Subsystem for
-Linux](https://docs.microsoft.com/en-us/windows/wsl/) or a Linux virtual
-machine.
+Linux と macOS では、通常 Bourne Again SHell、略して「bash」が
+開きます。これは最も広く使われているシェルのひとつで、その構文は
+他の多くのシェルで見かけるものとよく似ています。Windows では、
+実行したコマンドに応じて「batch」または「powershell」シェルが
+迎えてくれます。これらは Windows 固有のもので、この授業で扱う
+対象ではありません(私たちが教える内容の大半に相当する機能は
+ありますが)。代わりに [Windows Subsystem for
+Linux](https://docs.microsoft.com/en-us/windows/wsl/) か Linux の
+仮想マシンを使うとよいでしょう。
 
-Other shells exist, often with many ergonomic improvements over bash
-(fish and zsh are among the most common). While these are very popular
-(all the instructors use one), they're nowhere near as ubiquitous as
-bash, and lean on many of the same concepts, so we won't be focusing on
-those in this lecture.
+他にもシェルは存在し、bash よりも使い勝手が大きく改善されている
+ことがよくあります(fish と zsh が最も一般的です)。これらは非常に
+人気がありますが(講師陣は全員どちらかを使っています)、bash ほど
+どこにでもあるわけではなく、また多くの概念を bash と共有している
+ため、この講義では扱いません。
 
-## Why should you care about it?
+## なぜ気にかけるべきなのか?
 
-The shell is not just (usually) much faster than "clicking around", it
-also comes with expressive power you can't easily find in any one
-graphical program. As we'll see, the shell gives you the ability to
-_combine_ programs in creative ways to automate nearly any task.
+シェルは(たいてい)「あちこちクリックする」よりずっと速いだけで
+なく、どんな単一のグラフィカルなプログラムにも簡単には見つからない
+表現力を備えています。これから見ていくように、シェルはプログラムを
+創造的な方法で _組み合わせて_、ほぼあらゆる作業を自動化する能力を
+与えてくれます。
 
-Knowing your way around a shell is also very useful to navigate the
-world of open-source software (which often come with install
-instructions that require the shell), building continuous integration
-for your software projects (as described in the [Code Quality
-lecture](/2026/code-quality/)), and debugging errors when other programs
-fail.
+シェルを使いこなせることは、オープンソースソフトウェアの世界を
+渡り歩くうえでも(インストール手順にシェルが必要なことがよく
+あります)、ソフトウェアプロジェクトの継続的インテグレーションを
+構築するうえでも([コード品質の講義](/2026/code-quality/)で説明します)、
+他のプログラムが失敗したときにエラーをデバッグするうえでも、
+非常に役立ちます。
 
-## Navigating in the shell
+## シェルの中を移動する
 
-When you launch your terminal, you will see a _prompt_ that often looks
-a little like this:
+ターミナルを起動すると、多くの場合こんな感じの _プロンプト_ が
+表示されます。
 
 ```console
 missing:~$
 ```
 
-This is the main textual interface to the shell. It tells you that you
-are on the machine `missing` and that your "current working directory",
-or where you currently are, is `~` (short for "home"). The `$` tells you
-that you are not the root user (more on that later). At this prompt you
-can type a _command_, which will then be interpreted by the shell. The
-most basic command is to execute a program:
+これがシェルへの主要なテキストインターフェースです。これは、あなたが
+`missing` というマシン上にいること、そして「カレントワーキング
+ディレクトリ」、つまり現在いる場所が `~`(「ホーム」の略)である
+ことを示しています。`$` は、あなたが root ユーザーではないことを
+示しています(これについては後で詳しく説明します)。このプロンプトで
+_コマンド_ を入力すると、それがシェルによって解釈されます。最も
+基本的なコマンドは、プログラムを実行することです。
 
 ```console
 missing:~$ date
@@ -168,43 +171,45 @@ Fri 10 Jan 2020 11:49:31 AM EST
 missing:~$
 ```
 
-Here, we executed the `date` program, which (perhaps unsurprisingly)
-prints the current date and time. The shell then asks us for another
-command to execute. We can also execute a command with _arguments_:
+ここでは `date` プログラムを実行しました。これは(おそらく驚くこと
+ではありませんが)現在の日付と時刻を表示します。その後、シェルは
+次に実行するコマンドを尋ねてきます。コマンドは _引数_ とともに
+実行することもできます。
 
 ```console
 missing:~$ echo hello
 hello
 ```
 
-In this case, we told the shell to execute the program `echo` with the
-argument `hello`. The `echo` program simply prints out its arguments.
-The shell parses the command by splitting it by whitespace, and then
-runs the program indicated by the first word, supplying each subsequent
-word as an argument that the program can access. If you want to provide
-an argument that contains spaces or other special characters (e.g., a
-directory named "My Photos"), you can either quote the argument with `'`
-or `"` (`"My Photos"`), or escape just the relevant characters with `\`
-(`My\ Photos`).
+この場合、シェルに `echo` プログラムを引数 `hello` とともに実行する
+よう指示しました。`echo` プログラムは単に自分の引数を表示します。
+シェルはコマンドを空白で区切って解析し、最初の単語が示すプログラムを
+実行して、続く各単語をそのプログラムがアクセスできる引数として
+渡します。空白やその他の特殊文字を含む引数(たとえば "My Photos" と
+いう名前のディレクトリ)を渡したい場合は、引数を `'` または `"` で
+クォートする(`"My Photos"`)か、該当する文字だけを `\` でエスケープ
+します(`My\ Photos`)。
 
-Perhaps the most important command when you're starting out is `man`,
-short for "manual". The `man` program, among other things, lets you look
-up more information about any command on your system. For example, if
-you run `man date`, it'll explain what `date` is, and all of the various
-arguments you can pass it to alter its behavior. You can also usually
-get a short version of the help by passing `--help` as an argument to
-most commands.
+使い始めたばかりの頃に最も重要なコマンドは、おそらく `man` でしょう。
+これは「manual(マニュアル)」の略です。`man` プログラムを使うと、
+とりわけ、システム上の任意のコマンドについて詳しい情報を調べることが
+できます。たとえば `man date` を実行すると、`date` が何であるか、
+そして挙動を変えるために渡せるさまざまな引数のすべてを説明して
+くれます。また、ほとんどのコマンドでは `--help` を引数として渡すと、
+短いヘルプを表示できるのが普通です。
 
-> Consider installing and using [`tldr`](https://tldr.sh/) in addition
-> to `man`, as it shows you common usage examples right there in the
-> terminal. LLMs are also usually very good at explaining how commands
-> work and how you can call them to achieve what you want to accomplish.
+> `man` に加えて [`tldr`](https://tldr.sh/) をインストールして使う
+> ことを検討してみてください。よくある使用例をその場でターミナルに
+> 表示してくれます。また、LLM もたいてい、コマンドがどう動くのか、
+> やりたいことを実現するにはどう呼び出せばよいのかを説明するのが
+> とても得意です。
 
-After `man`, the most important command to learn is `cd`, or "change
-directory". This command is actually built into the shell, and isn't a
-separate program (i.e., `which cd` will say "no cd found"). You pass it
-a path, and that path becomes your current working directory. You'll
-also see the working directory reflected in the shell prompt:
+`man` の次に学ぶべき最も重要なコマンドは `cd`、すなわち「change
+directory(ディレクトリ変更)」です。このコマンドは実際にはシェルに
+組み込まれており、独立したプログラムではありません(つまり、
+`which cd` は「no cd found」と言うでしょう)。パスを渡すと、その
+パスがカレントワーキングディレクトリになります。ワーキング
+ディレクトリはシェルのプロンプトにも反映されます。
 
 ```console
 missing:~$ cd /bin
@@ -213,23 +218,23 @@ missing:/$ cd ~
 missing:~$
 ```
 
-> Note that the shell comes with auto-completion, so you can often
-> complete paths faster by pressing `<TAB>`!
+> シェルには自動補完機能が備わっているので、`<TAB>` を押せば
+> パスをより素早く補完できることが多いです!
 
-A lot of commands operate on the current working directory if nothing
-else is specified. If you're ever unsure where you are, you can run
-`pwd` or print the `$PWD` environment variable (with `echo $PWD`), both
-of which produce the current working directory.
+多くのコマンドは、他に何も指定されなければカレントワーキング
+ディレクトリを対象に動作します。今どこにいるのか分からなくなったら、
+`pwd` を実行するか、環境変数 `$PWD` を表示すれば(`echo $PWD`)、
+どちらもカレントワーキングディレクトリを出力してくれます。
 
-The current working directory also comes in handy in that it allows us to
-use _relative_ paths. All the paths we've seen so far have been
-_absolute_ --- they start with `/` and give the full set of directories
-needed to navigate to some location from the root of the file system
-(`/`). In practice, you'll more commonly work with relative paths; so
-called because they are relative to the current working directory. In a
-relative path (anything _not_ starting with `/`), the first path
-component is looked up in the current working directory, and subsequent
-components traverse as usual. For example:
+カレントワーキングディレクトリは、_相対_ パスを使えるようにして
+くれるという点でも便利です。ここまで見てきたパスはすべて _絶対_
+パスでした --- `/` で始まり、ファイルシステムのルート(`/`)から
+目的の場所までたどるのに必要なディレクトリを完全な形で示します。
+実際には、相対パスを使うことのほうが多いでしょう。相対パスと
+呼ばれるのは、カレントワーキングディレクトリからの相対で解釈される
+からです。相対パス(`/` で _始まらない_ もの)では、最初のパス
+要素がカレントワーキングディレクトリの中で探され、続く要素は
+通常どおりたどられます。たとえば:
 
 ```console
 missing:~$ cd /
@@ -237,9 +242,9 @@ missing:/$ cd bin
 missing:/bin$
 ```
 
-There are also two "special" components that exist in every directory:
-`.` and `..`. `.` is "this directory", and `..` is "the parent
-directory". So:
+また、すべてのディレクトリに存在する2つの「特別な」要素があります。
+`.` と `..` です。`.` は「このディレクトリ」、`..` は「親
+ディレクトリ」を意味します。つまり:
 
 ```console
 missing:~$ cd /
@@ -247,21 +252,21 @@ missing:/$ cd bin/../bin/../bin/././../bin/..
 missing:/$
 ```
 
-You can usually use absolute and relative paths interchangeably for any
-command argument, just keep in mind what your current working directory
-is when using a relative one!
+どんなコマンドの引数でも、絶対パスと相対パスはたいてい入れ替えて
+使えます。ただし、相対パスを使うときは、自分のカレントワーキング
+ディレクトリがどこなのかを意識しておきましょう!
 
-> Consider installing and using
-> [`zoxide`](https://github.com/ajeetdsouza/zoxide) to speed up your
-> `cd`ing --- `z` will remember the paths you frequently visit and let
-> you access with less typing.
+> [`zoxide`](https://github.com/ajeetdsouza/zoxide) をインストールして
+> 使うことを検討してみてください。`cd` の操作が速くなります ---
+> `z` はよく訪れるパスを覚えてくれて、少ないタイプ量でアクセス
+> できるようにしてくれます。
 
-## What is available in the shell?
+## シェルでは何が使えるのか?
 
-But how does the shell know how to find programs like `date` or `echo`?
-If the shell is asked to execute a command, it consults an _environment
-variable_ called `$PATH` that lists which directories the shell should
-search for programs when it is given a command:
+しかし、シェルはどうやって `date` や `echo` のようなプログラムの
+場所を知るのでしょうか? シェルはコマンドの実行を求められると、
+`$PATH` という _環境変数_ を参照します。これは、コマンドが与えられた
+ときにシェルがプログラムを探すべきディレクトリの一覧です。
 
 ```console
 missing:~$ echo $PATH
@@ -272,122 +277,129 @@ missing:~$ /bin/echo $PATH
 /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ```
 
-When we run the `echo` command, the shell sees that it should execute
-the program `echo`, and then searches through the `:`-separated list of
-directories in `$PATH` for a file by that name. When it finds it, it
-runs it (assuming the file is _executable_; more on that later). We can
-find out which file is executed for a given program name using the
-`which` program. We can also bypass `$PATH` entirely by giving the
-_path_ to the file we want to execute.
+`echo` コマンドを実行すると、シェルは `echo` というプログラムを
+実行すべきだと判断し、`$PATH` に列挙された `:` 区切りのディレクトリ
+一覧の中から、その名前のファイルを探します。見つかると、それを
+実行します(そのファイルが _実行可能_ であればですが。これに
+ついては後述します)。あるプログラム名に対してどのファイルが実行
+されるのかは、`which` プログラムで調べられます。また、実行したい
+ファイルへの _パス_ を直接指定することで、`$PATH` を完全に迂回する
+こともできます。
 
-This also gives a clue for how we can determine _all_ the programs we're
-able to execute in the shell: by listing the contents of all the
-directories on `$PATH`. We can do this by passing a given directory path
-to the `ls` program, which lists files:
+これは、シェルで実行できる _すべての_ プログラムを知る方法の
+手がかりにもなります。`$PATH` 上のすべてのディレクトリの中身を
+一覧すればよいのです。これは、ファイルを一覧表示する `ls`
+プログラムにディレクトリのパスを渡すことで実現できます。
 
 ```console
 missing:~$ ls /bin
 ```
 
-> Consider installing and using [`eza`](https://eza.rocks/) for a more
-> human-friendly `ls`.
+> より人に優しい `ls` として、[`eza`](https://eza.rocks/) を
+> インストールして使うことを検討してみてください。
 
-This will, on most computers, print a _lot_ of programs, but we'll only
-focus on some of the most important ones here. First, some simple ones:
+これを実行すると、ほとんどのコンピュータでは _大量の_ プログラムが
+表示されますが、ここでは特に重要なものだけに絞って見ていきます。
+まずは簡単なものから:
 
-- `cat file`, which prints the contents of `file`.
-- `sort file`, which prints out the lines of `file` in sorted order.
-- `uniq file`, which eliminates consecutive duplicate lines from `file`.
-- `head file` and `tail file`, which respectively print the first and
-  last few lines of `file`.
+- `cat file` は、`file` の内容を表示します。
+- `sort file` は、`file` の各行をソートした順序で表示します。
+- `uniq file` は、`file` から連続した重複行を取り除きます。
+- `head file` と `tail file` は、それぞれ `file` の最初と最後の
+  数行を表示します。
 
-> Consider installing and using [`bat`](https://github.com/sharkdp/bat)
-> over `cat` for syntax highlighting and scrolling.
+> シンタックスハイライトとスクロールのために、`cat` の代わりに
+> [`bat`](https://github.com/sharkdp/bat) をインストールして使う
+> ことを検討してみてください。
 
-There's also `grep pattern file`, which finds lines matching `pattern`
-in `file`. This one deserves slightly more attention as it's both _very_
-useful and sports a wider array of features than one may expect.
-`pattern` is actually a _regular expression_ which can express very
-complex patterns --- we'll [cover
-those](/2026/code-quality/#regular-expressions)
-in the code quality lecture. You can also specify a directory instead of a
-file (or leave it off for `.`) and pass `-r` to recursively search all
-the files in a directory.
+また、`grep pattern file` というコマンドもあります。これは `file`
+の中から `pattern` にマッチする行を見つけます。これは _非常に_
+便利で、思った以上に幅広い機能を備えているので、もう少し詳しく
+見ておく価値があります。`pattern` は実際には _正規表現_ で、
+非常に複雑なパターンを表現できます --- 正規表現については
+コード品質の講義で[扱います](/2026/code-quality/#regular-expressions)。
+ファイルの代わりにディレクトリを指定する(または省略して `.` に
+する)こともでき、`-r` を渡すとディレクトリ内のすべてのファイルを
+再帰的に検索します。
 
-> Consider installing and using
-> [`ripgrep`](https://github.com/BurntSushi/ripgrep) over `grep` for a
-> faster and more human-friendly (but less portable) alternative.
-> `ripgrep` will also recursively search the current working directory
-> by default!
+> `grep` の代わりに
+> [`ripgrep`](https://github.com/BurntSushi/ripgrep) をインストール
+> して使うことを検討してみてください。より高速で人に優しい
+> (ただし移植性は低い)代替品です。`ripgrep` はデフォルトで
+> カレントワーキングディレクトリを再帰的に検索してくれます!
 
-There are also some very useful tools with a slightly more complicated
-interface. First among those is `sed`, which is a programmatic file
-editor. It has its own programming language for making automated edits
-to files, but the most common use of it is:
+もう少し複雑なインターフェースを持つ、とても便利なツールも
+あります。その筆頭が `sed` で、これはプログラムから操作できる
+ファイルエディタです。ファイルを自動編集するための独自の
+プログラミング言語を持っていますが、最もよくある使い方は
+こうです。
 
 ```console
 missing:~$ sed -i 's/pattern/replacement/g' file
 ```
 
-This replaces all instances of `pattern` with `replacement` in `file`.
-The `-i` indicates that we want the substitutions to happen inline (as
-opposed to leaving `file` unmodified and printing the substituted
-contents). The `s/` is the way to express in the sed programming
-language that we want to do a substitution. The `/` separates the
-pattern from the replacement. And the trailing `/g` indicates that we
-want to replace _all_ occurrences on each line rather than just the
-first. As with `grep`, `pattern` here is a regular expression, which
-gives you significant expressive power. Regular expression substitutions
-also allow `replacement` to refer back to parts of the matched pattern;
-we'll see an example of that in a second.
+これは `file` 内のすべての `pattern` を `replacement` に置換
+します。`-i` は、置換をインラインで(つまり、`file` を変更せずに
+置換後の内容を表示するのではなく、ファイル自体を書き換えて)
+行いたいことを示します。`s/` は、sed のプログラミング言語で
+置換を行いたいことを表す書き方です。`/` はパターンと置換文字列を
+区切ります。そして末尾の `/g` は、各行で最初の1つだけでなく
+_すべての_ 出現を置換したいことを示します。`grep` と同様に、
+ここでの `pattern` は正規表現なので、大きな表現力が得られます。
+正規表現による置換では、`replacement` からマッチしたパターンの
+一部を参照することもできます。その例はすぐ後で見ます。
 
-Next, we have `find`, which lets you find files (recursively) that match
-certain conditions. For example:
+次は `find` です。これは、特定の条件にマッチするファイルを
+(再帰的に)探せるコマンドです。たとえば:
 
 ```console
 missing:~$ find ~/Downloads -type f -name "*.zip" -mtime +30
 ```
 
-Finds ZIP files in the download directory that are older than 30 days.
+これは、ダウンロードディレクトリの中から30日より古い ZIP
+ファイルを見つけます。
 
 ```console
 missing:~$ find ~ -type f -size +100M -exec ls -lh {} \;
 ```
 
-Finds files larger than 100M in your home directory and lists them. Note
-that `-exec` takes a _command_ terminated with a stand-alone `;` (which
-we need to escape much like a space) where `{}` is replaced with each
-matching file path by `find`.
+これは、ホームディレクトリの中から100Mより大きいファイルを見つけて
+一覧表示します。`-exec` は、単独の `;` で終端された _コマンド_ を
+受け取ることに注意してください(この `;` は空白と同じように
+エスケープする必要があります)。`{}` の部分は、`find` によって
+マッチした各ファイルのパスに置き換えられます。
 
 ```console
 missing:~$ find . -name "*.py" -exec grep -l "TODO" {} \;
 ```
 
-Finds any `.py` files with TODO items in them.
+これは、TODO 項目を含む `.py` ファイルを見つけます。
 
-The syntax of `find` can be a little daunting, but hopefully this gives
-you a sense of how useful it can be!
+`find` の構文は少し取っつきにくいかもしれませんが、どれほど
+便利になり得るか、感覚をつかんでもらえたら幸いです!
 
-> Consider installing and using [`fd`](https://github.com/sharkdp/fd)
-> instead of `find` for a more human-friendly (but less portable!)
-> experience.
+> `find` の代わりに [`fd`](https://github.com/sharkdp/fd) を
+> インストールして使うことを検討してみてください。より人に優しい
+> (ただし移植性は低い!)体験が得られます。
 
-Next on the docket is `awk`, which, like `sed`, has its own programming
-language. Where `sed` is built for editing files, `awk` is built for
-parsing them. By far the most common use of `awk` is for data files with
-a regular syntax (like CSV files) where you want to extract only certain
-parts of every record (i.e., line):
+次の議題は `awk` です。`sed` と同じく、独自のプログラミング言語を
+持っています。`sed` がファイルの編集のために作られているのに
+対して、`awk` はファイルの解析のために作られています。`awk` の
+圧倒的に多い使い方は、規則的な構文を持つデータファイル(CSV
+ファイルなど)から、各レコード(つまり行)の特定の部分だけを
+抽出することです。
 
 ```console
 missing:~$ awk '{print $2}' file
 ```
 
-Prints the second whitespace-separated column of every line of `file`.
-If you add `-F,`, it'll print the second comma-separated column of every
-line. `awk` can do much more --- filtering rows, computing aggregates,
-and more --- see the exercises for a taste.
+これは、`file` の各行について、空白で区切られた2番目の列を表示
+します。`-F,` を加えると、各行のカンマで区切られた2番目の列を
+表示します。`awk` はもっと多くのことができます --- 行の
+フィルタリング、集計の計算など --- その一端は演習で味わって
+ください。
 
-Putting these tools together, we can do fancy things like:
+これらのツールを組み合わせると、こんな凝ったこともできます。
 
 ```console
 missing:~$ ssh myserver 'journalctl -u sshd -b-1 | grep "Disconnected from"' \
@@ -398,76 +410,79 @@ missing:~$ ssh myserver 'journalctl -u sshd -b-1 | grep "Disconnected from"' \
 postgres,mysql,oracle,dell,ubuntu,inspur,test,admin,user,root
 ```
 
-This grabs SSH logs from a remote server (we'll talk more about `ssh` in
-the next lecture), searches for disconnect messages, extracts the
-username from each such message, and prints the top 10 usernames
-comma-separated. All in one command! We'll leave dissecting each step as
-an exercise.
+これは、リモートサーバーから SSH のログを取得し(`ssh` については
+次の講義で詳しく説明します)、切断メッセージを検索し、それぞれの
+メッセージからユーザー名を抽出して、上位10個のユーザー名をカンマ
+区切りで表示します。すべてが1つのコマンドで! 各ステップの分解は
+演習として残しておきます。
 
-## The shell language (bash)
+## シェルの言語 (bash)
 
-The previous example introduced a new concept: pipes (`|`). These let
-you string together the output of one program with the input of another.
-This works because most command-line programs will operate on their
-"standard input" (where your keystrokes normally go) if no `file`
-argument is given. `|` takes the "standard output" (what normally gets
-printed to your terminal) of the program before the `|` and makes it be
-the standard input of the program after the `|`. This allows you to
-_compose_ shell programs, and it's part of what makes the shell such a
-productive environment to work in!
+先ほどの例では、新しい概念が登場しました。パイプ(`|`)です。
+これは、あるプログラムの出力を別のプログラムの入力へとつなげて
+くれます。これが機能するのは、ほとんどのコマンドラインプログラムが、
+`file` 引数が与えられなければ「標準入力」(普段キー入力が届く場所)
+を対象に動作するからです。`|` は、`|` の前のプログラムの「標準出力」
+(普段ターミナルに表示されるもの)を受け取り、それを `|` の後の
+プログラムの標準入力にします。これによってシェルのプログラムを
+_合成_ できるようになり、シェルがこれほど生産的な作業環境である
+理由の一端となっています!
 
-In fact, most shells implement a full programming language (like bash),
-just like Python or Ruby. It has variables, conditionals, loops, and
-functions. When you run commands in your shell, you are really writing a
-small bit of code that your shell interprets. We won't teach you all of
-bash today, but there are some bits you'll find particularly useful:
+実際、ほとんどのシェルは、Python や Ruby と同じように、完全な
+プログラミング言語(bash など)を実装しています。変数、条件分岐、
+ループ、関数があります。シェルでコマンドを実行するとき、あなたは
+実はシェルが解釈する小さなコードを書いているのです。今日は bash の
+すべてを教えることはしませんが、特に役立つであろう部分をいくつか
+紹介します。
 
-First, redirects: `>file` lets you take the standard output of a program
-and write it to `file` instead of to your terminal. This makes it easier
-to analyze after the fact. `>>file` will append to `file` rather than
-overwrite it. There's also `<file` which tells the shell to read from
-`file` instead of from your keyboard as the standard input to a program.
+まず、リダイレクトです。`>file` を使うと、プログラムの標準出力を
+ターミナルではなく `file` に書き込めます。後から分析するのが楽に
+なります。`>>file` は `file` を上書きするのではなく追記します。
+また `<file` は、プログラムの標準入力として、キーボードではなく
+`file` から読み込むようシェルに指示します。
 
-> This is a good time to mention the `tee` program. `tee` will print
-> standard input to standard output (just like `cat`!), but will _also_
-> write it to a file. So `verbose cmd | tee verbose.log | grep CRITICAL`
-> will preserve the full verbose log to a file while keeping your
-> terminal clean!
+> ここで `tee` プログラムに触れておきましょう。`tee` は標準入力を
+> 標準出力に表示します(まるで `cat` のように!)が、同時にそれを
+> ファイルにも書き込みます。つまり
+> `verbose cmd | tee verbose.log | grep CRITICAL` とすれば、詳細な
+> ログ全体をファイルに残しつつ、ターミナルをすっきり保てます!
 
-Next, conditionals: `if command1; then command2; command3; fi` will
-execute `command1`, and if it doesn't result in an error, will run
-`command2` and `command3`. You can also have an `else` branch if you
-wish. The most common command to use as `command1` is the `test`
-command, often abbreviated simply as `[`, which lets you evaluate
-conditions like "does a file exist" (`test -f file` / `[ -f file ]`) or
-"does a string equal another" (`[ "$var" = "string" ]`). In bash,
-there's also `[[ ]]`, which is a "safer" built-in version of `test` that
-has fewer odd behaviours around quoting.
+次に、条件分岐です。`if command1; then command2; command3; fi` は
+`command1` を実行し、それがエラーにならなければ `command2` と
+`command3` を実行します。必要なら `else` 節を付けることもできます。
+`command1` として最もよく使われるのは `test` コマンドで、しばしば
+単に `[` と略記されます。これを使うと、「ファイルが存在するか」
+(`test -f file` / `[ -f file ]`)や「文字列が別の文字列と等しいか」
+(`[ "$var" = "string" ]`)といった条件を評価できます。bash には
+`[[ ]]` もあります。これは `test` の「より安全な」組み込み版で、
+クォート周りの奇妙な挙動が少なくなっています。
 
-Bash also has two forms of loops, `while` and `for`. `while command1; do
-command2; command3; done` functions just like the equivalent `if`
-command, except that it will re-execute the whole thing over and over
-for as long as `command1` does not error. `for varname in a b c d; do
-command; done` executes `command` four times, each time with `$varname`
-set to one of `a`, `b`, `c`, and `d`. Instead of listing the items
-explicitly, you'll often use "command substitution", such as:
+bash には2種類のループ、`while` と `for` もあります。
+`while command1; do command2; command3; done` は、先ほどの `if`
+コマンドと同じように機能しますが、`command1` がエラーにならない
+限り、全体を何度も繰り返し実行する点が異なります。
+`for varname in a b c d; do command; done` は `command` を4回実行し、
+そのたびに `$varname` に `a`、`b`、`c`、`d` のいずれかが設定
+されます。項目を明示的に列挙する代わりに、「コマンド置換」を
+使うこともよくあります。たとえば:
 
 ```bash
 for i in $(seq 1 10); do
 ```
 
-This executes the command `seq 1 10` (which prints the numbers from 1 to
-10 inclusive) and then replaces the whole `$()` with that command's
-output, giving you a 10-iteration for loop. In older code you'll
-sometimes see literal backticks (like ``for i in `seq 1 10`; do``)
-instead of `$()`, but you should strongly prefer the `$()` form as it
-can be nested.
+これは `seq 1 10` というコマンド(1から10までの数を両端含めて
+表示します)を実行し、`$()` 全体をそのコマンドの出力で置き換える
+ことで、10回繰り返す for ループになります。古いコードでは `$()` の
+代わりにバッククォート(``for i in `seq 1 10`; do`` のような形)を
+見かけることもありますが、`$()` の形はネストできるので、そちらを
+強く推奨します。
 
-While you _can_ write long shell scripts directly in your prompt, you'll
-usually want to write them into a `.sh` file instead. For example,
-here's a script that will run a program in a loop until it fails,
-printing the output only of the failed run, while stressing your CPU in
-the background (useful to reproduce flaky tests for example):
+長いシェルスクリプトをプロンプトに直接書くことも _できます_ が、
+普通は `.sh` ファイルに書きたくなるでしょう。たとえば、次の
+スクリプトは、バックグラウンドで CPU に負荷をかけながら、
+プログラムが失敗するまでループで実行し続け、失敗した実行の出力
+だけを表示します(たとえば不安定なテスト(flaky test)を再現する
+のに便利です)。
 
 ```bash
 #!/bin/bash
@@ -496,161 +511,182 @@ tail -n 20 "$LOGFILE"
 echo "Full log: $LOGFILE"
 ```
 
-This has a number of new things in it that I recommend you spend some
-time diving into, as they're very useful in crafting useful shell
-invocations like background jobs (`&`) to run programs concurrently,
-trickier [shell
-redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html),
-and [arithmetic
-expansion](https://www.gnu.org/software/bash/manual/html_node/Arithmetic-Expansion.html).
+この中には新しい要素がいくつも登場しているので、時間をかけて
+掘り下げてみることをおすすめします。プログラムを並行に実行する
+ためのバックグラウンドジョブ(`&`)、少し込み入った
+[シェルのリダイレクト](https://www.gnu.org/software/bash/manual/html_node/Redirections.html)、
+そして[算術展開](https://www.gnu.org/software/bash/manual/html_node/Arithmetic-Expansion.html)
+など、便利なシェルの使い方を組み立てるうえでとても役立ちます。
 
-It's worth spending a second on the first two lines of the program
-though. The first is the "shebang" -- you'll see this at the top of
-other files than shell scripts too. When a file that starts with the
-magic incantation `#!/path` is executed, the shell will start the
-program at `/path`, and pass it the contents of the file as input. In
-the case of a shell script, this means passing the contents of the shell
-script to `/bin/bash`, but you can also write Python scripts with a
-shebang line of `/usr/bin/python`!
+ただ、このプログラムの最初の2行については少し時間を割いておく
+価値があります。1行目は「シェバン(shebang)」です --- シェル
+スクリプト以外のファイルの先頭でも見かけることがあるでしょう。
+`#!/path` という魔法の呪文で始まるファイルが実行されると、シェルは
+`/path` にあるプログラムを起動し、そのファイルの内容を入力として
+渡します。シェルスクリプトの場合、これはスクリプトの内容を
+`/bin/bash` に渡すことを意味しますが、シェバン行を
+`/usr/bin/python` にして Python スクリプトを書くこともできます!
 
-The second line is a way to make bash "stricter", and mitigate a number
-of footguns when writing shell scripts. `set` can take a whole lot of
-arguments, but briefly: `-e` makes it so that if any command fails, the
-script exits early; `-u` makes it so that use of undefined variables
-crashes the script rather than just using an empty string; and `-o
-pipefail` makes it so that if programs in a `|` sequence fail, the
-shell script as a whole also exits early.
+2行目は bash を「より厳格」にして、シェルスクリプトを書くときの
+落とし穴の数々を軽減するための方法です。`set` は実にさまざまな
+引数を取れますが、手短に言うと: `-e` は、いずれかのコマンドが
+失敗したらスクリプトを早期終了させます。`-u` は、未定義の変数を
+使ったときに、単に空文字列として扱うのではなくスクリプトを
+クラッシュさせます。そして `-o pipefail` は、`|` の連なりの中の
+プログラムが失敗したら、シェルスクリプト全体も早期終了するように
+します。
 
-> Shell programming is a deep topic, just as any programming language
-> is, but be warned: bash has an unusual number of gotchas, to the point
-> that there are [multiple](https://tldp.org/LDP/abs/html/gotchas.html)
-> websites dedicated to [listing them](https://mywiki.wooledge.org/BashPitfalls).
-> I highly recommend making heavy use of
-> [shellcheck](https://www.shellcheck.net/) when writing them. LLMs are
-> also great at writing and debugging shell scripts, as well as
-> translating them to a "real" programming language (like Python) when
-> they've grown too unwieldy for bash (100+ lines).
+> シェルプログラミングは、他のプログラミング言語と同じく奥深い
+> トピックですが、注意してください。bash には異常なほど多くの
+> 落とし穴があり、それを[列挙する](https://mywiki.wooledge.org/BashPitfalls)
+> ことに特化したウェブサイトが[複数](https://tldp.org/LDP/abs/html/gotchas.html)
+> 存在するほどです。シェルスクリプトを書くときは
+> [shellcheck](https://www.shellcheck.net/) を大いに活用することを
+> 強くおすすめします。また、LLM もシェルスクリプトの作成や
+> デバッグ、さらには bash では手に負えないほど大きくなった
+> (100行超の)スクリプトを「本物の」プログラミング言語
+> (Python など)に翻訳するのが得意です。
 
-# Next steps
+# 次のステップ
 
-At this point you know your way around a shell enough to accomplish
-basic tasks. You should be able to navigate around to find files of
-interest and use the basic functionality of most programs. In the next
-lecture, we will talk about how to perform and automate more complex
-tasks using the shell and the many handy command-line programs out
-there.
+ここまでで、基本的な作業をこなせる程度にはシェルを使いこなせる
+ようになりました。目的のファイルを探して移動したり、ほとんどの
+プログラムの基本機能を使ったりできるはずです。次の講義では、
+シェルと、世の中にある数多くの便利なコマンドラインプログラムを
+使って、より複雑な作業を実行・自動化する方法について話します。
 
-# Exercises
+# 演習
 
-All classes in this course are accompanied by a series of exercises.
-Some give you a specific task to do, while others are open-ended, like
-"try using X and Y programs". We highly encourage you to try them out.
+このコースのすべての授業には、一連の演習が付いています。具体的な
+課題を与えるものもあれば、「X と Y のプログラムを使ってみよう」の
+ような自由回答式のものもあります。ぜひ試してみることを強く
+おすすめします。
 
-We have not written solutions for the exercises. If you are stuck on
-anything in particular, feel free to post in `#missing-semester-forum`
-on [Discord](https://ossu.dev/#community) or send us an email describing
-what you've tried so far, and we will try to help you out. These
-exercises will also likely work well as initial prompts in a
-conversation with an LLM where you can interactively dive into the
-topic. The real value in these exercises is the journey of discovering
-the answers, not the answer itself. We encourage you to follow tangents
-and ask "why" as you work through them, rather than just looking for the
-shortest path to the solution.
+演習の解答は用意していません。特定の箇所で行き詰まったら、
+[Discord](https://ossu.dev/#community) の `#missing-semester-forum` に
+投稿するか、これまでに試したことを書いたメールを私たちに送って
+ください。できる限りお手伝いします。これらの演習は、LLM との会話の
+最初のプロンプトとしてもうまく機能するでしょう。対話しながら
+トピックを深掘りできます。これらの演習の本当の価値は、答えそのもの
+ではなく、答えを発見するまでの道のりにあります。最短経路で解答を
+探すのではなく、寄り道をしながら「なぜ?」と問い続けることを
+おすすめします。
 
-1. For this course, you need to be using a Unix shell like Bash or ZSH. If
-   you are on Linux or macOS, you don't have to do anything special. If you
-   are on Windows, you need to make sure you are not running cmd.exe or
-   PowerShell; you can use [Windows Subsystem for
-   Linux](https://docs.microsoft.com/en-us/windows/wsl/) or a Linux virtual
-   machine to use Unix-style command-line tools. To make sure you're running
-   an appropriate shell, you can try the command `echo $SHELL`. If it says
-   something like `/bin/bash` or `/usr/bin/zsh`, that means you're running
-   the right program.
+1. このコースでは、Bash や ZSH のような Unix シェルを使う必要が
+   あります。Linux または macOS を使っているなら、特別なことをする
+   必要はありません。Windows を使っている場合は、cmd.exe や
+   PowerShell を実行していないことを確認する必要があります。
+   Unix スタイルのコマンドラインツールを使うには、[Windows Subsystem for
+   Linux](https://docs.microsoft.com/en-us/windows/wsl/) か Linux の
+   仮想マシンが使えます。適切なシェルを実行していることを確認する
+   には、`echo $SHELL` コマンドを試してください。`/bin/bash` や
+   `/usr/bin/zsh` のような表示が出れば、正しいプログラムを実行
+   できています。
 
-1. What does the `-l` flag to `ls` do? Run `ls -l /` and examine the output.
-   What do the first 10 characters of each line mean? (Hint: `man ls`)
+1. `ls` の `-l` フラグは何をするものでしょうか? `ls -l /` を実行して
+   出力を調べてください。各行の最初の10文字は何を意味している
+   でしょうか? (ヒント: `man ls`)
 
-1. In the command `find ~/Downloads -type f -name "*.zip" -mtime +30`, the
-   `*.zip` is a "glob". What is a glob? Create a test directory with some
-   files and experiment with patterns like `ls *.txt`, `ls file?.txt`, and
-   `ls {a,b,c}.txt`. See [Pattern
+1. `find ~/Downloads -type f -name "*.zip" -mtime +30` というコマンドの
+   `*.zip` は「グロブ(glob)」です。グロブとは何でしょうか? テスト用の
+   ディレクトリをいくつかのファイルと一緒に作り、`ls *.txt`、
+   `ls file?.txt`、`ls {a,b,c}.txt` のようなパターンを試して
+   ください。Bash マニュアルの [Pattern
    Matching](https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html)
-   in the Bash manual.
+   を参照してください。
 
-1. What's the difference between `'single quotes'`, `"double quotes"`, and
-   `$'ANSI quotes'`? Write a command that echoes a string containing a
-   literal `$`, a `!`, and a newline character. See
-   [Quoting](https://www.gnu.org/software/bash/manual/html_node/Quoting.html).
+1. `'single quotes'`、`"double quotes"`、`$'ANSI quotes'` の違いは
+   何でしょうか? リテラルの `$`、`!`、改行文字を含む文字列を
+   echo するコマンドを書いてください。
+   [Quoting](https://www.gnu.org/software/bash/manual/html_node/Quoting.html)
+   を参照してください。
 
-1. The shell has three standard streams: stdin (0), stdout (1), and stderr
-   (2). Run `ls /nonexistent /tmp` and redirect stdout to one file and
-   stderr to another. How would you redirect both to the same file? See
-   [Redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html).
+1. シェルには3つの標準ストリームがあります。stdin (0)、stdout (1)、
+   stderr (2) です。`ls /nonexistent /tmp` を実行し、stdout を
+   あるファイルへ、stderr を別のファイルへリダイレクトして
+   ください。両方を同じファイルにリダイレクトするにはどうすれば
+   よいでしょうか?
+   [Redirections](https://www.gnu.org/software/bash/manual/html_node/Redirections.html)
+   を参照してください。
 
-1. `$?` holds the exit status of the last command (0 = success). `&&` runs
-   the next command only if the previous succeeded; `||` runs it only if
-   the previous failed. Write a one-liner that creates `/tmp/mydir` only if
-   it doesn't already exist. See [Exit
-   Status](https://www.gnu.org/software/bash/manual/html_node/Exit-Status.html).
+1. `$?` は直前のコマンドの終了ステータスを保持します(0 = 成功)。
+   `&&` は直前のコマンドが成功した場合にのみ次のコマンドを実行し、
+   `||` は失敗した場合にのみ実行します。`/tmp/mydir` がまだ存在
+   しない場合にのみ作成するワンライナーを書いてください。[Exit
+   Status](https://www.gnu.org/software/bash/manual/html_node/Exit-Status.html)
+   を参照してください。
 
-1. Why does `cd` have to be built into the shell itself rather than a
-   standalone program? (Hint: think about what a child process can and
-   cannot affect in its parent.)
+1. なぜ `cd` は独立したプログラムではなく、シェル自体に組み込まれて
+   いなければならないのでしょうか? (ヒント: 子プロセスが親プロセスに
+   対して影響を与えられるもの・与えられないものについて考えて
+   みてください。)
 
-1. Write a script that takes a filename as an argument (`$1`) and checks
-   whether the file exists using `test -f` or `[ -f ... ]`. It should print
-   different messages depending on whether the file exists. See [Bash
+1. ファイル名を引数(`$1`)として受け取り、そのファイルが存在するか
+   どうかを `test -f` または `[ -f ... ]` で確認するスクリプトを
+   書いてください。ファイルが存在するかどうかに応じて異なる
+   メッセージを表示するようにしましょう。[Bash
    Conditional
-   Expressions](https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html).
+   Expressions](https://www.gnu.org/software/bash/manual/html_node/Bash-Conditional-Expressions.html)
+   を参照してください。
 
-1. Save the script from the previous exercise to a file (e.g., `check.sh`).
-   Try running it with `./check.sh somefile`. What happens? Now run
-   `chmod +x check.sh` and try again. Why is this step necessary? (Hint:
-   look at `ls -l check.sh` before and after the `chmod`.)
+1. 前の演習のスクリプトをファイル(例: `check.sh`)に保存して
+   ください。`./check.sh somefile` で実行してみましょう。何が
+   起こるでしょうか? 次に `chmod +x check.sh` を実行してからもう一度
+   試してください。なぜこのステップが必要なのでしょうか? (ヒント:
+   `chmod` の前後で `ls -l check.sh` の出力を見比べてみてください。)
 
-1. What happens if you add `-x` to the `set` flags in a script? Try it with
-    a simple script and observe the output. See [The Set
-    Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html).
+1. スクリプトの `set` フラグに `-x` を追加すると何が起こるでしょうか?
+    簡単なスクリプトで試して、出力を観察してください。[The Set
+    Builtin](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+    を参照してください。
 
-1. Write a command that copies a file to a backup with today's date in the
-    filename (e.g., `notes.txt` → `notes_2026-01-12.txt`). (Hint: `$(date
-    +%Y-%m-%d)`). See [Command
-    Substitution](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html).
+1. ファイルを、今日の日付をファイル名に含むバックアップとして
+    コピーするコマンドを書いてください(例: `notes.txt` →
+    `notes_2026-01-12.txt`)。(ヒント: `$(date
+    +%Y-%m-%d)`)。[Command
+    Substitution](https://www.gnu.org/software/bash/manual/html_node/Command-Substitution.html)
+    を参照してください。
 
-1. Modify the flaky test script from the lecture to accept the test command
-    as an argument instead of hardcoding `cargo test my_test`. (Hint: `$1`
-    or `$@`). See [Special
-    Parameters](https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html).
+1. 講義に出てきた不安定なテスト用のスクリプトを、`cargo test my_test`
+    をハードコードする代わりに、テストコマンドを引数として受け取る
+    ように変更してください。(ヒント: `$1` または `$@`)。[Special
+    Parameters](https://www.gnu.org/software/bash/manual/html_node/Special-Parameters.html)
+    を参照してください。
 
-1. Use pipes to find the 5 most common file extensions in your home
-    directory. (Hint: combine `find`, `grep` or `sed` or `awk`, `sort`,
-    `uniq -c`, and `head`.)
+1. パイプを使って、ホームディレクトリ内で最もよく使われている
+    ファイル拡張子の上位5つを見つけてください。(ヒント: `find` と、
+    `grep`・`sed`・`awk` のいずれか、`sort`、`uniq -c`、`head` を
+    組み合わせます。)
 
-1. `xargs` converts lines from stdin into command arguments. Use `find` and
-    `xargs` together (not `find -exec`) to find all `.sh` files in a
-    directory and count the lines in each with `wc -l`. Bonus: make it
-    handle filenames with spaces. (Hint: `-print0` and `-0`). See `man
-    xargs`.
+1. `xargs` は stdin から読み込んだ行をコマンドの引数に変換します。
+    `find` と `xargs` を組み合わせて(`find -exec` は使わずに)、
+    あるディレクトリ内のすべての `.sh` ファイルを見つけ、それぞれの
+    行数を `wc -l` で数えてください。ボーナス: 空白を含むファイル名
+    にも対応させてください。(ヒント: `-print0` と `-0`)。`man
+    xargs` を参照してください。
 
-1. Use `curl` to fetch the HTML of the course website
-    (`https://missing.csail.mit.edu/`) and pipe it to `grep` to count how
-    many lectures are listed. (Hint: look for a pattern that appears once
-    per lecture; use `curl -s` to silence the progress output.)
+1. `curl` を使ってこのコースのウェブサイト
+    (`https://missing.csail.mit.edu/`)の HTML を取得し、`grep` に
+    パイプして、いくつの講義が掲載されているか数えてください。
+    (ヒント: 講義ごとに1回出現するパターンを探しましょう。進捗
+    表示を消すには `curl -s` を使います。)
 
-1. [`jq`](https://jqlang.github.io/jq/) is a powerful tool for processing
-    JSON data. Fetch the sample data at
-    `https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json` with
-    `curl` and use `jq` to extract just the names of people whose version
-    is greater than 6. (Hint: pipe to `jq .` first to see the structure;
-    then try `jq '.[] | select(...) | .name'`)
+1. [`jq`](https://jqlang.github.io/jq/) は JSON データを処理するための
+    強力なツールです。`curl` で
+    `https://microsoftedge.github.io/Demos/json-dummy-data/64KB.json`
+    にあるサンプルデータを取得し、`jq` を使って version が6より
+    大きい人の名前だけを抽出してください。(ヒント: まず `jq .` に
+    パイプして構造を確認してから、
+    `jq '.[] | select(...) | .name'` を試してみましょう)
 
-1. `awk` can filter lines based on column values and manipulate output.
-    For example, `awk '$3 ~ /pattern/ {$4=""; print}'` prints only lines
-    where the third column matches `pattern`, while omitting the fourth
-    column. Write an `awk` command that prints only lines where the second
-    column is greater than 100, and swaps the first and third columns. Test
-    with: `printf 'a 50 x\nb 150 y\nc 200 z\n'`
+1. `awk` は列の値に基づいて行をフィルタリングしたり、出力を加工
+    したりできます。たとえば `awk '$3 ~ /pattern/ {$4=""; print}'` は、
+    3列目が `pattern` にマッチする行だけを、4列目を省いて表示
+    します。2列目が100より大きい行だけを表示し、1列目と3列目を
+    入れ替える `awk` コマンドを書いてください。次のコマンドで
+    テストできます: `printf 'a 50 x\nb 150 y\nc 200 z\n'`
 
-1. Dissect the SSH log pipeline from the lecture: what does each step do?
-    Then build something similar to find your most-used shell commands from
-    `~/.bash_history` (or `~/.zsh_history`).
+1. 講義に出てきた SSH ログのパイプラインを分解してみましょう。
+    各ステップは何をしているでしょうか? その後、似たようなものを
+    作って、`~/.bash_history`(または `~/.zsh_history`)から自分が
+    最もよく使うシェルコマンドを見つけてください。

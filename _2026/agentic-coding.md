@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Agentic Coding"
+title: "エージェンティックコーディング"
 description: >
-  Learn how to use AI coding agents effectively for software development tasks.
+  AIコーディングエージェントをソフトウェア開発のタスクに効果的に活用する方法を学びます。
 thumbnail: /static/assets/thumbnails/2026/lec7.png
 date: 2026-01-21
 ready: true
@@ -11,9 +11,9 @@ video:
   id: sTdz6PZoAnw
 ---
 
-Coding agents are conversational AI models with access to tools such as reading/writing files, web search, and invoking shell commands. They live either in the IDE or in standalone command-line or GUI tools. Coding agents are highly autonomous and powerful tools, enabling a wide variety of use cases.
+コーディングエージェントとは、ファイルの読み書き、Web検索、シェルコマンドの実行といったツールへのアクセスを持つ、対話型のAIモデルです。IDEの中に組み込まれているものもあれば、スタンドアロンのコマンドラインツールやGUIツールとして提供されているものもあります。コーディングエージェントは高い自律性を持つ強力なツールであり、非常に幅広いユースケースを可能にします。
 
-This lecture builds on the AI-powered development material from the [Development Environment and Tools](/2026/development-environment/) lecture. As a quick demo, let's continue with the example from the [AI-powered development](/2026/development-environment/#ai-powered-development) section:
+この講義は、[開発環境とツール](/2026/development-environment/)の講義で扱ったAIを活用した開発の内容を発展させたものです。簡単なデモとして、[AIを活用した開発](/2026/development-environment/#ai-powered-development)のセクションの例の続きから始めましょう。
 
 ```python
 from urllib.request import urlopen
@@ -30,49 +30,49 @@ def extract(content: str) -> list[str]:
 print(extract(download_contents("https://raw.githubusercontent.com/missing-semester/missing-semester/refs/heads/master/_2026/development-environment.md")))
 ```
 
-We can try prompting a coding agent with the following task:
+コーディングエージェントに次のようなタスクをプロンプトとして与えてみましょう。
 
 ```
 Turn this into a proper command-line program, with argparse for argument parsing. Add type annotations, and make sure the program passes type checking.
 ```
 
-The agent will read the file to understand it, then make some edits, and finally invoke the type checker to make sure the type annotations are correct. If it makes a mistake such that it fails type checking, it will likely iterate, though this is a simple task so that is unlikely to happen. Because coding agents have access to tools that may be harmful, by default, agent harnesses prompt the user to confirm tool calls.
+エージェントはまずファイルを読んで内容を理解し、次にいくつかの編集を行い、最後に型チェッカーを実行して型アノテーションが正しいことを確認します。型チェックに失敗するようなミスをした場合は、おそらく自分で修正を繰り返すでしょう(もっとも、これは単純なタスクなので、そうなる可能性は低いですが)。コーディングエージェントは有害になりうるツールへのアクセスを持つため、デフォルトでは、エージェントハーネスはツール呼び出しの前にユーザーに確認を求めます。
 
-> If the coding agent makes a mistake --- for example, if you have the `mypy` binary available directly on `$PATH` but the agent tries calling `python -m mypy` --- you can give it text feedback to help it course correct.
+> コーディングエージェントがミスをした場合 --- たとえば、`mypy` バイナリが `$PATH` 上で直接利用できるのにエージェントが `python -m mypy` を呼び出そうとした場合など --- テキストでフィードバックを与えて軌道修正を促すことができます。
 
-Coding agents support multi-turn interaction, so you can iterate on work over a back-and-forth conversation with the agent. You can even interrupt the agent if it's going down the wrong track. One helpful mental model might be that of a manager of an intern: the intern will do the nitty gritty work, but will require guidance, and will occasionally do the wrong thing and need to be corrected.
+コーディングエージェントはマルチターンの対話に対応しているので、エージェントとのやり取りを重ねながら作業を進めていくことができます。エージェントが間違った方向に進んでいる場合には、途中で割り込むことも可能です。役に立つメンタルモデルのひとつは、インターンを指導するマネージャーというものです。インターンは細々とした作業をこなしてくれますが、指導が必要であり、ときには間違ったことをして修正が必要になります。
 
-> For a more illustrative demo, try asking the agent as a follow-up to run the resulting script. Observe the outputs, and try asking it to make a change (e.g., ask it to include only absolute URLs).
+> より分かりやすいデモとして、続けてエージェントに、生成されたスクリプトを実行するよう頼んでみてください。出力を観察し、変更を依頼してみましょう(たとえば、絶対URLだけを含めるように頼んでみてください)。
 
-# How AI models and agents work
+# AIモデルとエージェントの仕組み
 
-Fully explaining the inner workings of modern [large language models (LLMs)](https://en.wikipedia.org/wiki/Large_language_model) and infrastructure such as agent harnesses is beyond the scope of this course. However, having a high-level understanding of some of the key ideas is helpful for effectively _using_ this bleeding edge technology and understanding its limitations.
+現代の[大規模言語モデル(LLM)](https://en.wikipedia.org/wiki/Large_language_model)やエージェントハーネスなどのインフラの内部動作を完全に説明することは、このコースの範囲を超えています。しかし、いくつかの重要なアイデアを高いレベルで理解しておくことは、この最先端技術を効果的に「使う」上でも、その限界を理解する上でも役立ちます。
 
-LLMs can be viewed as modeling the probability distribution of completion strings (outputs) given prompt strings (inputs). LLM inference (what happens when you, e.g., supply a query to a conversational chat app) _samples_ from this probability distribution. LLMs have a fixed _context window_, the maximum length of the input and output strings.
+LLMは、プロンプト文字列(入力)が与えられたときの補完文字列(出力)の確率分布をモデル化したものと見なせます。LLMの推論(たとえば対話型チャットアプリにクエリを入力したときに起こること)は、この確率分布から「サンプリング」を行います。LLMには固定の「コンテキストウィンドウ」があり、これは入力と出力の文字列の最大長です。
 
 {% comment %}
 > In mathematical notation, the LLM models the probability distribution $\pi_\theta$ of completions $y$ conditioned on prompts $x$, and we sample from this distribution: $\hat{y} \sim \pi_\theta(\cdot \mid x)$.
 {% endcomment %}
 
-AI tools such as conversational chat and coding agents build on top of this primitive. For multi-turn interactions, chat apps and agents use turn markers and supply the entire conversation history as the prompt string every time there is a new user prompt, invoking LLM inference once per user prompt. For tool-calling agents, the harness interprets certain LLM outputs as requests to invoke a tool, and the harness supplies the results of the tool call back to the model as part of the prompt string (so LLM inference runs again every time there is a tool call/response). The core concepts in tool-calling agents can be [implemented in 200 lines of code](https://www.mihaileric.com/The-Emperor-Has-No-Clothes/).
+対話型チャットやコーディングエージェントといったAIツールは、このプリミティブの上に構築されています。マルチターンの対話のために、チャットアプリやエージェントはターンマーカーを使い、新しいユーザープロンプトが来るたびに会話履歴全体をプロンプト文字列として与え、ユーザープロンプトごとに1回LLMの推論を実行します。ツール呼び出しを行うエージェントでは、ハーネスがLLMの特定の出力をツール呼び出しの要求として解釈し、ツール呼び出しの結果をプロンプト文字列の一部としてモデルに返します(つまり、ツールの呼び出し/応答があるたびにLLMの推論が再び実行されます)。ツール呼び出しエージェントの中核となる概念は、[200行のコードで実装できます](https://www.mihaileric.com/The-Emperor-Has-No-Clothes/)。
 
-## Privacy
+## プライバシー
 
-Most AI coding tools in their standard configurations send a lot of your data to the cloud. Sometimes the harness runs locally while LLM inference runs in the cloud, other times even more of the software is running in the cloud (and, e.g., the service provider might effectively get a copy of your entire repository as well as all interactions you have with the AI tool).
+ほとんどのAIコーディングツールは、標準の設定では大量のデータをクラウドに送信します。ハーネスはローカルで動作しLLMの推論だけがクラウドで実行される場合もあれば、より多くの部分がクラウドで実行される場合もあります(その場合、たとえばサービス提供者は、リポジトリ全体のコピーと、あなたがAIツールと行うすべてのやり取りを事実上入手できることになります)。
 
-There are open-source AI coding tools and open-source LLMs that are pretty good (though not quite as good as the proprietary models), but at the present, for most users, running bleeding-edge open LLMs locally will be infeasible due to hardware limitations.
+オープンソースのAIコーディングツールや、かなり優秀なオープンソースのLLMも存在します(とはいえ、プロプライエタリなモデルほどの性能はありません)。しかし現時点では、ほとんどのユーザーにとって、最先端のオープンLLMをローカルで動かすことはハードウェアの制約から現実的ではないでしょう。
 
-# Use cases
+# ユースケース
 
-Coding agents can be helpful for a wide variety of tasks. Some examples:
+コーディングエージェントは、非常に幅広いタスクで役立ちます。いくつか例を挙げます。
 
-- **Implementing new features.** As in the example above, you can ask a coding agent to implement a feature. Giving a good specification is more of an art than a science at this point; you want the input to the agent to be descriptive enough so that the agent does what you want it to do (at least heading in the right direction so you can iterate), but not overly descriptive to the point where you're doing too much work yourself. Test-driven development can be particularly effective: write tests (or use the coding agent to help you write tests), audit them to ensure they capture what you want, and then ask the coding agent to implement the feature. Models are continually improving, so you'll have to keep your intuition up-to-date on what the models are capable of.
-    > We used Claude Code to [implement](https://github.com/missing-semester/missing-semester/pull/345) these Tufte-style sidenotes.
+- **新機能の実装。** 上の例のように、コーディングエージェントに機能の実装を依頼できます。良い仕様を与えることは、現時点では科学というよりも技芸に近いものです。エージェントが意図どおりに動く(少なくとも正しい方向に進み始めて、そこから反復改善できる)程度に十分具体的な入力を与えたい一方で、詳細すぎて自分の作業量が増えてしまうのも避けたいところです。テスト駆動開発は特に効果的です。テストを書き(またはコーディングエージェントにテスト作成を手伝ってもらい)、そのテストが望むものを捉えているか自分で確認したうえで、コーディングエージェントに機能の実装を依頼します。モデルは絶えず進化しているので、モデルに何ができるかについての直観は常にアップデートしていく必要があります。
+    > このTufteスタイルのサイドノートは、Claude Codeを使って[実装](https://github.com/missing-semester/missing-semester/pull/345)しました。
 {%- comment %}
 No need to demo this, since the intro of a lecture was a small demo of adding a new feature.
 {% endcomment %}
-- **Fixing errors.** If you have errors from your compiler, linter, type checker, or tests, you can ask your agent to correct them, for example with a prompt like "fix the issues with mypy". Coding models are particularly effective when you can get them in a feedback loop, so try to set things up so that the model can run the failing check directly, which will let it iterate autonomously. If this is impractical, you can give the model feedback manually.
-    > On commit [f552b55](https://github.com/missing-semester/missing-semester/commit/f552b5523462b22b8893a8404d2110c4e59613dd) of the missing-semester repo, we prompted Claude Code with "Review the agentic coding lecture for typos and grammatical issues" and subsequently asked it to fix the issues it found, which were committed in [f1e1c41](https://github.com/missing-semester/missing-semester/commit/f1e1c417adba6b4149f7eef91ff5624de40dc637).
+- **エラーの修正。** コンパイラ、リンタ、型チェッカー、テストからエラーが出ている場合、エージェントに修正を依頼できます。たとえば「fix the issues with mypy」のようなプロンプトを与えます。コーディングモデルはフィードバックループに入れると特に効果を発揮するので、モデル自身が失敗しているチェックを直接実行できるように環境を整えましょう。そうすればモデルは自律的に反復できます。それが難しい場合は、手動でフィードバックを与えることもできます。
+    > missing-semesterリポジトリのコミット[f552b55](https://github.com/missing-semester/missing-semester/commit/f552b5523462b22b8893a8404d2110c4e59613dd)で、Claude Codeに「Review the agentic coding lecture for typos and grammatical issues」というプロンプトを与え、続けて見つかった問題の修正を依頼しました。その修正は[f1e1c41](https://github.com/missing-semester/missing-semester/commit/f1e1c417adba6b4149f7eef91ff5624de40dc637)でコミットされています。
 {%- comment %}
 Demo a coding agent fixing the bug in https://github.com/anishathalye/dotbot/commit/cef40c902ef0f52f484153413142b5154bbc5e99.
 
@@ -88,18 +88,18 @@ Can prompt coding agent with:
 
 Get it to commit the changes.
 {% endcomment %}
-- **Refactoring.** You can use coding agents to refactor code in various ways, from simple tasks like renaming a method (this kind of refactoring is also supported by [code intelligence](/2026/development-environment/#code-intelligence-and-language-servers)) to more complex tasks like breaking out functionality into a separate module.
-    > We used Claude Code to [split](https://github.com/missing-semester/missing-semester/pull/344) agentic coding into its own lecture.
+- **リファクタリング。** コーディングエージェントは、さまざまな形のリファクタリングに利用できます。メソッドのリネームのような単純なタスク(この種のリファクタリングは[コードインテリジェンス](/2026/development-environment/#code-intelligence-and-language-servers)でも可能です)から、機能を別モジュールに切り出すような複雑なタスクまで対応できます。
+    > エージェンティックコーディングを独立した講義に[分割](https://github.com/missing-semester/missing-semester/pull/344)する作業には、Claude Codeを使いました。
 {%- comment %}
 Show usage in Missing Semester, point out that the agent did make some mistakes.
 {% endcomment %}
-- **Code review.** You can ask coding agents to review code. You can give them basic guidance, like "review my latest changes that are not yet committed". If you want to review a pull request and your coding agent supports web fetch, or you have command-line tools like the [GitHub CLI](https://cli.github.com/) installed, you might even be able to ask the coding agent "Review the pull request {link}" and it'll handle it from there.
+- **コードレビュー。** コーディングエージェントにコードのレビューを依頼できます。「review my latest changes that are not yet committed」のような簡単な指示を与えるだけで構いません。プルリクエストをレビューしたい場合、コーディングエージェントがWebフェッチに対応していたり、[GitHub CLI](https://cli.github.com/)のようなコマンドラインツールがインストールされていれば、「Review the pull request {link}」と頼むだけで、あとはエージェントが処理してくれるかもしれません。
 {%- comment %}
 In Porcupine repo, prompt agent with:
 
     Review this PR: https://github.com/anishathalye/porcupine/pull/39
 {% endcomment %}
-- **Code understanding.** You can ask a coding agent questions about a codebase, which can be particularly helpful for onboarding.
+- **コード理解。** コードベースについてコーディングエージェントに質問できます。これは特にオンボーディングの際に役立ちます。
 {%- comment %}
 Some prompts to try in the missing-semester repo:
 
@@ -107,39 +107,39 @@ Some prompts to try in the missing-semester repo:
 
     How are the social preview cards implemented?
 {% endcomment %}
-- **As a shell.** You can ask the coding agent to use a particular tool to solve a task, so you can invoke a shell command using natural language, such as "use the find command to find all files older than 30 days" or "use mogrify to resize all the jpgs to 50% of their original size".
+- **シェルとして。** 特定のツールを使ってタスクを解決するようコーディングエージェントに依頼できます。つまり、自然言語でシェルコマンドを呼び出せるということです。たとえば「use the find command to find all files older than 30 days」や「use mogrify to resize all the jpgs to 50% of their original size」のように指示できます。
 {%- comment %}
 In Dotbot repo, prompt agent with:
 
     Use the ag command to find all Python renaming imports
 {% endcomment %}
-- **Vibe coding.** Agents are powerful enough that you can implement some applications without writing a single line of code yourself.
-    > [Here is an example](https://github.com/cleanlab/office-presence-dashboard) of a real-world project that one of the instructors vibe-coded.
+- **バイブコーディング。** エージェントは十分に強力なので、自分では一行もコードを書かずにアプリケーションを実装できることもあります。
+    > 講師のひとりがバイブコーディングで作った実際のプロジェクトの[例がこちらです](https://github.com/cleanlab/office-presence-dashboard)。
 {%- comment %}
 In missing-semester repo, prompt agent with:
 
     Make this site look retro.
 {% endcomment %}
 
-# Advanced agents
+# 高度なエージェント
 
-Here, we give a brief overview of some more advanced usage patterns and capabilities of coding agents.
+ここでは、コーディングエージェントのより高度な使用パターンと機能について簡単に紹介します。
 
-- **Reusable prompts.** Create reusable prompts or templates. For example, you can write a detailed prompt to do code review in a particular way, and save that as a reusable prompt.
-    > Agent tooling evolves quickly. In some tools, reusable prompts as a standalone feature are deprecated. For example, in Codex and Claude Code, they are [subsumed](https://developers.openai.com/codex/custom-prompts) by [skills](https://code.claude.com/docs/en/skills).
-- **Parallel agents.** Coding agents can be slow: you can prompt the agent, and it can work at a problem for tens of minutes. You can run multiple copies of agents at the same time, either working on the same task (LLMs are stochastic, so it can be helpful to run the same thing multiple times and take the best solution) or different tasks (e.g., implement two non-overlapping features at the same time). To keep the different agents' changes from interfering with each other, you can use [git worktrees](https://git-scm.com/docs/git-worktree), which we cover in the lecture on [version control](/2026/version-control/).
-- **MCPs.** MCP, which stands for _Model Context Protocol_, is an open protocol that you can use to connect your coding agents with tools. For example, this [Notion MCP server](https://github.com/makenotion/notion-mcp-server) can let your agent read/write Notion docs, enabling use cases like "read the spec linked in {Notion doc}, draft an implementation plan as a new page in Notion, and then implement a prototype". For discovering MCPs, you can use directories like [Pulse](https://www.pulsemcp.com/servers) and [Glama](https://glama.ai/mcp/servers).
-- **Context management.** As we noted [above](#how-ai-models-and-agents-work), the LLMs that underlie coding agents have a limited _context window_. Effective use of coding agents necessitates making good use of context. You want to make sure the agent has access to the information it needs, but avoid unnecessary context to avoid overflowing the context window or degrading the performance of the model (which tends to happen as context size grows, even if it doesn't overflow the context window). Agent harnesses automatically supply, and to some degree, manage context, but a lot of control is left to the user.
-    - **Clearing the context window.** The most basic control, coding agents support clearing the context window (starting a new conversation), which you should do for unrelated queries.
-    - **Rewinding the conversation.** Some coding agents support undoing steps in the conversation history. Rather than give a follow-up message steering the agent in a different direction, in situations where an "undo" makes more sense, this more effectively manages context.
+- **再利用可能なプロンプト。** 再利用可能なプロンプトやテンプレートを作成できます。たとえば、特定のやり方でコードレビューを行うための詳細なプロンプトを書き、それを再利用可能なプロンプトとして保存できます。
+    > エージェント関連のツールは急速に進化しています。ツールによっては、独立した機能としての再利用可能なプロンプトは非推奨になっています。たとえばCodexとClaude Codeでは、[スキル](https://code.claude.com/docs/en/skills)に[統合](https://developers.openai.com/codex/custom-prompts)されています。
+- **並列エージェント。** コーディングエージェントは時間がかかることがあります。プロンプトを与えると、数十分にわたって問題に取り組むこともあります。複数のエージェントを同時に走らせることができ、同じタスクに取り組ませることも(LLMは確率的なので、同じことを複数回実行して最良の解を選ぶのが有効な場合があります)、別々のタスクに取り組ませることも(たとえば、重複しない2つの機能を同時に実装するなど)できます。異なるエージェントの変更が互いに干渉しないようにするには、[gitのworktree](https://git-scm.com/docs/git-worktree)が使えます。これは[バージョン管理](/2026/version-control/)の講義で扱っています。
+- **MCP。** MCPとは「Model Context Protocol」の略で、コーディングエージェントをツールと接続するためのオープンなプロトコルです。たとえば、この[Notion MCPサーバー](https://github.com/makenotion/notion-mcp-server)を使うと、エージェントがNotionのドキュメントを読み書きできるようになり、「{Notionドキュメント}にリンクされた仕様を読んで、実装計画をNotionの新しいページとして下書きし、プロトタイプを実装する」といったユースケースが可能になります。MCPを探すには、[Pulse](https://www.pulsemcp.com/servers)や[Glama](https://glama.ai/mcp/servers)のようなディレクトリが利用できます。
+- **コンテキスト管理。** [上で述べたように](#how-ai-models-and-agents-work)、コーディングエージェントの基盤となるLLMには限られた「コンテキストウィンドウ」があります。コーディングエージェントを効果的に使うには、コンテキストをうまく活用する必要があります。エージェントが必要な情報にアクセスできるようにする一方で、不要なコンテキストは避けるべきです。コンテキストウィンドウのあふれを防ぐためだけでなく、モデルの性能低下を避けるためでもあります(コンテキストウィンドウがあふれなくても、コンテキストサイズが大きくなるにつれて性能は低下する傾向があります)。エージェントハーネスは自動的にコンテキストを供給し、ある程度は管理もしてくれますが、多くの制御はユーザーに委ねられています。
+    - **コンテキストウィンドウのクリア。** 最も基本的な制御として、コーディングエージェントはコンテキストウィンドウのクリア(新しい会話の開始)に対応しています。無関係な問い合わせをするときはクリアすべきです。
+    - **会話の巻き戻し。** コーディングエージェントの中には、会話履歴のステップを取り消せるものがあります。エージェントを別の方向に誘導するフォローアップメッセージを送るよりも、「取り消し」のほうが理にかなっている状況では、こちらのほうが効果的にコンテキストを管理できます。
 {%- comment %}
 Make up a quick demo.
 {% endcomment %}
-    - **Compaction.** To enable conversations of unbounded length, coding agents support context _compaction_: if the conversation history grows too long, they will automatically call an LLM to summarize the prefix of the conversation, and replace the conversation history with the summary. Some agents give control to the user to invoke compaction when desired.
+    - **コンパクション。** 長さに制限のない会話を可能にするため、コーディングエージェントはコンテキストの「コンパクション」に対応しています。会話履歴が長くなりすぎると、自動的にLLMを呼び出して会話の前半部分を要約し、会話履歴をその要約で置き換えます。ユーザーが任意のタイミングでコンパクションを実行できるエージェントもあります。
 {%- comment %}
 Show `/compact` in Claude Code, show full summary.
 {% endcomment %}
-    - **llms.txt.** The `/llms.txt` file is a proposed [standard](https://llmstxt.org/) location for a document meant for LLMs to use at inference time. Products (e.g., [cursor.com/llms.txt](https://cursor.com/llms.txt)), software libraries (e.g., [ai.pydantic.dev/llms.txt](https://ai.pydantic.dev/llms.txt)), and APIs (e.g., [apify.com/llms.txt](https://apify.com/llms.txt)) might have `llms.txt` files that are handy for development. Such documents are more information dense per token, and so they are more context-efficient than asking your coding agent to fetch and read an HTML page. External documentation is handy when a coding agent doesn't have built-in knowledge about a dependency you are trying to use (e.g., because it was published after the LLM's knowledge cutoff).
+    - **llms.txt。** `/llms.txt` ファイルは、LLMが推論時に利用するためのドキュメントの置き場所として提案されている[標準](https://llmstxt.org/)です。製品(例: [cursor.com/llms.txt](https://cursor.com/llms.txt))、ソフトウェアライブラリ(例: [ai.pydantic.dev/llms.txt](https://ai.pydantic.dev/llms.txt))、API(例: [apify.com/llms.txt](https://apify.com/llms.txt))が、開発に便利な `llms.txt` ファイルを提供していることがあります。こうしたドキュメントはトークンあたりの情報密度が高いため、コーディングエージェントにHTMLページを取得して読ませるよりもコンテキスト効率に優れています。外部ドキュメントは、利用しようとしている依存ライブラリについてコーディングエージェントが組み込みの知識を持っていない場合(たとえば、LLMの知識カットオフ以降に公開されたものである場合)に便利です。
 {%- comment %}
 Side-by-side comparison in an empty repo (on Desktop or some other self-contained place, with `git init` run in it):
 
@@ -149,7 +149,7 @@ Side-by-side comparison in an empty repo (on Desktop or some other self-containe
 
 Not sure why the agent doesn't do this by default. You'd probably put that last sentence in a CLAUDE.md file.
 {% endcomment %}
-    - **AGENTS.md.** Most coding agents support [AGENTS.md](https://agents.md/) or similar (e.g., Claude Code looks for `CLAUDE.md`) as a README for coding agents. When the agent starts, it pre-fills the context with the entire contents of `AGENTS.md`. You can use this to give the agent advice that is common across sessions (e.g., instruct it to always run the type-checker after making code changes, explain how to run unit tests, or provide links to third-party docs that the agent can browse). Some coding agents can auto-generate this file (e.g., the `/init` command in Claude Code). See [here](https://github.com/pydantic/pydantic-ai/blob/main/CLAUDE.md) for a real-world example of an `AGENTS.md`.
+    - **AGENTS.md。** ほとんどのコーディングエージェントは、コーディングエージェント向けのREADMEとして[AGENTS.md](https://agents.md/)またはそれに類するもの(たとえばClaude Codeは `CLAUDE.md` を探します)に対応しています。エージェントの起動時に、`AGENTS.md` の内容全体がコンテキストにあらかじめ読み込まれます。これを使って、セッションをまたいで共通するアドバイスをエージェントに与えることができます(たとえば、コード変更後は必ず型チェッカーを実行するよう指示する、ユニットテストの実行方法を説明する、エージェントが参照できるサードパーティのドキュメントへのリンクを載せる、など)。このファイルを自動生成できるコーディングエージェントもあります(たとえばClaude Codeの `/init` コマンド)。実際の `AGENTS.md` の例は[こちら](https://github.com/pydantic/pydantic-ai/blob/main/CLAUDE.md)をご覧ください。
 {%- comment %}
 Dotbot example, CLAUDE.md that includes @DEVELOPMENT.md and says to always run the type checker and code formatter after making any changes to Python code.
 
@@ -159,30 +159,30 @@ Example prompt, off of master:
 
 This is something that'll be fast, for demonstration purposes.
 {% endcomment %}
-    - **Skills.** Content in the `AGENTS.md` is always loaded, in its entirety, into the context window of an agent. _Skills_ add one level of indirection to avoid context bloat: you can provide the agent with a list of skills along with descriptions, and the agent can "open" the skill (load it into its context window) as desired.
-    - **Subagents.** Some coding agents let you define subagents, which are agents for task-specific workflows. The top-level coding agent can invoke a sub-agent to complete a particular task, which enables both the top-level agent and subagent to more effectively manage context. The top-level agent's context isn't bloated with everything the subagent sees, and the subagent can get just the context it needs for its task. As one example, some coding agents implement web research as a subagent: the top-level agent will pose a query to the subagent, which will run web search, retrieve individual web pages, analyze them, and provide an answer to the query to the top-level agent. This way, the top-level agent doesn't have its context bloated by the full content of all retrieved web pages, and the subagent doesn't have in its context the rest of the conversation history of the top-level agent.
+    - **スキル。** `AGENTS.md` の内容は、常にその全体がエージェントのコンテキストウィンドウに読み込まれます。「スキル」は、コンテキストの肥大化を避けるために一段階の間接参照を加えたものです。エージェントにスキルの一覧とその説明を提供しておき、エージェントは必要に応じてスキルを「開く」(コンテキストウィンドウに読み込む)ことができます。
+    - **サブエージェント。** コーディングエージェントの中には、タスク特化のワークフローのためのエージェントであるサブエージェントを定義できるものがあります。トップレベルのコーディングエージェントは、特定のタスクを完了させるためにサブエージェントを呼び出せます。これにより、トップレベルエージェントとサブエージェントの両方がコンテキストをより効果的に管理できます。トップレベルエージェントのコンテキストはサブエージェントが見るすべての情報で肥大化せずに済み、サブエージェントは自分のタスクに必要なコンテキストだけを受け取れます。一例として、Webリサーチをサブエージェントとして実装しているコーディングエージェントがあります。トップレベルエージェントがサブエージェントにクエリを投げると、サブエージェントはWeb検索を実行し、個々のWebページを取得・分析し、クエリへの回答をトップレベルエージェントに返します。こうすることで、トップレベルエージェントのコンテキストは取得したすべてのWebページの全文で肥大化せず、サブエージェントのコンテキストにはトップレベルエージェントの残りの会話履歴が含まれずに済みます。
 
-For many of the advanced features that require writing prompts (e.g., skills or subagents), you can use LLMs to get you started. Some coding agents even have built-in support for doing this. For example, Claude Code can generate a subagent from a short prompt (invoke `/agents` and create a new agent). Try creating a subagent with this prompt:
+プロンプトを書く必要がある高度な機能(スキルやサブエージェントなど)の多くでは、LLMを使って最初の一歩を踏み出すことができます。これを組み込みでサポートしているコーディングエージェントもあります。たとえばClaude Codeは、短いプロンプトからサブエージェントを生成できます(`/agents` を実行して新しいエージェントを作成します)。次のプロンプトでサブエージェントを作ってみてください。
 
 ```
 A Python code checking agent that uses `mypy` and `ruff` to type-check, lint, and format *check* any files that have been modified from the last git commit.
 ```
 
-Then, you can use the top-level agent to explicitly invoke the subagent with a message like "use the code checker subagent". You might also be able to get the top-level agent to automatically invoke the subagent when appropriate, for example, after modifying any Python files.
+その後、「use the code checker subagent」のようなメッセージで、トップレベルエージェントから明示的にサブエージェントを呼び出せます。適切な場面で、たとえばPythonファイルを変更したあとに、トップレベルエージェントが自動的にサブエージェントを呼び出すようにすることもできるかもしれません。
 
-# What to watch out for
+# 注意すべきこと
 
-AI tools can make mistakes. They are built on LLMs, which are just probabilistic next-token-prediction models. They are not "intelligent" in the same way as humans. Review AI output for correctness and security bugs. Sometimes verifying code can be harder than writing the code yourself; for critical code, consider writing it by hand. AI can go down rabbit holes and try to gaslight you; be aware of debugging spirals. Don't use AI as a crutch, and be wary of overreliance or having a shallow understanding. There's still a huge class of programming tasks that AI is still incapable of doing. Computational thinking is still valuable.
+AIツールは間違いを犯すことがあります。AIツールはLLMの上に構築されており、LLMは単なる確率的な次トークン予測モデルにすぎません。人間と同じ意味で「知的」なわけではありません。AIの出力は、正しさとセキュリティ上のバグの観点からレビューしましょう。コードの検証は、自分でコードを書くよりも難しい場合があります。重要なコードは手で書くことを検討してください。AIは深みにはまり込んだり、あなたを言いくるめようとしたりすることがあります。デバッグの泥沼にはご注意を。AIを松葉杖のように使わないでください。過度な依存や理解の浅さには警戒が必要です。AIがまだこなせないプログラミングタスクは依然として山ほどあります。計算論的思考(computational thinking)には今も価値があります。
 
-# Recommended software
+# おすすめのソフトウェア
 
-Many IDEs / AI coding extensions include coding agents (see recommendations from the [development environment lecture](/2026/development-environment/)). Other popular coding agents include Anthropic's [Claude Code](https://www.claude.com/product/claude-code), OpenAI's [Codex](https://openai.com/codex/), and open-source agents like [opencode](https://github.com/anomalyco/opencode).
+多くのIDEやAIコーディング拡張機能にはコーディングエージェントが含まれています([開発環境の講義](/2026/development-environment/)のおすすめを参照してください)。その他の人気のあるコーディングエージェントとしては、Anthropicの[Claude Code](https://www.claude.com/product/claude-code)、OpenAIの[Codex](https://openai.com/codex/)、そして[opencode](https://github.com/anomalyco/opencode)のようなオープンソースのエージェントがあります。
 
-# Exercises
+# 演習
 
-1. Compare the experience of coding by hand, using AI autocomplete, inline chat, and agents by doing the same programming task four times. The best candidate is a small-sized feature from a project you're already working on. If you're looking for other ideas, you could consider completing "good first issue" style tasks in open-source projects on GitHub, or [Advent of Code](https://adventofcode.com/) or [LeetCode](https://leetcode.com/) problems.
-1. Use an AI coding agent to navigate an unfamiliar codebase. This is best done in the context of wanting to debug or add a new feature to a project you actually care about. If you don't have any that come to mind, try using an AI agent to understand how security-related features work in the [opencode](https://github.com/anomalyco/opencode) agent.
-1. Vibe code a small app from scratch. Do not write a single line of code by hand.
-1. For your coding agent of choice, create and test an `AGENTS.md` (or analogous for your agent of choice, such as `CLAUDE.md`), a skill (e.g., [skill in Claude Code](https://code.claude.com/docs/en/skills) or [skill in Codex](https://developers.openai.com/codex/skills/)), and a subagent (e.g., [subagent in Claude Code](https://code.claude.com/docs/en/sub-agents)). Think about when you'd want to use one of these versus another. Note that your coding agent of choice might not support some of these functionalities; you can either skip them, or try a different coding agent that has support.
-1. Use a coding agent to accomplish the same goal as in the Markdown bullet points regex exercise from the [Code Quality lecture](/2026/code-quality/). Does it complete the tasks via direct file edits? What are the downsides and limitations of an agent editing the file directly to complete such a task? Figure out how to prompt the agent such that it doesn't complete the task via direct file edits. Hint: ask the agent to use one of the command-line tools mentioned in the [first lecture](/2026/course-shell/).
-1. Most coding agents support a form of "yolo mode" (e.g., in Claude Code, `--dangerously-skip-permissions`). It is not secure to use this mode directly, but it may be acceptable to run a coding agent in an isolated environment like a virtual machine or container and then enable autonomous operation. Get this setup running on your machine. Documentation such as [Claude Code devcontainers](https://code.claude.com/docs/en/devcontainer) or [Docker Sandboxes / Claude Code](https://docs.docker.com/ai/sandboxes/agents/claude-code/) may come in handy. There is more than one way to set this up.
+1. 同じプログラミングタスクを4回行って、手作業でのコーディング、AIオートコンプリート、インラインチャット、エージェントのそれぞれの体験を比較してみましょう。題材として最適なのは、すでに取り組んでいるプロジェクトの小さめの機能です。他のアイデアを探しているなら、GitHub上のオープンソースプロジェクトの「good first issue」的なタスクや、[Advent of Code](https://adventofcode.com/)、[LeetCode](https://leetcode.com/)の問題に取り組むのもよいでしょう。
+1. AIコーディングエージェントを使って、なじみのないコードベースを探索してみましょう。これは、実際に関心のあるプロジェクトをデバッグしたり新機能を追加したりしたいという文脈で行うのが一番です。思い当たるものがなければ、AIエージェントを使って[opencode](https://github.com/anomalyco/opencode)エージェントのセキュリティ関連機能がどのように動作しているかを理解してみてください。
+1. 小さなアプリをゼロからバイブコーディングしてみましょう。一行たりとも自分の手でコードを書いてはいけません。
+1. 使っているコーディングエージェントで、`AGENTS.md`(または `CLAUDE.md` のような、そのエージェントに対応するもの)、スキル(例: [Claude Codeのスキル](https://code.claude.com/docs/en/skills)や[Codexのスキル](https://developers.openai.com/codex/skills/))、サブエージェント(例: [Claude Codeのサブエージェント](https://code.claude.com/docs/en/sub-agents))を作成してテストしてみましょう。どのような場面でどれを使いたいかを考えてみてください。なお、使っているコーディングエージェントがこれらの機能の一部に対応していない場合もあります。その場合はスキップしてもよいですし、対応している別のコーディングエージェントを試してもよいでしょう。
+1. [コード品質の講義](/2026/code-quality/)にあるMarkdownの箇条書き記号の正規表現の演習と同じ目標を、コーディングエージェントを使って達成してみましょう。エージェントはファイルを直接編集してタスクを完了させるでしょうか?このようなタスクをエージェントがファイルの直接編集で完了させることの欠点や限界は何でしょうか?ファイルの直接編集ではない方法でタスクを完了させるには、エージェントにどうプロンプトを与えればよいかを考えてみてください。ヒント: [最初の講義](/2026/course-shell/)で紹介したコマンドラインツールのひとつを使うようエージェントに依頼してみましょう。
+1. ほとんどのコーディングエージェントは、いわゆる「yoloモード」に対応しています(たとえばClaude Codeでは `--dangerously-skip-permissions`)。このモードをそのまま使うのは安全ではありませんが、仮想マシンやコンテナのような隔離された環境でコーディングエージェントを動かし、自律的な動作を有効にするのであれば許容できるかもしれません。このセットアップをあなたのマシンで動かしてみましょう。[Claude Codeのdevcontainer](https://code.claude.com/docs/en/devcontainer)や[Docker Sandboxes / Claude Code](https://docs.docker.com/ai/sandboxes/agents/claude-code/)のようなドキュメントが役に立つかもしれません。セットアップの方法はひとつではありません。

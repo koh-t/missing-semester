@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Development Environment and Tools"
+title: "開発環境とツール"
 description: >
-  Learn about IDEs, Vim, language servers, and AI-powered development tools.
+  IDE、Vim、言語サーバー、AI を活用した開発ツールについて学びます。
 thumbnail: /static/assets/thumbnails/2026/lec3.png
 date: 2026-01-14
 ready: true
@@ -11,121 +11,121 @@ video:
   id: QnM1nVzrkx8
 ---
 
-A _development environment_ is a set of tools for developing software. At the heart of a development environment is text editing functionality, along with accompanying features such as syntax highlighting, type checking, code formatting, and autocomplete. _Integrated development environments_ (IDEs) such as [VS Code][vs-code] bring together all of this functionality into a single application. Terminal-based development workflows combine tools such as [tmux](https://github.com/tmux/tmux) (a terminal multiplexer), [Vim](https://www.vim.org/) (a text editor), [Zsh](https://www.zsh.org/) (a shell), and language-specific command-line tools, such as [Ruff](https://docs.astral.sh/ruff/) (a Python linter and code formatter) and [Mypy](https://mypy-lang.org/) (a Python type checker).
+_開発環境_ とは、ソフトウェアを開発するためのツール一式のことです。開発環境の中心にあるのはテキスト編集の機能で、そこにシンタックスハイライト、型チェック、コードフォーマット、オートコンプリートといった付随機能が加わります。[VS Code][vs-code] のような _統合開発環境_(IDE)は、これらすべての機能を1つのアプリケーションにまとめたものです。ターミナルベースの開発ワークフローでは、[tmux](https://github.com/tmux/tmux)(ターミナルマルチプレクサ)、[Vim](https://www.vim.org/)(テキストエディタ)、[Zsh](https://www.zsh.org/)(シェル)のようなツールに加えて、[Ruff](https://docs.astral.sh/ruff/)(Python のリンタ兼コードフォーマッタ)や [Mypy](https://mypy-lang.org/)(Python の型チェッカー)のような言語固有のコマンドラインツールを組み合わせて使います。
 
-IDEs and terminal-based workflows each have their strengths and weaknesses. For example, graphical IDEs can be easier to learn, and today's IDEs generally have better out-of-the-box AI integrations like AI autocomplete; on the other hand, terminal-based workflows are lightweight, and they may be your only option in environments where you don't have a GUI or can't install software. We recommend you develop basic familiarity with both and develop mastery of at least one. If you don't already have a preferred IDE, we recommend starting with [VS Code][vs-code].
+IDE とターミナルベースのワークフローには、それぞれ長所と短所があります。たとえば、グラフィカルな IDE は習得しやすく、今日の IDE は AI オートコンプリートのような AI 統合機能が最初からよく整っている傾向があります。一方、ターミナルベースのワークフローは軽量で、GUI がない環境やソフトウェアをインストールできない環境では唯一の選択肢になることもあります。両方の基本的な使い方に慣れたうえで、少なくともどちらか一方を使いこなせるようになることをお勧めします。まだお気に入りの IDE がないなら、[VS Code][vs-code] から始めるとよいでしょう。
 
-In this lecture, we'll cover:
+この講義では、次の内容を扱います。
 
-- [Text editing and Vim](#text-editing-and-vim)
-- [Code intelligence and language servers](#code-intelligence-and-language-servers)
-- [AI-powered development](#ai-powered-development)
-- [Extensions and other IDE functionality](#extensions-and-other-ide-functionality)
+- [テキスト編集と Vim](#text-editing-and-vim)
+- [コードインテリジェンスと言語サーバー](#code-intelligence-and-language-servers)
+- [AI を活用した開発](#ai-powered-development)
+- [拡張機能とその他の IDE 機能](#extensions-and-other-ide-functionality)
 
 [vs-code]: https://code.visualstudio.com/
 
-# Text editing and Vim
+# テキスト編集と Vim
 
-When programming, you spend most of your time navigating through code, reading snippets of code, and making edits to code, rather than writing long streams or reading files top-to-bottom. [Vim] is a text editor that is optimized for this distribution of tasks.
+プログラミング中の時間の大半は、長い文章を一気に書いたりファイルを頭から順に読んだりすることではなく、コードの中を移動し、コードの断片を読み、コードに編集を加えることに費やされます。[Vim] は、このようなタスクの分布に最適化されたテキストエディタです。
 
-**The philosophy of Vim.** Vim has a beautiful idea as its foundation: its interface is itself a programming language, designed for navigating and editing text. Keystrokes (with mnemonic names) are commands, and these commands are composable. Vim avoids the use of the mouse, because it's too slow; Vim even avoids use of the arrow keys because it requires too much movement. The result: an editor that feels like a brain-computer interface and matches the speed at which you think.
+**Vim の哲学。** Vim の根底には美しいアイデアがあります。そのインターフェース自体が、テキストの移動と編集のために設計されたプログラミング言語なのです。キー入力(覚えやすい名前が付いています)はコマンドであり、これらのコマンドは合成可能です。Vim はマウスの使用を避けます。遅すぎるからです。Vim は矢印キーの使用さえ避けます。手の移動が大きすぎるからです。その結果として生まれるのは、まるでブレイン・コンピュータ・インターフェースのように感じられ、思考の速度に追従するエディタです。
 
-**Vim support in other software.** You don't have to use [Vim] itself to benefit from the ideas at its core. Many programs that involve any kind of text editing support "Vim mode", either as built-in functionality or as a plugin. For example, VS Code has the [VSCodeVim](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim) plugin, Zsh has [built-in support](https://zsh.sourceforge.io/Guide/zshguide04.html) for Vim emulation, and even Claude Code has [built-in support](https://code.claude.com/docs/en/interactive-mode#vim-editor-mode) for Vim editor mode. Chances are that any tool you use that involves text editing supports Vim mode in one way or another.
+**他のソフトウェアでの Vim サポート。** Vim の核にあるアイデアの恩恵を受けるのに、[Vim] そのものを使う必要はありません。テキスト編集を伴う多くのプログラムが、組み込み機能またはプラグインとして「Vim モード」をサポートしています。たとえば、VS Code には [VSCodeVim](https://marketplace.visualstudio.com/items?itemName=vscodevim.vim) プラグインがあり、Zsh には Vim エミュレーションの[組み込みサポート](https://zsh.sourceforge.io/Guide/zshguide04.html)があり、Claude Code にさえ Vim エディタモードの[組み込みサポート](https://code.claude.com/docs/en/interactive-mode#vim-editor-mode)があります。あなたが使うテキスト編集を伴うツールなら、何らかの形で Vim モードをサポートしている可能性が高いでしょう。
 
-## Modal editing
+## モーダル編集
 
-Vim is a _modal editor_: it has different operating modes for different classes of tasks.
+Vim は _モーダルエディタ_ です。タスクの種類ごとに異なる操作モードを持っています。
 
-- **Normal**: for moving around a file and making edits
-- **Insert**: for inserting text
-- **Replace**: for replacing text
-- **Visual** (plain, line, or block): for selecting blocks of text
-- **Command-line**: for running a command
+- **ノーマル(Normal)**: ファイル内の移動と編集のため
+- **挿入(Insert)**: テキストの入力のため
+- **置換(Replace)**: テキストの置き換えのため
+- **ビジュアル(Visual)**(通常・行・ブロック): テキストのブロックの選択のため
+- **コマンドライン(Command-line)**: コマンドの実行のため
 
-Keystrokes have different meanings in different operating modes. For example, the letter `x` in Insert mode will just insert a literal character "x", but in Normal mode, it will delete the character under the cursor, and in Visual mode, it will delete the selection.
+キー入力の意味は操作モードによって異なります。たとえば、文字 `x` は Insert モードでは単に文字「x」を入力しますが、Normal モードではカーソル位置の文字を削除し、Visual モードでは選択範囲を削除します。
 
-In its default configuration, Vim shows the current mode in the bottom left. The initial/default mode is Normal mode. You'll generally spend most of your time between Normal mode and Insert mode.
+デフォルト設定の Vim は、現在のモードを左下に表示します。起動時のデフォルトのモードは Normal モードです。ほとんどの時間は Normal モードと Insert モードの行き来に費やすことになるでしょう。
 
-You change modes by pressing `<ESC>` (the escape key) to switch from any mode back to Normal mode. From Normal mode, enter Insert mode with `i`, Replace mode with `R`, Visual mode with `v`, Visual Line mode with `V`, Visual Block mode with `<C-v>` (Ctrl-V, sometimes also written `^V`), and Command-line mode with `:`.
+モードの切り替えは、どのモードからでも `<ESC>`(エスケープキー)を押せば Normal モードに戻れます。Normal モードからは、`i` で Insert モード、`R` で Replace モード、`v` で Visual モード、`V` で Visual Line モード、`<C-v>`(Ctrl-V、`^V` と書かれることもあります)で Visual Block モード、`:` で Command-line モードに入ります。
 
-You use the `<ESC>` key a lot when using Vim: consider remapping Caps Lock to Escape ([macOS instructions](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS)) or create an [alternative mapping](https://vim.fandom.com/wiki/Avoid_the_escape_key#Mappings) for `<ESC>` with a simple key sequence.
+Vim を使っていると `<ESC>` キーを多用することになります。Caps Lock を Escape に割り当て直す([macOS での手順](https://vim.fandom.com/wiki/Map_caps_lock_to_escape_in_macOS))か、簡単なキーシーケンスによる `<ESC>` の[代替マッピング](https://vim.fandom.com/wiki/Avoid_the_escape_key#Mappings)を作ることを検討しましょう。
 
-## Basics: inserting text
+## 基本: テキストの入力
 
-From Normal mode, press `i` to enter Insert mode. Now, Vim behaves like any other text editor, until you press `<ESC>` to return to Normal mode. This, along with the basics explained above, are all you need to start editing files using Vim (though not particularly efficiently, if you're spending all your time editing from Insert mode).
+Normal モードから `i` を押すと Insert モードに入ります。この状態では、`<ESC>` を押して Normal モードに戻るまで、Vim は他の一般的なテキストエディタと同じように振る舞います。これと上で説明した基本事項さえ知っていれば、Vim でファイルの編集を始められます(ただし、ずっと Insert モードで編集しているようでは、あまり効率的とは言えません)。
 
-## Vim's interface is a programming language
+## Vim のインターフェースはプログラミング言語である
 
-Vim's interface is a programming language. Keystrokes (with mnemonic names) are commands, and these commands _compose_. This enables efficient movement and edits, especially once the commands become muscle memory, just like typing becomes super efficient once you've learned your keyboard layout.
+Vim のインターフェースはプログラミング言語です。キー入力(覚えやすい名前が付いています)はコマンドであり、これらのコマンドは _合成_ できます。これにより効率的な移動と編集が可能になります。特にコマンドが体に染み付いてからは、キーボード配列を覚えたあとのタイピングが非常に速くなるのと同じです。
 
-### Movement
+### 移動
 
-You should spend most of your time in Normal mode, using movement commands to navigate the file. Movements in Vim are also called "nouns", because they refer to chunks of text.
+ほとんどの時間は Normal モードで過ごし、移動コマンドを使ってファイル内を動き回るべきです。Vim の移動コマンドは「名詞」とも呼ばれます。テキストのまとまりを指し示すからです。
 
-- Basic movement: `hjkl` (left, down, up, right)
-- Words: `w` (next word), `b` (beginning of word), `e` (end of word)
-- Lines: `0` (beginning of line), `^` (first non-blank character), `$` (end of line)
-- Screen: `H` (top of screen), `M` (middle of screen), `L` (bottom of screen)
-- Scroll: `Ctrl-u` (up), `Ctrl-d` (down)
-- File: `gg` (beginning of file), `G` (end of file)
-- Line numbers: `:{number}<CR>` or `{number}G` (line {number})
-    - `<CR>` refers to the carriage return / enter key
-- Misc: `%` (matching item, like parenthesis or brace)
-- Find: `f{character}`, `t{character}`, `F{character}`, `T{character}`
-    - find/to forward/backward {character} on the current line
-    - `,` / `;` for navigating matches
-- Search: `/{regex}`, `n` / `N` for navigating matches
+- 基本の移動: `hjkl`(左、下、上、右)
+- 単語: `w`(次の単語)、`b`(単語の先頭)、`e`(単語の末尾)
+- 行: `0`(行頭)、`^`(行の最初の非空白文字)、`$`(行末)
+- 画面: `H`(画面の上端)、`M`(画面の中央)、`L`(画面の下端)
+- スクロール: `Ctrl-u`(上)、`Ctrl-d`(下)
+- ファイル: `gg`(ファイルの先頭)、`G`(ファイルの末尾)
+- 行番号: `:{number}<CR>` または `{number}G`({number} 行目へ)
+    - `<CR>` はキャリッジリターン / Enter キーを指します
+- その他: `%`(括弧やブレースなどの対応する相手へ)
+- 検索(行内): `f{character}`、`t{character}`、`F{character}`、`T{character}`
+    - 現在の行で {character} を前方/後方に find/to で探します
+    - `,` / `;` でマッチ間を移動します
+- 検索: `/{regex}`、`n` / `N` でマッチ間を移動します
 
-### Selection
+### 選択
 
-Visual modes:
+ビジュアルモード:
 
 - Visual: `v`
 - Visual Line: `V`
 - Visual Block: `Ctrl-v`
 
-Can use movement keys to make selection.
+移動キーを使って選択範囲を作れます。
 
-### Edits
+### 編集
 
-Everything that you used to do with the mouse, you now do with the keyboard using editing commands that compose with movement commands. Here's where Vim's interface starts to look like a programming language. Vim's editing commands are also called "verbs", because verbs act on nouns.
+これまでマウスでやっていたことはすべて、移動コマンドと合成できる編集コマンドを使ってキーボードで行うようになります。ここからが、Vim のインターフェースがプログラミング言語のように見えてくるところです。Vim の編集コマンドは「動詞」とも呼ばれます。動詞は名詞に作用するからです。
 
-- `i` enter Insert mode
-    - but for manipulating/deleting text, want to use something more than backspace
-- `o` / `O` insert line below / above
-- `d{motion}` delete {motion}
-    - e.g. `dw` is delete word, `d$` is delete to end of line, `d0` is delete to beginning of line
-- `c{motion}` change {motion}
-    - e.g. `cw` is change word
-    - like `d{motion}` followed by `i`
-- `x` delete character (equivalent to `dl`)
-- `s` substitute character (equivalent to `cl`)
-- Visual mode + manipulation
-    - select text, `d` to delete it or `c` to change it
-- `u` to undo, `<C-r>` to redo
-- `y` to copy / "yank" (some other commands like `d` also copy)
-- `p` to paste
-- Lots more to learn: for example, `~` flips the case of a character, and `J` joins together lines
+- `i` で Insert モードに入る
+    - ただしテキストの操作や削除には、バックスペース以上のものを使いたいところです
+- `o` / `O` で下 / 上に行を挿入
+- `d{motion}` で {motion} を削除
+    - 例: `dw` は単語を削除、`d$` は行末まで削除、`d0` は行頭まで削除
+- `c{motion}` で {motion} を変更
+    - 例: `cw` は単語を変更
+    - `d{motion}` のあとに `i` を続けるのと同様
+- `x` で文字を削除(`dl` と同等)
+- `s` で文字を置き換え(`cl` と同等)
+- Visual モード + 操作
+    - テキストを選択して、`d` で削除、`c` で変更
+- `u` で取り消し(undo)、`<C-r>` でやり直し(redo)
+- `y` でコピー / 「ヤンク」(`d` など一部の他のコマンドもコピーを行います)
+- `p` で貼り付け
+- 学ぶことはまだたくさんあります: たとえば `~` は文字の大文字・小文字を反転し、`J` は行を連結します
 
-### Counts
+### カウント
 
-You can combine nouns and verbs with a count, which will perform a given action a number of times.
+名詞と動詞にはカウントを組み合わせることができ、指定した操作を指定回数実行できます。
 
-- `3w` move 3 words forward
-- `5j` move 5 lines down
-- `7dw` delete 7 words
+- `3w` で3単語前に移動
+- `5j` で5行下に移動
+- `7dw` で7単語を削除
 
-### Modifiers
+### 修飾子
 
-You can use modifiers to change the meaning of a noun. Some modifiers are `i`, which means "inner" or "inside", and `a`, which means "around".
+修飾子を使って名詞の意味を変えられます。修飾子には、「inner」または「inside」(内側)を意味する `i` や、「around」(周りごと)を意味する `a` があります。
 
-- `ci(` change the contents inside the current pair of parentheses
-- `ci[` change the contents inside the current pair of square brackets
-- `da'` delete a single-quoted string, including the surrounding single quotes
+- `ci(` で現在の丸括弧のペアの内側の内容を変更
+- `ci[` で現在の角括弧のペアの内側の内容を変更
+- `da'` でシングルクォート文字列を、囲んでいるシングルクォートごと削除
 
-## Putting it all together
+## すべてを組み合わせる
 
-Here is a broken [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz) implementation:
+以下は壊れた [fizz buzz](https://en.wikipedia.org/wiki/Fizz_buzz) の実装です。
 
 ```python
 def fizz_buzz(limit):
@@ -142,73 +142,73 @@ def main():
     fizz_buzz(20)
 ```
 
-We use the following sequence of commands to fix the issues, beginning in Normal mode:
+Normal モードから始めて、次の一連のコマンドで問題を修正していきます。
 
-- Main is never called
-    - `G` to jump to the end of the file
-    - `o` to **o**pen a new line below
-    - Type in `if __name__ == "__main__": main()`
-        - If your editor has Python language support, it might do some auto-indentation for you in Insert mode
-    - `<ESC>` to go back to Normal mode
-- Starts at 0 instead of 1
-    - `/` followed by `range` and `<CR>` to search for "range"
-    - `ww` to move forward two **w**ords (you could also use `2w`, but in practice, for small counts it's common to repeat the key instead of using the count functionality)
-    - `i` to switch to **i**nsert mode, and add `1,`
-    - `<ESC>` to go back to Normal mode
-    - `e` to jump to the **e**nd of the next word
-    - `a` to start **a**ppending text, and add `+ 1`
-    - `<ESC>` to go back to Normal mode
-- Prints "fizz" for multiples of 5
-    - `:6<CR>` to go to line 6
-    - `ci"` to **c**hange **i**nside the '**"**', change to `"buzz"`
-    - `<ESC>` to go back to Normal mode
+- main が呼ばれていない
+    - `G` でファイルの末尾にジャンプ
+    - `o` で下に新しい行を開く(**o**pen)
+    - `if __name__ == "__main__": main()` と入力
+        - エディタに Python の言語サポートがあれば、Insert モードで自動インデントしてくれるかもしれません
+    - `<ESC>` で Normal モードに戻る
+- 1 ではなく 0 から始まっている
+    - `/` に続けて `range` と `<CR>` で「range」を検索
+    - `ww` で2単語(**w**ord)前に移動(`2w` でも構いませんが、実際には小さいカウントではカウント機能を使うよりキーを繰り返し押すことが多いです)
+    - `i` で **i**nsert モードに切り替えて `1,` を追加
+    - `<ESC>` で Normal モードに戻る
+    - `e` で次の単語の末尾(**e**nd)にジャンプ
+    - `a` でテキストの追記(**a**ppend)を始めて `+ 1` を追加
+    - `<ESC>` で Normal モードに戻る
+- 5 の倍数で「fizz」と出力される
+    - `:6<CR>` で6行目へ移動
+    - `ci"` で「**"**」の内側(**i**nside)を変更(**c**hange)し、`"buzz"` に書き換える
+    - `<ESC>` で Normal モードに戻る
 
-## Learning Vim
+## Vim を学ぶ
 
-The best way to learn Vim is to learn the fundamentals (what we've covered so far) and then just enable Vim mode in all your software and start using it in practice. Avoid the temptation to use the mouse or the arrow keys; in some editors, you can unbind the arrow keys to force yourself to build good habits.
+Vim を学ぶ最良の方法は、基本(ここまでで扱った内容)を学んだら、あとは使うすべてのソフトウェアで Vim モードを有効にして、実践の中で使い始めることです。マウスや矢印キーを使いたくなる誘惑に耐えましょう。エディタによっては矢印キーのバインドを解除して、良い習慣を強制的に身につけることもできます。
 
-### Additional resources
+### 追加リソース
 
-- The [Vim lecture](/2020/editors/) from the previous iteration of this class --- we have covered Vim in more depth there
-- `vimtutor` is a tutorial that comes installed with Vim --- if Vim is installed, you should be able to run `vimtutor` from your shell
-- [Vim Adventures](https://vim-adventures.com/) is a game to learn Vim
+- この講座の以前の年度の [Vim の講義](/2020/editors/) --- そこでは Vim をより深く扱っています
+- `vimtutor` は Vim に付属するチュートリアルです --- Vim がインストールされていれば、シェルから `vimtutor` を実行できるはずです
+- [Vim Adventures](https://vim-adventures.com/) は Vim を学ぶためのゲームです
 - [Vim Tips Wiki](https://vim.fandom.com/wiki/Vim_Tips_Wiki)
-- [Vim Advent Calendar](https://vimways.org/2019/) has various Vim tips
-- [VimGolf](https://www.vimgolf.com/) is [code golf](https://en.wikipedia.org/wiki/Code_golf), but where the programming language is Vim's UI
+- [Vim Advent Calendar](https://vimways.org/2019/) には様々な Vim の tips があります
+- [VimGolf](https://www.vimgolf.com/) は [code golf](https://en.wikipedia.org/wiki/Code_golf) の一種で、プログラミング言語が Vim の UI になったものです
 - [Vi/Vim Stack Exchange](https://vi.stackexchange.com/)
 - [Vim Screencasts](http://vimcasts.org/)
-- [Practical Vim](https://pragprog.com/titles/dnvim2/) (book)
+- [Practical Vim](https://pragprog.com/titles/dnvim2/)(書籍)
 
 [Vim]: https://www.vim.org/
 
-# Code intelligence and language servers
+# コードインテリジェンスと言語サーバー
 
-IDEs generally offer language-specific support that requires semantic understanding of the code through IDE extensions that connect to _language servers_ that implement [Language Server Protocol](https://microsoft.github.io/language-server-protocol/). For example, the [Python extension for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-python.python) relies on [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance), and the [Go extension for VS Code](https://marketplace.visualstudio.com/items?itemName=golang.go) relies on the first-party [gopls](https://go.dev/gopls/). By installing the extension and language server for the languages you work with, you can enable many language-specific features in your IDE, such as:
+IDE は一般に、コードの意味的な理解を必要とする言語固有のサポートを提供します。これは、[Language Server Protocol](https://microsoft.github.io/language-server-protocol/) を実装した _言語サーバー_ に接続する IDE 拡張機能を通じて実現されます。たとえば、[VS Code の Python 拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-python.python)は [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) に依存しており、[VS Code の Go 拡張機能](https://marketplace.visualstudio.com/items?itemName=golang.go)は公式の [gopls](https://go.dev/gopls/) に依存しています。使っている言語の拡張機能と言語サーバーをインストールすることで、次のような言語固有の機能を IDE で使えるようになります。
 
-- **Code completion.** Better autocomplete and autosuggest, such as being able to see an object's fields and methods after typing `object.`.
-- **Inline documentation.** Seeing documentation on hover and autosuggest.
-- **Jump-to-definition.** Jumping from a use site to the definition, such as being able to go from a field reference `object.field` to the definition of the field.
-- **Find references.** The inverse of the above, find all sites where a particular item such as a field or type is referenced.
-- **Help with imports.** Organizing imports, removing unused imports, flagging missing imports.
-- **Code quality.** These tools can be used standalone, but this functionality is often provided by language servers as well. Code formatting auto-indents and auto-formats code, and type checkers and linters find errors in your code, as you type. We will cover this class of functionality in greater depth in the [lecture on code quality](/2026/code-quality/).
+- **コード補完。** より優れたオートコンプリートとサジェスト。たとえば `object.` と入力するとオブジェクトのフィールドやメソッドが見られます。
+- **インラインドキュメント。** ホバー時やサジェスト時にドキュメントを表示します。
+- **定義へのジャンプ。** 使用箇所から定義へジャンプします。たとえばフィールド参照 `object.field` からそのフィールドの定義へ移動できます。
+- **参照の検索。** 上記の逆で、特定のフィールドや型などの項目が参照されているすべての箇所を見つけます。
+- **インポートの支援。** インポートの整理、未使用のインポートの削除、不足しているインポートの指摘。
+- **コード品質。** これらのツールは単体でも使えますが、この機能も言語サーバーによって提供されることがよくあります。コードフォーマットは入力中に自動インデントと自動整形を行い、型チェッカーとリンタは入力中にコードのエラーを見つけます。この種の機能については[コード品質の講義](/2026/code-quality/)でより深く扱います。
 
-## Configuring language servers
+## 言語サーバーの設定
 
-For some languages, all you need to do is install the extension and language server, and you'll be all set. For others, to get the maximum benefit from the language server, you need to tell the IDE about your environment. For example, pointing VS Code to your [Python environment](https://code.visualstudio.com/docs/python/environments) will enable the language server to see your installed packages. Environments are covered in more depth in our [lecture on packaging and shipping code](/2026/shipping-code/).
+言語によっては、拡張機能と言語サーバーをインストールするだけで準備完了です。他の言語では、言語サーバーの恩恵を最大限に受けるために、IDE にあなたの環境を教える必要があります。たとえば、VS Code に [Python 環境](https://code.visualstudio.com/docs/python/environments)の場所を指定すると、言語サーバーがインストール済みのパッケージを認識できるようになります。環境については[コードのパッケージングと配布の講義](/2026/shipping-code/)でより深く扱います。
 
-Depending on the language, there might be some settings you can configure for your language server. For example, using the Python support in VS Code, you can disable static type checking for projects that don't make use of Python's optional type annotations.
+言語によっては、言語サーバーに設定できる項目があるかもしれません。たとえば、VS Code の Python サポートでは、Python のオプションの型アノテーションを使っていないプロジェクトに対して、静的型チェックを無効にできます。
 
-# AI-powered development
+# AI を活用した開発
 
-Since the introduction of [GitHub Copilot][github-copilot] using OpenAI's [Codex model](https://openai.com/index/openai-codex/) in mid 2021, [LLMs](https://en.wikipedia.org/wiki/Large_language_model) have become widely adopted in software engineering. There are three main form factors in use right now: autocomplete, inline chat, and coding agents.
+2021年半ばに OpenAI の [Codex モデル](https://openai.com/index/openai-codex/)を用いた [GitHub Copilot][github-copilot] が登場して以来、[LLM](https://en.wikipedia.org/wiki/Large_language_model) はソフトウェアエンジニアリングで広く採用されるようになりました。現在、主に3つの形態が使われています。オートコンプリート、インラインチャット、そしてコーディングエージェントです。
 
 [github-copilot]: https://github.com/features/copilot/ai-code-editor
 
-## Autocomplete
+## オートコンプリート
 
-AI-powered autocomplete has the same form factor as traditional autocomplete in your IDE, suggesting completions at your cursor position as you type. Sometimes, it's used as a passive feature that "just works". Beyond that, AI autocomplete is generally [prompted](https://en.wikipedia.org/wiki/Prompt_engineering) using code comments.
+AI によるオートコンプリートは、IDE の従来のオートコンプリートと同じ形態で、入力中のカーソル位置に補完を提案します。「ただ動く」受け身の機能として使われることもあります。それに加えて、AI オートコンプリートは一般にコードコメントを使って[プロンプト](https://en.wikipedia.org/wiki/Prompt_engineering)を与えられます。
 
-For example, let's write a script to download the contents of these lecture notes and extract all the links. We can start with:
+例として、この講義ノートの内容をダウンロードしてすべてのリンクを抽出するスクリプトを書いてみましょう。まずこう書き始めます。
 
 ```python
 import requests
@@ -216,34 +216,34 @@ import requests
 def download_contents(url: str) -> str:
 ```
 
-The model will autocomplete the body of the function:
+モデルは関数の本体をオートコンプリートします。
 
 ```python
     response = requests.get(url)
     return response.text
 ```
 
-We can further guide completions using comments. For example, if we start writing a function to extract all Markdown links, but it doesn't have a particularly descriptive name:
+コメントを使って補完をさらに誘導できます。たとえば、すべての Markdown リンクを抽出する関数を書き始めたものの、あまり説明的でない名前を付けたとします。
 
 ```python
 def extract(contents: str) -> list[str]:
 ```
 
-The model will autocomplete something like this:
+モデルは次のような補完をします。
 
 ```python
     lines = contents.splitlines()
     return [line for line in lines if line.strip()]
 ```
 
-We can guide the completion through code comments:
+コードコメントを通じて補完を誘導できます。
 
 ```python
 def extract(content: str) -> list[str]:
     # extract all Markdown links from the content
 ```
 
-This time, the model gives a better completion:
+今度は、モデルはより良い補完をしてくれます。
 
 ```python
     import re
@@ -251,27 +251,27 @@ This time, the model gives a better completion:
     return re.findall(pattern, content)
 ```
 
-Here, we see one downside of this AI coding tool: it can only provide completions at the cursor. In this case, it would be better practice to put the `import re` at the module level, rather than inside the function.
+ここで、この AI コーディングツールの欠点の一つが見えてきます。補完はカーソル位置にしか提供できないのです。この場合、`import re` は関数の内側ではなく、モジュールのトップレベルに置く方が良い作法でしょう。
 
-The example above used a poorly-named function to demonstrate how code completion can be steered using comments; in practice, you'd want to write code with functions named more descriptively, like `extract_links`, and you'd want to write docstrings (and based on this, the model should generate a completion analogous to the one above).
+上の例では、コメントによってコード補完を誘導できることを示すために、わざと名前の悪い関数を使いました。実際には、`extract_links` のようにもっと説明的な名前の関数を書き、docstring も書くべきです(そうすれば、モデルはそれに基づいて上と同様の補完を生成するはずです)。
 
-For demonstration purposes, we can complete the script:
+デモンストレーションのために、スクリプトを完成させましょう。
 
 ```python
 print(extract(download_contents("https://raw.githubusercontent.com/missing-semester/missing-semester/refs/heads/master/_2026/development-environment.md")))
 ```
 
-## Inline chat
+## インラインチャット
 
-Inline chat lets you select a line or block and then directly prompt the AI model to propose an edit. In this interaction mode, the model can make changes to existing code (which differs from autocomplete, which only completes code beyond the cursor).
+インラインチャットでは、行やブロックを選択して、AI モデルに編集の提案を直接プロンプトで指示できます。この対話モードでは、モデルは既存のコードに変更を加えられます(カーソルの先のコードを補完するだけのオートコンプリートとは異なる点です)。
 
-Continuing the example from above, suppose we decided not to use the third-party `requests` library. We could select the relevant three lines of code, invoke inline chat, and say something like:
+上の例の続きとして、サードパーティの `requests` ライブラリを使わないことにしたとしましょう。該当する3行のコードを選択し、インラインチャットを呼び出して、たとえばこう伝えます。
 
 ```
 use built-in libraries instead
 ```
 
-The model proposes:
+モデルはこう提案します。
 
 ```python
 from urllib.request import urlopen
@@ -281,25 +281,25 @@ def download_contents(url: str) -> str:
         return response.read().decode('utf-8')
 ```
 
-## Coding agents
+## コーディングエージェント
 
-Coding agents are covered in depth in the [Agentic Coding](/2026/agentic-coding/) lecture.
+コーディングエージェントについては、[エージェンティックコーディング](/2026/agentic-coding/)の講義で詳しく扱います。
 
-## Recommended software
+## おすすめのソフトウェア
 
-Some popular AI IDEs are [VS Code][vs-code] with the [GitHub Copilot][github-copilot] extension and [Cursor](https://cursor.com/). GitHub Copilot is currently available [for free for students](https://github.com/education/students), teachers, and maintainers of popular open source projects. This is a rapidly evolving space. Many of the leading products have roughly equivalent functionality.
+人気のある AI IDE には、[GitHub Copilot][github-copilot] 拡張機能を入れた [VS Code][vs-code] や、[Cursor](https://cursor.com/) があります。GitHub Copilot は現在、[学生には無料](https://github.com/education/students)で提供されており、教員や人気オープンソースプロジェクトのメンテナも対象です。この分野は急速に進化しています。主要な製品の多くは、おおむね同等の機能を備えています。
 
-# Extensions and other IDE functionality
+# 拡張機能とその他の IDE 機能
 
-IDEs are powerful tools, made even more powerful by _extensions_. We can't cover all of these features in a single lecture, but here we provide some pointers to a couple popular extensions. We encourage you to explore this space on your own; there are many lists of popular IDE extensions available online, such as [Vim Awesome](https://vimawesome.com/) for Vim plugins and [VS Code extensions sorted by popularity](https://marketplace.visualstudio.com/search?target=VSCode&category=All%20categories&sortBy=Installs).
+IDE は強力なツールですが、_拡張機能_ によってさらに強力になります。1回の講義でこれらの機能をすべて扱うことはできませんが、ここではいくつかの人気の拡張機能へのポインタを紹介します。この領域はぜひ自分で探索してみてください。人気の IDE 拡張機能のリストはオンラインに数多くあります。たとえば、Vim プラグインなら [Vim Awesome](https://vimawesome.com/)、VS Code なら[人気順に並べた VS Code 拡張機能](https://marketplace.visualstudio.com/search?target=VSCode&category=All%20categories&sortBy=Installs)があります。
 
-- [Development containers](https://containers.dev/): supported by popular IDEs (e.g., [supported by VS Code](https://code.visualstudio.com/docs/devcontainers/containers)), dev containers let you use a container to run development tools. This can be helpful for portability or isolation. The [lecture on packaging and shipping code](/2026/shipping-code/) covers containers in more depth.
-- Remote development: do development on a remote machine using SSH (e.g., with the [Remote SSH plugin for VS Code](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)). This can be handy, for example, if you want to develop and run code on a beefy GPU machine in the cloud.
-- Collaborative editing: edit the same file, Google Docs style (e.g., with the [Live Share plugin for VS Code](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare)).
+- [開発コンテナ(Development containers)](https://containers.dev/): 人気の IDE でサポートされており(例: [VS Code でのサポート](https://code.visualstudio.com/docs/devcontainers/containers))、dev container を使うとコンテナ内で開発ツールを実行できます。ポータビリティや分離のために役立ちます。[コードのパッケージングと配布の講義](/2026/shipping-code/)でコンテナをより深く扱います。
+- リモート開発: SSH を使ってリモートマシン上で開発します(例: [VS Code の Remote SSH プラグイン](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh))。たとえば、クラウド上の強力な GPU マシンでコードを開発・実行したい場合に便利です。
+- 共同編集: Google Docs のように同じファイルを同時に編集します(例: [VS Code の Live Share プラグイン](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare))。
 
-# Exercises
+# 演習
 
-1. Enable Vim mode in all the software you use that supports it, such as your editor and your shell, and use Vim mode for all your text editing for the next month. Whenever something seems inefficient, or when you think "there must be a better way", try Googling it, there probably is a better way.
-1. Complete a challenge from [VimGolf](https://www.vimgolf.com/).
-1. Configure an IDE extension and language server for a project that you're working on. Ensure that all the expected functionality, such as jump-to-definition for library dependencies, works as expected. If you don't have code that you can use for this exercise, you can use some open-source project from GitHub (such as [this one](https://github.com/spf13/cobra)).
-1. Browse a list of IDE extensions and install one that seems useful to you.
+1. エディタやシェルなど、使っているソフトウェアのうち Vim モードをサポートするものすべてで Vim モードを有効にし、これから1か月間、すべてのテキスト編集を Vim モードで行ってみましょう。何かが非効率に感じられたときや、「もっと良い方法があるはずだ」と思ったときは、ググってみてください。たいてい、もっと良い方法があります。
+1. [VimGolf](https://www.vimgolf.com/) のチャレンジを1つクリアしてみましょう。
+1. 取り組んでいるプロジェクトで、IDE 拡張機能と言語サーバーを設定しましょう。ライブラリ依存関係に対する定義へのジャンプなど、期待されるすべての機能が正しく動くことを確認してください。この演習に使えるコードがない場合は、GitHub のオープンソースプロジェクト([こちら](https://github.com/spf13/cobra)など)を使うとよいでしょう。
+1. IDE 拡張機能のリストを眺めて、便利そうなものを1つインストールしてみましょう。

@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Past Offerings
+title: 過去の開講
 description: >
-  Find all past offerings of Missing Semester.
+  Missing Semesterの過去のすべての開講一覧です。
 ---
 
 {% comment %} pop to remove default "posts" collection {% endcomment %}
@@ -13,4 +13,4 @@ description: >
 {% endfor %}
 </ul>
 
-Each year's lectures are fully self-contained. We recommend starting with the most recent version of the material. There is variation in the topics covered year to year, so we continue to host notes and videos for earlier versions of this course.
+各年度の講義はそれぞれ完全に自己完結しています。最新版の資料から始めることをおすすめします。扱うトピックは年度によって異なるため、過去の版の講義ノートと動画も引き続き公開しています。

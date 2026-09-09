@@ -1,33 +1,32 @@
 ---
 layout: default
-title: "License"
+title: "ライセンス"
 permalink: /license/
 ---
 
-# License
+# ライセンス
 
-All the content in this course, including the website source code, lecture notes, exercises, and lecture videos is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+このコースのすべてのコンテンツ(Webサイトのソースコード、講義ノート、演習、講義動画を含む)は [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) の下でライセンスされています。
 
-This means that you are free to:
-- **Share** — copy and redistribute the material in any medium or format
-- **Adapt** — remix, transform, and build upon the material
+これは、次のことが自由にできることを意味します。
+- **共有** — どのような媒体・形式でも資料を複製・再配布できます
+- **翻案** — 資料をリミックスし、改変し、資料をもとに新たな作品を作れます
 
-Under the following terms:
+ただし、次の条件に従う必要があります。
 
-- **Attribution** — You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use.
-- **NonCommercial** — You may not use the material for commercial purposes.
-- **ShareAlike** — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.
+- **表示** — 適切なクレジットを表示し、ライセンスへのリンクを提供し、変更があった場合はその旨を示さなければなりません。合理的であればどのような方法でもかまいませんが、ライセンサーがあなたやあなたの利用を推奨しているかのような示し方をしてはいけません。
+- **非営利** — 資料を営利目的で利用することはできません。
+- **継承** — 資料をリミックス・改変したり、資料をもとに新たな作品を作った場合は、あなたの寄与物を元の資料と同じライセンスの下で頒布しなければなりません。
 
-This is a human-readable summary of (and not a substitute for) the [license](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
+これは[ライセンス](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)の人間が読みやすい要約であり、ライセンスの代わりになるものではありません。
 
-## Contribution guidelines
+## コントリビューションガイドライン
 
-You can submit corrections and suggestions to the course material by submitting issues and pull requests on our GitHub [repo](https://github.com/missing-semester/missing-semester). This includes the captions for the video lectures which are also in the repo (see [here](https://github.com/missing-semester/missing-semester/tree/master/static/files/subtitles/2020)).
+コース資料への修正や提案は、GitHubの[リポジトリ](https://github.com/missing-semester/missing-semester)にIssueやプルリクエストを提出することで送れます。これには講義動画の字幕も含まれます。字幕もリポジトリにあります([こちら](https://github.com/missing-semester/missing-semester/tree/master/static/files/subtitles/2020)を参照)。
 
-## Translation guidelines
+## 翻訳ガイドライン
 
-You are free to translate the lecture notes and exercises as long as you follow the license terms.
-If your translation mirrors the course structure, please contact us so we can link your translated version from our page.
+ライセンス条項に従うかぎり、講義ノートと演習を自由に翻訳できます。
+翻訳がコースの構成をそのまま反映している場合は、私たちのページから翻訳版へリンクできるようご連絡ください。
 
-For translating the video captions, please submit your translations as community contributions in YouTube.
-
+動画の字幕の翻訳については、YouTubeのコミュニティ字幕として翻訳を投稿してください。

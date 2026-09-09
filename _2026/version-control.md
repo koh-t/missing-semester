@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Version Control and Git"
+title: "バージョン管理とGit"
 description: >
-  Learn Git's data model and how to use Git for version control and collaboration.
+  Gitのデータモデルを学び、バージョン管理と共同作業のためのGitの使い方を身につけます。
 thumbnail: /static/assets/thumbnails/2026/lec5.png
 date: 2026-01-16
 ready: true
@@ -11,61 +11,31 @@ video:
   id: 9K8lB61dl3Y
 ---
 
-Version control systems (VCSs) are tools used to track changes to source code
-(or other collections of files and folders). As the name implies, these tools
-help maintain a history of changes; furthermore, they facilitate collaboration.
-Logically, VCSs track changes to a folder and its contents in a series of
-_snapshots_, where each snapshot encapsulates the entire state of files/folders
-within a top-level directory. VCSs also maintain metadata like who created each
-snapshot, messages associated with each snapshot, and so on.
+バージョン管理システム(VCS)は、ソースコード(あるいはその他のファイルやフォルダの集まり)への変更を追跡するためのツールです。その名前が示すとおり、これらのツールは変更の履歴を保持するのに役立ちます。さらに、共同作業も容易にしてくれます。論理的には、VCSはフォルダとその中身への変更を一連の「_スナップショット_」として追跡します。各スナップショットは、最上位ディレクトリ内のファイルやフォルダの状態全体を丸ごと収めたものです。VCSはまた、各スナップショットを誰が作成したか、各スナップショットに添えられたメッセージなどのメタデータも保持します。
 
-Why is version control useful? Even when you're working by yourself, it can let
-you look at old snapshots of a project, keep a log of why certain changes were
-made, work on parallel branches of development, and much more. When working
-with others, it's an invaluable tool for seeing what other people have changed,
-as well as resolving conflicts in concurrent development.
+バージョン管理はなぜ便利なのでしょうか? 一人で作業しているときでも、プロジェクトの過去のスナップショットを見たり、特定の変更を行った理由の記録を残したり、並行する開発ブランチで作業したりと、さまざまなことができます。他の人と作業するときには、他の人が何を変更したかを確認したり、並行開発で生じた競合を解決したりするうえで欠かせないツールです。
 
-Modern VCSs also let you easily (and often automatically) answer questions
-like:
+現代のVCSでは、次のような質問にも簡単に(しかも多くの場合、自動的に)答えられます。
 
-- Who wrote this module?
-- When was this particular line of this particular file edited? By whom? Why
-  was it edited?
-- Over the last 1000 revisions, when/why did a particular unit test stop
-working?
+- このモジュールを書いたのは誰か?
+- この特定のファイルのこの特定の行は、いつ編集されたのか? 誰によって? なぜ編集されたのか?
+- 直近1000リビジョンの間で、特定のユニットテストはいつ、なぜ動かなくなったのか?
 
-While other VCSs exist, **Git** is the de facto standard for version control.
-This [XKCD comic](https://xkcd.com/1597/) captures Git's reputation:
+他にもVCSは存在しますが、**Git** がバージョン管理のデファクトスタンダードです。この[XKCDのコミック](https://xkcd.com/1597/)は、Gitの評判をよく表しています。
 
 ![xkcd 1597](https://imgs.xkcd.com/comics/git.png)
 
-Because Git's interface is a leaky abstraction, learning Git top-down (starting
-with its interface / command-line interface) can lead to a lot of confusion.
-It's possible to memorize a handful of commands and think of them as magic
-incantations, and follow the approach in the comic above whenever anything goes
-wrong.
+Gitのインターフェースは「漏れのある抽象化(leaky abstraction)」であるため、Gitをトップダウンで(インターフェース、つまりコマンドラインインターフェースから)学ぼうとすると、大きな混乱を招きがちです。いくつかのコマンドを丸暗記して魔法の呪文のように扱い、何か問題が起きるたびに上のコミックのようなアプローチを取ることにもなりかねません。
 
-While Git admittedly has an ugly interface, its underlying design and ideas are
-beautiful. While an ugly interface has to be _memorized_, a beautiful design
-can be _understood_. For this reason, we give a bottom-up explanation of Git,
-starting with its data model and later covering the command-line interface.
-Once the data model is understood, the commands can be better understood in
-terms of how they manipulate the underlying data model.
+Gitのインターフェースはお世辞にも美しいとは言えませんが、その根底にある設計と考え方は美しいものです。醜いインターフェースは「_暗記_」するしかありませんが、美しい設計は「_理解_」できます。そのため、この講義ではGitをボトムアップで説明します。まずデータモデルから始め、その後にコマンドラインインターフェースを扱います。データモデルを理解すれば、各コマンドが根底にあるデータモデルをどのように操作するのかという観点から、コマンドをよりよく理解できるようになります。
 
-# Git's data model
+# Gitのデータモデル
 
-Git's ingenuity is in its well-thought-out data model that enables all the nice
-features of version control, like maintaining history, supporting branches, and
-enabling collaboration.
+Gitの独創性は、よく練られたデータモデルにあります。このデータモデルこそが、履歴の保持、ブランチのサポート、共同作業といったバージョン管理のあらゆる優れた機能を可能にしています。
 
-## Snapshots
+## スナップショット
 
-Git models the history of a collection of files and folders within some
-top-level directory as a series of snapshots. In Git terminology, a file is
-called a "blob", and it's just a bunch of bytes. A directory is called a
-"tree", and it maps names to blobs or trees (so directories can contain other
-directories). A snapshot is the top-level tree that is being tracked. For
-example, we might have a tree as follows:
+Gitは、ある最上位ディレクトリ内のファイルとフォルダの集まりの履歴を、一連のスナップショットとしてモデル化します。Gitの用語では、ファイルは「blob」と呼ばれ、単なるバイト列です。ディレクトリは「tree」と呼ばれ、名前をblobまたはtreeに対応づけます(こうしてディレクトリは他のディレクトリを含むことができます)。スナップショットとは、追跡対象となっている最上位のtreeのことです。たとえば、次のようなtreeがあるとします。
 
 ```
 <root> (tree)
@@ -77,24 +47,15 @@ example, we might have a tree as follows:
 +- baz.txt (blob, contents = "git is wonderful")
 ```
 
-The top-level tree contains two elements, a tree "foo" (that itself contains
-one element, a blob "bar.txt"), and a blob "baz.txt".
+最上位のtreeには2つの要素が含まれています。1つはtree「foo」(それ自体が1つの要素、blob「bar.txt」を含む)で、もう1つはblob「baz.txt」です。
 
-## Modeling history: relating snapshots
+## 履歴のモデル化: スナップショット同士の関係づけ
 
-How should a version control system relate snapshots? One simple model would be
-to have a linear history. A history would be a list of snapshots in time-order.
-For many reasons, Git doesn't use a simple model like this.
+バージョン管理システムはスナップショット同士をどのように関係づけるべきでしょうか? 単純なモデルの1つは、線形の履歴を持つことでしょう。この場合、履歴は時系列順に並んだスナップショットのリストになります。しかし、さまざまな理由から、Gitはこのような単純なモデルを採用していません。
 
-In Git, a history is a directed acyclic graph (DAG) of snapshots. That may
-sound like a fancy math word, but don't be intimidated. All this means is that
-each snapshot in Git refers to a set of "parents", the snapshots that preceded
-it. It's a set of parents rather than a single parent (as would be the case in
-a linear history) because a snapshot might descend from multiple parents, for
-example, due to combining (merging) two parallel branches of development.
+Gitでは、履歴はスナップショットの有向非巡回グラフ(DAG)です。難しそうな数学用語に聞こえるかもしれませんが、身構える必要はありません。これが意味するのは、Gitの各スナップショットが「親」の集合、つまりそのスナップショットに先行するスナップショットたちを参照している、ということだけです。(線形の履歴のように)単一の親ではなく親の「集合」なのは、スナップショットが複数の親から派生する場合があるためです。たとえば、並行する2つの開発ブランチを統合(マージ)した場合がそうです。
 
-Git calls these snapshots "commit"s. Visualizing a commit history might look
-something like this:
+Gitはこれらのスナップショットを「コミット」と呼びます。コミット履歴を可視化すると、次のようになるでしょう。
 
 ```
 o <-- o <-- o <-- o
@@ -103,14 +64,7 @@ o <-- o <-- o <-- o
               --- o <-- o
 ```
 
-In the ASCII art above, the `o`s correspond to individual commits (snapshots).
-The arrows point to the parent of each commit (it's a "comes before" relation,
-not "comes after"). After the third commit, the history branches into two
-separate branches. This might correspond to, for example, two separate features
-being developed in parallel, independently from each other. In the future,
-these branches may be merged to create a new snapshot that incorporates both of
-the features, producing a new history that looks like this, with the newly
-created merge commit shown in bold:
+上のアスキーアートでは、`o` が個々のコミット(スナップショット)に対応します。矢印は各コミットの親を指しています(「後に来る」ではなく「前に来る」という関係です)。3番目のコミットの後、履歴は2つの独立したブランチに分岐しています。これはたとえば、2つの別々の機能が互いに独立して並行開発されている状況に対応します。将来、これらのブランチはマージされて、両方の機能を取り込んだ新しいスナップショットが作られるかもしれません。その結果、新しく作られたマージコミットを太字で示すと、履歴は次のようになります。
 
 <pre class="highlight">
 <code>
@@ -121,14 +75,11 @@ o <-- o <-- o <-- o <---- <strong>o</strong>
 </code>
 </pre>
 
-Commits in Git are immutable. This doesn't mean that mistakes can't be
-corrected, however; it's just that "edits" to the commit history are actually
-creating entirely new commits, and references (see below) are updated to point
-to the new ones.
+Gitのコミットは不変(イミュータブル)です。ただし、これは間違いを訂正できないという意味ではありません。コミット履歴への「編集」は、実際にはまったく新しいコミットを作成することであり、参照(後述)が新しいコミットを指すように更新される、というだけのことです。
 
-## Data model, as pseudocode
+## 疑似コードで表したデータモデル
 
-It may be instructive to see Git's data model written down in pseudocode:
+Gitのデータモデルを疑似コードで書き下してみると、理解の助けになるかもしれません。
 
 ```
 // a file is a bunch of bytes
@@ -146,18 +97,17 @@ type commit = struct {
 }
 ```
 
-It's a clean, simple model of history.
+とてもクリーンでシンプルな履歴のモデルです。
 
-## Objects and content-addressing
+## オブジェクトとコンテンツアドレッシング
 
-An "object" is a blob, tree, or commit:
+「オブジェクト」とは、blob、tree、またはコミットのことです。
 
 ```
 type object = blob | tree | commit
 ```
 
-In Git's data store, all objects are content-addressed by their [SHA-1
-hash](https://en.wikipedia.org/wiki/SHA-1).
+Gitのデータストアでは、すべてのオブジェクトはその[SHA-1ハッシュ](https://en.wikipedia.org/wiki/SHA-1)によってコンテンツアドレッシングされます。
 
 ```
 objects = map<string, object>
@@ -170,38 +120,26 @@ def load(id):
     return objects[id]
 ```
 
-Blobs, trees, and commits are unified in this way: they are all objects. When
-they reference other objects, they don't actually _contain_ them in their
-on-disk representation, but have a reference to them by their hash.
+blob、tree、コミットは、この点で統一的に扱われます。すべてオブジェクトなのです。オブジェクトが他のオブジェクトを参照するとき、ディスク上の表現において実際にそれらを<em>含んでいる</em>わけではなく、ハッシュによる参照を持っています。
 
-For example, the tree for the example directory structure [above](#snapshots)
-(visualized using `git cat-file -p 698281bc680d1995c5f4caaf3359721a5a58d48d`),
-looks like this:
+たとえば、[上の](#snapshots)例のディレクトリ構造に対応するtree(`git cat-file -p 698281bc680d1995c5f4caaf3359721a5a58d48d` で可視化したもの)は次のようになります。
 
 ```
 100644 blob 4448adbf7ecd394f42ae135bbeed9676e894af85    baz.txt
 040000 tree c68d233a33c5c06e0340e4c224f0afca87c8ce87    foo
 ```
 
-The tree itself contains pointers to its contents, `baz.txt` (a blob) and `foo`
-(a tree). If we look at the contents addressed by the hash corresponding to
-baz.txt with `git cat-file -p 4448adbf7ecd394f42ae135bbeed9676e894af85`, we get
-the following:
+tree自体は、その中身である `baz.txt`(blob)と `foo`(tree)へのポインタを含んでいます。baz.txtに対応するハッシュが指す内容を `git cat-file -p 4448adbf7ecd394f42ae135bbeed9676e894af85` で見てみると、次のようになります。
 
 ```
 git is wonderful
 ```
 
-## References
+## 参照
 
-Now, all snapshots can be identified by their SHA-1 hashes. That's inconvenient,
-because humans aren't good at remembering strings of 40 hexadecimal characters.
+さて、これですべてのスナップショットをSHA-1ハッシュで識別できるようになりました。しかし、これは不便です。人間は40桁の16進数文字列を覚えるのが得意ではないからです。
 
-Git's solution to this problem is human-readable names for SHA-1 hashes, called
-"references". References are pointers to commits. Unlike objects, which are
-immutable, references are mutable (can be updated to point to a new commit).
-For example, the `master` reference usually points to the latest commit in the
-main branch of development.
+この問題に対するGitの解決策が、SHA-1ハッシュに付ける人間が読める名前、すなわち「参照(references)」です。参照はコミットへのポインタです。不変であるオブジェクトとは異なり、参照は可変です(新しいコミットを指すように更新できます)。たとえば、`master` 参照は通常、開発のメインブランチにおける最新のコミットを指します。
 
 ```
 references = map<string, string>
@@ -219,214 +157,127 @@ def load_reference(name_or_id):
         return load(name_or_id)
 ```
 
-With this, Git can use human-readable names like "master" to refer to a
-particular snapshot in the history, instead of a long hexadecimal string.
+これにより、Gitは長い16進数文字列の代わりに、「master」のような人間が読める名前を使って履歴内の特定のスナップショットを参照できます。
 
-One detail is that we often want a notion of "where we currently are" in the
-history, so that when we take a new snapshot, we know what it is relative to
-(how we set the `parents` field of the commit). In Git, that "where we
-currently are" is a special reference called "HEAD".
+1つ細かい点として、履歴の中で「今自分がどこにいるのか」という概念が欲しくなることがよくあります。そうすれば、新しいスナップショットを取るときに、それが何に対する相対なのか(コミットの `parents` フィールドをどう設定するか)が分かるからです。Gitでは、この「今いる場所」は「HEAD」と呼ばれる特別な参照です。
 
-## Repositories
+## リポジトリ
 
-Finally, we can define what (roughly) is a Git _repository_: it is the data
-`objects` and `references`.
+これでようやく、Gitの<em>リポジトリ</em>とは(おおまかに)何かを定義できます。それは、データ `objects` と `references` のことです。
 
-On disk, all Git stores are objects and references: that's all there is to Git's
-data model. All `git` commands map to some manipulation of the commit DAG by
-adding objects and adding/updating references.
+ディスク上において、Gitが保存しているのはオブジェクトと参照だけです。Gitのデータモデルはこれがすべてです。すべての `git` コマンドは、オブジェクトを追加したり、参照を追加・更新したりすることによる、コミットDAGへの何らかの操作に対応しています。
 
-Whenever you're typing in any command, think about what manipulation the
-command is making to the underlying graph data structure. Conversely, if you're
-trying to make a particular kind of change to the commit DAG, e.g. "discard
-uncommitted changes and make the 'master' ref point to commit `5d83f9e`", there's
-probably a command to do it (e.g. in this case, `git checkout master; git reset
---hard 5d83f9e`).
+コマンドを入力するときはいつでも、そのコマンドが根底にあるグラフデータ構造にどのような操作を加えているのかを考えてみてください。逆に、コミットDAGに対して特定の種類の変更を加えたい場合、たとえば「コミットされていない変更を破棄して、'master' 参照がコミット `5d83f9e` を指すようにしたい」という場合には、それを実現するコマンドがおそらく存在します(この例では `git checkout master; git reset
+--hard 5d83f9e`)。
 
-# Staging area
+# ステージングエリア
 
-This is another concept that's orthogonal to the data model, but it's a part of
-the interface to create commits.
+これはデータモデルとは直交する別の概念ですが、コミットを作成するためのインターフェースの一部です。
 
-One way you might imagine implementing snapshotting as described above is to have
-a "create snapshot" command that creates a new snapshot based on the _current
-state_ of the working directory. Some version control tools work like this, but
-not Git. We want clean snapshots, and it might not always be ideal to make a
-snapshot from the current state. For example, imagine a scenario where you've
-implemented two separate features, and you want to create two separate commits,
-where the first introduces the first feature, and the next introduces the
-second feature. Or imagine a scenario where you have debugging print statements
-added all over your code, along with a bugfix; you want to commit the bugfix
-while discarding all the print statements.
+上で説明したようなスナップショットの仕組みを実装する方法として、作業ディレクトリの<em>現在の状態</em>に基づいて新しいスナップショットを作る「スナップショット作成」コマンドを用意する、という方法が考えられます。実際にそのように動作するバージョン管理ツールもありますが、Gitは違います。私たちはクリーンなスナップショットが欲しいのであり、現在の状態からスナップショットを作ることが常に理想的とは限りません。たとえば、2つの別々の機能を実装し終えていて、それらを2つの別々のコミットに分けたい場合を考えてみてください。最初のコミットで1つ目の機能を導入し、次のコミットで2つ目の機能を導入したいわけです。あるいは、コード中のあちこちにデバッグ用のprint文を追加した状態でバグ修正も行っていて、print文はすべて破棄しつつバグ修正だけをコミットしたい場合もあるでしょう。
 
-Git accommodates such scenarios by allowing you to specify which modifications
-should be included in the next snapshot through a mechanism called the "staging
-area".
+Gitは「ステージングエリア」と呼ばれる仕組みを通じて、次のスナップショットにどの変更を含めるかを指定できるようにすることで、こうしたシナリオに対応しています。
 
-# Git command-line interface
+# Gitのコマンドラインインターフェース
 
-To avoid duplicating information, we're not going to explain the commands below
-in detail in these lecture notes. See the highly recommended [Pro
-Git](https://git-scm.com/book/en/v2) for more information, or watch the lecture
-video.
+情報の重複を避けるため、この講義ノートでは以下のコマンドを詳しくは説明しません。詳細は、強くおすすめする [Pro Git](https://git-scm.com/book/en/v2) を参照するか、講義ビデオをご覧ください。
 
-## Basics
+## 基本
 
-- `git help <command>`: get help for a git command
-- `git init`: creates a new git repo, with data stored in the `.git` directory
-- `git status`: tells you what's going on
-- `git add <filename>`: adds files to staging area
-- `git commit`: creates a new commit
-    - Write [good commit messages](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)!
-    - Even more reasons to write [good commit messages](https://chris.beams.io/posts/git-commit/)!
-- `git log`: shows a flattened log of history
-- `git log --all --graph --decorate`: visualizes history as a DAG
-- `git diff <filename>`: show changes you made relative to the staging area
-- `git diff <revision> <filename>`: shows differences in a file between snapshots
-- `git checkout <revision>`: updates HEAD (and current branch if checking out a branch)
+- `git help <command>`: gitコマンドのヘルプを表示する
+- `git init`: 新しいgitリポジトリを作成する。データは `.git` ディレクトリに保存される
+- `git status`: 現在の状況を教えてくれる
+- `git add <filename>`: ファイルをステージングエリアに追加する
+- `git commit`: 新しいコミットを作成する
+    - [良いコミットメッセージ](https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)を書きましょう!
+    - [良いコミットメッセージ](https://chris.beams.io/posts/git-commit/)を書くべき理由はまだまだあります!
+- `git log`: 履歴を平坦化されたログとして表示する
+- `git log --all --graph --decorate`: 履歴をDAGとして可視化する
+- `git diff <filename>`: ステージングエリアに対する自分の変更を表示する
+- `git diff <revision> <filename>`: スナップショット間でのファイルの差分を表示する
+- `git checkout <revision>`: HEADを更新する(ブランチをチェックアウトした場合は現在のブランチも更新する)
 
-## Branching and merging
+## ブランチとマージ
 
-- `git branch`: shows branches
-- `git branch <name>`: creates a branch
-- `git switch <name>`: switches to a branch
-- `git checkout -b <name>`: creates a branch and switches to it
-    - same as `git branch <name>; git switch <name>`
-- `git merge <revision>`: merges into current branch
-- `git mergetool`: use a fancy tool to help resolve merge conflicts
-- `git rebase`: rebase set of patches onto a new base
+- `git branch`: ブランチの一覧を表示する
+- `git branch <name>`: ブランチを作成する
+- `git switch <name>`: ブランチに切り替える
+- `git checkout -b <name>`: ブランチを作成して、そのブランチに切り替える
+    - `git branch <name>; git switch <name>` と同じ
+- `git merge <revision>`: 現在のブランチにマージする
+- `git mergetool`: マージ競合の解決を助ける便利なツールを使う
+- `git rebase`: 一連のパッチを新しいベースの上にリベースする
 
-## Remotes
+## リモート
 
-- `git remote`: list remotes
-- `git remote add <name> <url>`: add a remote
-- `git push <remote> <local branch>:<remote branch>`: send objects to remote, and update remote reference
-- `git branch --set-upstream-to=<remote>/<remote branch>`: set up correspondence between local and remote branch
-- `git fetch`: retrieve objects/references from a remote
-- `git pull`: same as `git fetch; git merge`
-- `git clone`: download repository from remote
+- `git remote`: リモートの一覧を表示する
+- `git remote add <name> <url>`: リモートを追加する
+- `git push <remote> <local branch>:<remote branch>`: オブジェクトをリモートに送り、リモートの参照を更新する
+- `git branch --set-upstream-to=<remote>/<remote branch>`: ローカルブランチとリモートブランチの対応関係を設定する
+- `git fetch`: リモートからオブジェクトや参照を取得する
+- `git pull`: `git fetch; git merge` と同じ
+- `git clone`: リモートからリポジトリをダウンロードする
 
-## Undo
+## 取り消し
 
-- `git commit --amend`: edit a commit's contents/message
-- `git reset <file>`: unstage a file
-- `git restore`: discard changes
+- `git commit --amend`: コミットの内容やメッセージを編集する
+- `git reset <file>`: ファイルをステージングから外す
+- `git restore`: 変更を破棄する
 
-# Advanced Git
+# 高度なGit
 
-- `git config`: Git is [highly customizable](https://git-scm.com/docs/git-config)
-- `git clone --depth=1`: shallow clone, without entire version history
-- `git add -p`: interactive staging
-- `git rebase -i`: interactive rebasing
-- `git blame`: show who last edited which line
-- `git stash`: temporarily remove modifications to working directory
-- `git bisect`: binary search history (e.g. for regressions)
-- `git revert`: create a new commit that reverses the effect of an earlier commit
-- `git worktree`: check out multiple branches at the same time
-- `.gitignore`: [specify](https://git-scm.com/docs/gitignore) intentionally untracked files to ignore
+- `git config`: Gitは[高度にカスタマイズ可能](https://git-scm.com/docs/git-config)です
+- `git clone --depth=1`: 全バージョン履歴を含まないシャロークローン
+- `git add -p`: 対話的なステージング
+- `git rebase -i`: 対話的なリベース
+- `git blame`: 各行を最後に編集したのが誰かを表示する
+- `git stash`: 作業ディレクトリへの変更を一時的に退避する
+- `git bisect`: 履歴を二分探索する(例: リグレッションの原因を探す)
+- `git revert`: 以前のコミットの効果を打ち消す新しいコミットを作成する
+- `git worktree`: 複数のブランチを同時にチェックアウトする
+- `.gitignore`: 意図的に追跡しないファイルを[指定](https://git-scm.com/docs/gitignore)して無視する
 
-# Miscellaneous
+# その他
 
-- **GUIs**: there are many [GUI clients](https://git-scm.com/downloads/guis)
-out there for Git. We personally don't use them and use the command-line
-interface instead.
-- **Shell integration**: it's super handy to have a Git status as part of your
-shell prompt ([zsh](https://github.com/olivierverdier/zsh-git-prompt),
-[bash](https://github.com/magicmonty/bash-git-prompt)). Often included in
-frameworks like [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh).
-- **Editor integration**: similarly to the above, handy integrations with many
-features. [fugitive.vim](https://github.com/tpope/vim-fugitive) is the standard
-one for Vim.
-- **Workflows**: we taught you the data model, plus some basic commands; we
-didn't tell you what practices to follow when working on big projects (and
-there are [many](https://nvie.com/posts/a-successful-git-branching-model/)
-[different](https://www.endoflineblog.com/gitflow-considered-harmful)
-[approaches](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)).
-- **GitHub**: Git is not GitHub. GitHub has a specific way of contributing code
-to other projects, called [pull
-requests](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).
-- **Other Git providers**: GitHub is not special: there are many Git repository
-hosts, like [GitLab](https://about.gitlab.com/) and
-[BitBucket](https://bitbucket.org/).
+- **GUI**: Gitには多くの[GUIクライアント](https://git-scm.com/downloads/guis)があります。私たち自身は使っておらず、代わりにコマンドラインインターフェースを使っています。
+- **シェルとの統合**: Gitのステータスをシェルのプロンプトに表示できると非常に便利です([zsh](https://github.com/olivierverdier/zsh-git-prompt)、[bash](https://github.com/magicmonty/bash-git-prompt))。[Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) のようなフレームワークには最初から含まれていることが多いです。
+- **エディタとの統合**: 上と同様に、多くの機能を備えた便利な統合があります。[fugitive.vim](https://github.com/tpope/vim-fugitive) がVimにおける定番です。
+- **ワークフロー**: この講義ではデータモデルといくつかの基本コマンドを教えましたが、大きなプロジェクトで作業するときにどのような慣習に従うべきかは教えていません(そして、それには[数多くの](https://nvie.com/posts/a-successful-git-branching-model/)[異なる](https://www.endoflineblog.com/gitflow-considered-harmful)[アプローチ](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)があります)。
+- **GitHub**: GitはGitHubではありません。GitHubには、他のプロジェクトにコードを寄贈するための独自の方法があり、[プルリクエスト](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)と呼ばれています。
+- **その他のGitプロバイダ**: GitHubだけが特別なわけではありません。[GitLab](https://about.gitlab.com/) や [BitBucket](https://bitbucket.org/) など、Gitリポジトリのホスティングサービスは数多くあります。
 
-# Resources
+# 参考資料
 
-- [Pro Git](https://git-scm.com/book/en/v2) is **highly recommended reading**.
-Going through Chapters 1--5 should teach you most of what you need to use Git
-proficiently, now that you understand the data model. The later chapters have
-some interesting, advanced material.
-- [Oh Shit, Git!?!](https://ohshitgit.com/) is a short guide on how to recover
-from some common Git mistakes.
-- [Git for Computer
-Scientists](https://eagain.net/articles/git-for-computer-scientists/) is a
-short explanation of Git's data model, with less pseudocode and more fancy
-diagrams than these lecture notes.
-- [Git from the Bottom Up](https://jwiegley.github.io/git-from-the-bottom-up/)
-is a detailed explanation of Git's implementation details beyond just the data
-model, for the curious.
-- [How to explain git in simple
-words](https://smusamashah.github.io/blog/2017/10/14/explain-git-in-simple-words)
-- [Learn Git Branching](https://learngitbranching.js.org/) is a browser-based
-game that teaches you Git.
+- [Pro Git](https://git-scm.com/book/en/v2) は**強くおすすめする読み物**です。データモデルを理解した今なら、第1章から第5章までを読み通せば、Gitを使いこなすのに必要なことのほとんどが身につくはずです。後半の章には、興味深い高度な内容が書かれています。
+- [Oh Shit, Git!?!](https://ohshitgit.com/) は、Gitでよくある失敗から復旧する方法についての短いガイドです。
+- [Git for Computer Scientists](https://eagain.net/articles/git-for-computer-scientists/) は、Gitのデータモデルの短い解説です。この講義ノートよりも疑似コードは少なめで、しゃれた図が多く使われています。
+- [Git from the Bottom Up](https://jwiegley.github.io/git-from-the-bottom-up/) は、興味のある人向けに、データモデルにとどまらないGitの実装の詳細を解説したものです。
+- [How to explain git in simple words](https://smusamashah.github.io/blog/2017/10/14/explain-git-in-simple-words)
+- [Learn Git Branching](https://learngitbranching.js.org/) は、Gitを教えてくれるブラウザベースのゲームです。
 
-# Exercises
+# 演習
 
-1. If you don't have any past experience with Git, either try reading the first
-   couple chapters of [Pro Git](https://git-scm.com/book/en/v2) or go through a
-   tutorial like [Learn Git Branching](https://learngitbranching.js.org/). As
-   you're working through it, relate Git commands to the data model.
-1. Clone the [repository for the
-class website](https://github.com/missing-semester/missing-semester).
-    1. Explore the version history by visualizing it as a graph.
-    1. Who was the last person to modify `README.md`? (Hint: use `git log` with
-       an argument).
-    1. What was the commit message associated with the last modification to the
-       `collections:` line of `_config.yml`? (Hint: use `git blame` and `git
-       show`).
-1. One common mistake when learning Git is to commit large files that should
-   not be managed by Git or adding sensitive information. Try adding a file to
-   a repository, making some commits and then deleting that file from _history_
-   (not just the latest commit). You may want to look at
-   [this](https://help.github.com/articles/removing-sensitive-data-from-a-repository/).
-1. Clone some repository from GitHub, and modify one of its existing files.
-   What happens when you do `git stash`? What do you see when running `git log
-   --all --oneline`? Run `git stash pop` to undo what you did with `git stash`.
-   In what scenario might this be useful?
-1. Like many command line tools, Git provides a configuration file (or dotfile)
-   called `~/.gitconfig`. Create an alias in `~/.gitconfig` so that when you
-   run `git graph`, you get the output of `git log --all --graph --decorate
-   --oneline`. You can do this by directly
-   [editing](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias)
-   the `~/.gitconfig` file, or you can use the `git config` command to add the
-   alias. Information about git aliases can be found
-   [here](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases).
-1. You can define global ignore patterns in `~/.gitignore_global` after running
-   `git config --global core.excludesfile ~/.gitignore_global`. This sets the
-   location of the global ignore file that Git will use, but you still need to
-   manually create the file at that path. Set up your global gitignore file to
-   ignore OS-specific or editor-specific temporary files, like `.DS_Store`.
-1. Fork the [repository for the class
-   website](https://github.com/missing-semester/missing-semester), find a typo
-   or some other improvement you can make, and submit a pull request on GitHub
-   (you may want to look at [this](https://github.com/firstcontributions/first-contributions)).
-   Please only submit PRs that are useful (don't spam us, please!). If you
-   can't find an improvement to make, you can skip this exercise.
-1. Practice resolving merge conflicts by simulating a collaborative scenario:
-    1. Create a new repository with `git init` and create a file called
-       `recipe.txt` with a few lines (e.g., a simple recipe).
-    1. Commit it, then create two branches: `git branch salty` and `git branch
-       sweet`.
-    1. In the `salty` branch, modify a line (e.g., change "1 cup sugar" to "1
-       cup salt") and commit.
-    1. In the `sweet` branch, modify the same line differently (e.g., change "1
-       cup sugar" to "2 cups sugar") and commit.
-    1. Now switch to `master` and try `git merge salty`, then `git merge
-       sweet`. What happens? Look at the contents of `recipe.txt` - what do the
-       `<<<<<<<`, `=======`, and `>>>>>>>` markers mean?
-    1. Resolve the conflict by editing the file to keep the content you want,
-       removing the conflict markers, and completing the merge with `git add`
-       and `git commit` (or `git merge --continue`). Alternatively, try using
-       `git mergetool` to resolve the conflict with a graphical or
-       terminal-based merge tool.
-    1. Use `git log --graph --oneline` to visualize the merge history you just
-       created.
+1. Gitを使った経験がまったくない場合は、[Pro Git](https://git-scm.com/book/en/v2) の最初の数章を読むか、[Learn Git Branching](https://learngitbranching.js.org/) のようなチュートリアルをやってみてください。取り組みながら、Gitのコマンドをデータモデルと関連づけて考えてみましょう。
+1. [この授業のWebサイトのリポジトリ](https://github.com/missing-semester/missing-semester)をクローンしてください。
+    1. バージョン履歴をグラフとして可視化して探索してみましょう。
+    1. `README.md` を最後に変更したのは誰ですか?(ヒント: `git log` に引数を付けて使いましょう。)
+    1. `_config.yml` の `collections:` の行が最後に変更されたときのコミットメッセージは何でしたか?(ヒント: `git blame` と `git show` を使いましょう。)
+1. Gitを学ぶ際によくある失敗の1つが、Gitで管理すべきではない大きなファイルをコミットしてしまったり、機密情報を追加してしまったりすることです。リポジトリにファイルを追加していくつかコミットを作った後、そのファイルを(最新のコミットからだけでなく)<em>履歴</em>から削除してみてください。[こちら](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)が参考になるでしょう。
+1. GitHubから適当なリポジトリをクローンし、既存のファイルの1つを変更してください。`git stash` を実行すると何が起こりますか? `git log
+   --all --oneline` を実行すると何が表示されますか? `git stash pop` を実行して、`git stash` で行ったことを元に戻してください。これはどのような場面で役に立つでしょうか?
+1. 多くのコマンドラインツールと同様に、Gitは `~/.gitconfig` という設定ファイル(dotfile)を提供しています。`git graph` を実行すると `git log --all --graph --decorate
+   --oneline` の出力が得られるように、`~/.gitconfig` にエイリアスを作成してください。これは `~/.gitconfig` ファイルを直接[編集](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias)するか、`git config` コマンドを使ってエイリアスを追加することで実現できます。gitのエイリアスについての情報は[こちら](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases)にあります。
+1. `git config --global core.excludesfile ~/.gitignore_global` を実行すると、`~/.gitignore_global` にグローバルな無視パターンを定義できます。これはGitが使用するグローバル無視ファイルの場所を設定するだけなので、そのパスにファイルを自分で作成する必要があります。`.DS_Store` のような、OS固有あるいはエディタ固有の一時ファイルを無視するように、グローバルなgitignoreファイルを設定してください。
+1. [この授業のWebサイトのリポジトリ](https://github.com/missing-semester/missing-semester)をフォークし、タイポやその他の改善できる点を見つけて、GitHubでプルリクエストを送ってください([こちら](https://github.com/firstcontributions/first-contributions)が参考になるでしょう)。有用なPRだけを送ってください(スパムはやめてくださいね!)。改善点が見つからない場合は、この演習は飛ばしてかまいません。
+1. 共同作業のシナリオをシミュレートして、マージ競合の解決を練習しましょう。
+    1. `git init` で新しいリポジトリを作成し、数行の内容(たとえば簡単なレシピ)を書いた `recipe.txt` というファイルを作成します。
+    1. それをコミットしてから、`git branch salty` と `git branch
+       sweet` で2つのブランチを作成します。
+    1. `salty` ブランチで、ある行を変更して(たとえば「1 cup sugar」を「1
+       cup salt」に変えて)コミットします。
+    1. `sweet` ブランチで、同じ行を別の内容に変更して(たとえば「1
+       cup sugar」を「2 cups sugar」に変えて)コミットします。
+    1. 次に `master` に切り替えて、`git merge salty`、続いて `git merge
+       sweet` を試してみてください。何が起こるでしょうか? `recipe.txt` の中身を見てみましょう。`<<<<<<<`、`=======`、`>>>>>>>` のマーカーは何を意味しているのでしょうか?
+    1. 残したい内容だけが残るようにファイルを編集し、競合マーカーを削除して、`git add` と `git commit`(または `git merge --continue`)でマージを完了させることで、競合を解決してください。あるいは、`git mergetool` を使って、グラフィカルまたはターミナルベースのマージツールで競合を解決してみてください。
+    1. `git log --graph --oneline` を使って、いま作成したマージ履歴を可視化してみましょう。
