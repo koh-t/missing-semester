@@ -2,7 +2,7 @@
 layout: page
 title: "2026年 講義一覧"
 description: >
-  Missing Semester(MIT IAP 2026)の講義ノートとビデオ。
+  Missing Semester(MIT IAP 2026)の講義ノートと動画。
 permalink: /2026/
 phony: true
 ---
@@ -29,7 +29,7 @@ phony: true
   {% endfor %}
 </ul>
 
-講義のビデオ録画は [YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQunmnnTXrNbZnBaCA-ieK4L) で公開されています。
+講義の録画は[YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQunmnnTXrNbZnBaCA-ieK4L)で公開されています。
 
 # MITの外へ
 
@@ -46,4 +46,4 @@ phony: true
 
 # 謝辞
 
-講義ビデオの収録を可能にしてくださった Elaine Mello 氏と [MIT Open Learning](https://openlearning.mit.edu/) に感謝します。また、この授業を [SIPB IAP 2026](https://sipb.mit.edu/iap/) の一環として支援してくださった Luis Turino 氏 / [SIPB](https://sipb.mit.edu/) に感謝します。
+講義動画の収録を可能にしてくださったElaine Melloさんと[MIT Open Learning](https://openlearning.mit.edu/)に感謝します。[SIPB IAP 2026](https://sipb.mit.edu/iap/)の一環としてこの授業を支援してくださったLuis Turinoさん / [SIPB](https://sipb.mit.edu/)に感謝します。

@@ -167,8 +167,7 @@ def load_reference(name_or_id):
 
 ディスク上において、Gitが保存しているのはオブジェクトと参照だけです。Gitのデータモデルはこれがすべてです。すべての `git` コマンドは、オブジェクトを追加したり、参照を追加・更新したりすることによる、コミットDAGへの何らかの操作に対応しています。
 
-コマンドを入力するときはいつでも、そのコマンドが根底にあるグラフデータ構造にどのような操作を加えているのかを考えてみてください。逆に、コミットDAGに対して特定の種類の変更を加えたい場合、たとえば「コミットされていない変更を破棄して、'master' 参照がコミット `5d83f9e` を指すようにしたい」という場合には、それを実現するコマンドがおそらく存在します(この例では `git checkout master; git reset
---hard 5d83f9e`)。
+コマンドを入力するときはいつでも、そのコマンドが根底にあるグラフデータ構造にどのような操作を加えているのかを考えてみてください。逆に、コミットDAGに対して特定の種類の変更を加えたい場合、たとえば「コミットされていない変更を破棄して、'master' 参照がコミット `5d83f9e` を指すようにしたい」という場合には、それを実現するコマンドがおそらく存在します(この例では `git checkout master; git reset --hard 5d83f9e`)。
 
 # ステージングエリア
 
@@ -263,21 +262,15 @@ Gitは「ステージングエリア」と呼ばれる仕組みを通じて、�
     1. `README.md` を最後に変更したのは誰ですか?(ヒント: `git log` に引数を付けて使いましょう。)
     1. `_config.yml` の `collections:` の行が最後に変更されたときのコミットメッセージは何でしたか?(ヒント: `git blame` と `git show` を使いましょう。)
 1. Gitを学ぶ際によくある失敗の1つが、Gitで管理すべきではない大きなファイルをコミットしてしまったり、機密情報を追加してしまったりすることです。リポジトリにファイルを追加していくつかコミットを作った後、そのファイルを(最新のコミットからだけでなく)<em>履歴</em>から削除してみてください。[こちら](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)が参考になるでしょう。
-1. GitHubから適当なリポジトリをクローンし、既存のファイルの1つを変更してください。`git stash` を実行すると何が起こりますか? `git log
-   --all --oneline` を実行すると何が表示されますか? `git stash pop` を実行して、`git stash` で行ったことを元に戻してください。これはどのような場面で役に立つでしょうか?
-1. 多くのコマンドラインツールと同様に、Gitは `~/.gitconfig` という設定ファイル(dotfile)を提供しています。`git graph` を実行すると `git log --all --graph --decorate
-   --oneline` の出力が得られるように、`~/.gitconfig` にエイリアスを作成してください。これは `~/.gitconfig` ファイルを直接[編集](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias)するか、`git config` コマンドを使ってエイリアスを追加することで実現できます。gitのエイリアスについての情報は[こちら](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases)にあります。
+1. GitHubから適当なリポジトリをクローンし、既存のファイルの1つを変更してください。`git stash` を実行すると何が起こりますか? `git log --all --oneline` を実行すると何が表示されますか? `git stash pop` を実行して、`git stash` で行ったことを元に戻してください。これはどのような場面で役に立つでしょうか?
+1. 多くのコマンドラインツールと同様に、Gitは `~/.gitconfig` という設定ファイル(dotfile)を提供しています。`git graph` を実行すると `git log --all --graph --decorate --oneline` の出力が得られるように、`~/.gitconfig` にエイリアスを作成してください。これは `~/.gitconfig` ファイルを直接[編集](https://git-scm.com/docs/git-config#Documentation/git-config.txt-alias)するか、`git config` コマンドを使ってエイリアスを追加することで実現できます。gitのエイリアスについての情報は[こちら](https://git-scm.com/book/en/v2/Git-Basics-Git-Aliases)にあります。
 1. `git config --global core.excludesfile ~/.gitignore_global` を実行すると、`~/.gitignore_global` にグローバルな無視パターンを定義できます。これはGitが使用するグローバル無視ファイルの場所を設定するだけなので、そのパスにファイルを自分で作成する必要があります。`.DS_Store` のような、OS固有あるいはエディタ固有の一時ファイルを無視するように、グローバルなgitignoreファイルを設定してください。
 1. [この授業のWebサイトのリポジトリ](https://github.com/missing-semester/missing-semester)をフォークし、タイポやその他の改善できる点を見つけて、GitHubでプルリクエストを送ってください([こちら](https://github.com/firstcontributions/first-contributions)が参考になるでしょう)。有用なPRだけを送ってください(スパムはやめてくださいね!)。改善点が見つからない場合は、この演習は飛ばしてかまいません。
 1. 共同作業のシナリオをシミュレートして、マージ競合の解決を練習しましょう。
     1. `git init` で新しいリポジトリを作成し、数行の内容(たとえば簡単なレシピ)を書いた `recipe.txt` というファイルを作成します。
-    1. それをコミットしてから、`git branch salty` と `git branch
-       sweet` で2つのブランチを作成します。
-    1. `salty` ブランチで、ある行を変更して(たとえば「1 cup sugar」を「1
-       cup salt」に変えて)コミットします。
-    1. `sweet` ブランチで、同じ行を別の内容に変更して(たとえば「1
-       cup sugar」を「2 cups sugar」に変えて)コミットします。
-    1. 次に `master` に切り替えて、`git merge salty`、続いて `git merge
-       sweet` を試してみてください。何が起こるでしょうか? `recipe.txt` の中身を見てみましょう。`<<<<<<<`、`=======`、`>>>>>>>` のマーカーは何を意味しているのでしょうか?
+    1. それをコミットしてから、`git branch salty` と `git branch sweet` で2つのブランチを作成します。
+    1. `salty` ブランチで、ある行を変更して(たとえば「1 cup sugar」を「1 cup salt」に変えて)コミットします。
+    1. `sweet` ブランチで、同じ行を別の内容に変更して(たとえば「1 cup sugar」を「2 cups sugar」に変えて)コミットします。
+    1. 次に `master` に切り替えて、`git merge salty`、続いて `git merge sweet` を試してみてください。何が起こるでしょうか? `recipe.txt` の中身を見てみましょう。`<<<<<<<`、`=======`、`>>>>>>>` のマーカーは何を意味しているのでしょうか?
     1. 残したい内容だけが残るようにファイルを編集し、競合マーカーを削除して、`git add` と `git commit`(または `git merge --continue`)でマージを完了させることで、競合を解決してください。あるいは、`git mergetool` を使って、グラフィカルまたはターミナルベースのマージツールで競合を解決してみてください。
     1. `git log --graph --oneline` を使って、いま作成したマージ履歴を可視化してみましょう。
