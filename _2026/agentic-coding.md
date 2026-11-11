@@ -44,7 +44,7 @@ Turn this into a proper command-line program, with argparse for argument parsing
 
 > より分かりやすいデモとして、続けてエージェントに、生成されたスクリプトを実行するよう頼んでみてください。出力を観察し、変更を依頼してみましょう(たとえば、絶対URLだけを含めるように頼んでみてください)。
 
-# AIモデルとエージェントの仕組み
+# AIモデルとエージェントの仕組み {#how-ai-models-and-agents-work}
 
 現代の[大規模言語モデル(LLM)](https://en.wikipedia.org/wiki/Large_language_model)やエージェントハーネスなどのインフラの内部動作を完全に説明することは、このコースの範囲を超えています。しかし、いくつかの重要なアイデアを高いレベルで理解しておくことは、この最先端技術を効果的に「使う」上でも、その限界を理解する上でも役立ちます。
 

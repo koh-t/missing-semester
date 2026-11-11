@@ -33,7 +33,7 @@ Gitのインターフェースはお世辞にも美しいとは言えません�
 
 Gitの独創性は、よく練られたデータモデルにあります。このデータモデルこそが、履歴の保持、ブランチのサポート、共同作業といったバージョン管理のあらゆる優れた機能を可能にしています。
 
-## スナップショット
+## スナップショット {#snapshots}
 
 Gitは、ある最上位ディレクトリ内のファイルとフォルダの集まりの履歴を、一連のスナップショットとしてモデル化します。Gitの用語では、ファイルは「blob」と呼ばれ、単なるバイト列です。ディレクトリは「tree」と呼ばれ、名前をblobまたはtreeに対応づけます(こうしてディレクトリは他のディレクトリを含むことができます)。スナップショットとは、追跡対象となっている最上位のtreeのことです。たとえば、次のようなtreeがあるとします。
 
@@ -243,7 +243,7 @@ Gitは「ステージングエリア」と呼ばれる仕組みを通じて、�
 - **シェルとの統合**: Gitのステータスをシェルのプロンプトに表示できると非常に便利です([zsh](https://github.com/olivierverdier/zsh-git-prompt)、[bash](https://github.com/magicmonty/bash-git-prompt))。[Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) のようなフレームワークには最初から含まれていることが多いです。
 - **エディタとの統合**: 上と同様に、多くの機能を備えた便利な統合があります。[fugitive.vim](https://github.com/tpope/vim-fugitive) がVimにおける定番です。
 - **ワークフロー**: この講義ではデータモデルといくつかの基本コマンドを教えましたが、大きなプロジェクトで作業するときにどのような慣習に従うべきかは教えていません(そして、それには[数多くの](https://nvie.com/posts/a-successful-git-branching-model/)[異なる](https://www.endoflineblog.com/gitflow-considered-harmful)[アプローチ](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)があります)。
-- **GitHub**: GitはGitHubではありません。GitHubには、他のプロジェクトにコードを寄贈するための独自の方法があり、[プルリクエスト](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)と呼ばれています。
+- **GitHub**: GitはGitHubではありません。GitHubには、他のプロジェクトにコードで貢献するための独自の方法があり、[プルリクエスト](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)と呼ばれています。
 - **その他のGitプロバイダ**: GitHubだけが特別なわけではありません。[GitLab](https://about.gitlab.com/) や [BitBucket](https://bitbucket.org/) など、Gitリポジトリのホスティングサービスは数多くあります。
 
 # 参考資料

@@ -24,7 +24,7 @@ IDE とターミナルベースのワークフローには、それぞれ長所�
 
 [vs-code]: https://code.visualstudio.com/
 
-# テキスト編集と Vim
+# テキスト編集と Vim {#text-editing-and-vim}
 
 プログラミング中の時間の大半は、長い文章を一気に書いたりファイルを頭から順に読んだりすることではなく、コードの中を移動し、コードの断片を読み、コードに編集を加えることに費やされます。[Vim] は、このようなタスクの分布に最適化されたテキストエディタです。
 
@@ -111,7 +111,7 @@ Vim のインターフェースはプログラミング言語です。キー入�
 
 名詞と動詞にはカウントを組み合わせることができ、指定した操作を指定回数実行できます。
 
-- `3w` で3単語前に移動
+- `3w` で3単語先に進む
 - `5j` で5行下に移動
 - `7dw` で7単語を削除
 
@@ -152,7 +152,7 @@ Normal モードから始めて、次の一連のコマンドで問題を修正�
     - `<ESC>` で Normal モードに戻る
 - 1 ではなく 0 から始まっている
     - `/` に続けて `range` と `<CR>` で「range」を検索
-    - `ww` で2単語(**w**ord)前に移動(`2w` でも構いませんが、実際には小さいカウントではカウント機能を使うよりキーを繰り返し押すことが多いです)
+    - `ww` で2単語(**w**ord)先に進む(`2w` でも構いませんが、実際には小さいカウントではカウント機能を使うよりキーを繰り返し押すことが多いです)
     - `i` で **i**nsert モードに切り替えて `1,` を追加
     - `<ESC>` で Normal モードに戻る
     - `e` で次の単語の末尾(**e**nd)にジャンプ
@@ -181,7 +181,7 @@ Vim を学ぶ最良の方法は、基本(ここまでで扱った内容)を学�
 
 [Vim]: https://www.vim.org/
 
-# コードインテリジェンスと言語サーバー
+# コードインテリジェンスと言語サーバー {#code-intelligence-and-language-servers}
 
 IDE は一般に、コードの意味的な理解を必要とする言語固有のサポートを提供します。これは、[Language Server Protocol](https://microsoft.github.io/language-server-protocol/) を実装した _言語サーバー_ に接続する IDE 拡張機能を通じて実現されます。たとえば、[VS Code の Python 拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-python.python)は [Pylance](https://marketplace.visualstudio.com/items?itemName=ms-python.vscode-pylance) に依存しており、[VS Code の Go 拡張機能](https://marketplace.visualstudio.com/items?itemName=golang.go)は公式の [gopls](https://go.dev/gopls/) に依存しています。使っている言語の拡張機能と言語サーバーをインストールすることで、次のような言語固有の機能を IDE で使えるようになります。
 
@@ -198,7 +198,7 @@ IDE は一般に、コードの意味的な理解を必要とする言語固有�
 
 言語によっては、言語サーバーに設定できる項目があるかもしれません。たとえば、VS Code の Python サポートでは、Python のオプションの型アノテーションを使っていないプロジェクトに対して、静的型チェックを無効にできます。
 
-# AI を活用した開発
+# AI を活用した開発 {#ai-powered-development}
 
 2021年半ばに OpenAI の [Codex モデル](https://openai.com/index/openai-codex/)を用いた [GitHub Copilot][github-copilot] が登場して以来、[LLM](https://en.wikipedia.org/wiki/Large_language_model) はソフトウェアエンジニアリングで広く採用されるようになりました。現在、主に3つの形態が使われています。オートコンプリート、インラインチャット、そしてコーディングエージェントです。
 
@@ -289,7 +289,7 @@ def download_contents(url: str) -> str:
 
 人気のある AI IDE には、[GitHub Copilot][github-copilot] 拡張機能を入れた [VS Code][vs-code] や、[Cursor](https://cursor.com/) があります。GitHub Copilot は現在、[学生には無料](https://github.com/education/students)で提供されており、教員や人気オープンソースプロジェクトのメンテナも対象です。この分野は急速に進化しています。主要な製品の多くは、おおむね同等の機能を備えています。
 
-# 拡張機能とその他の IDE 機能
+# 拡張機能とその他の IDE 機能 {#extensions-and-other-ide-functionality}
 
 IDE は強力なツールですが、_拡張機能_ によってさらに強力になります。1回の講義でこれらの機能をすべて扱うことはできませんが、ここではいくつかの人気の拡張機能へのポインタを紹介します。この領域はぜひ自分で探索してみてください。人気の IDE 拡張機能のリストはオンラインに数多くあります。たとえば、Vim プラグインなら [Vim Awesome](https://vimawesome.com/)、VS Code なら[人気順に並べた VS Code 拡張機能](https://marketplace.visualstudio.com/search?target=VSCode&category=All%20categories&sortBy=Installs)があります。
 
