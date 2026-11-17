@@ -38,7 +38,7 @@ video:
 # トピック1: シェル
 
 {% comment %}
-lecturer: Jon
+講師: Jon
 {% endcomment %}
 
 ## シェルとは何か?

@@ -51,7 +51,7 @@ Turn this into a proper command-line program, with argparse for argument parsing
 LLMは、プロンプト文字列(入力)が与えられたときの補完文字列(出力)の確率分布をモデル化したものと見なせます。LLMの推論(たとえば対話型チャットアプリにクエリを入力したときに起こること)は、この確率分布から「サンプリング」を行います。LLMには固定の「コンテキストウィンドウ」があり、これは入力と出力の文字列の最大長です。
 
 {% comment %}
-> In mathematical notation, the LLM models the probability distribution $\pi_\theta$ of completions $y$ conditioned on prompts $x$, and we sample from this distribution: $\hat{y} \sim \pi_\theta(\cdot \mid x)$.
+> 数式で書くと、LLMはプロンプト $x$ を条件とする補完 $y$ の確率分布 $\pi_\theta$ をモデル化しており、私たちはこの分布からサンプリングします: $\hat{y} \sim \pi_\theta(\cdot \mid x)$。
 {% endcomment %}
 
 対話型チャットやコーディングエージェントといったAIツールは、このプリミティブの上に構築されています。マルチターンの対話のために、チャットアプリやエージェントはターンマーカーを使い、新しいユーザープロンプトが来るたびに会話履歴全体をプロンプト文字列として与え、ユーザープロンプトごとに1回LLMの推論を実行します。ツール呼び出しを行うエージェントでは、ハーネスがLLMの特定の出力をツール呼び出しの要求として解釈し、ツール呼び出しの結果をプロンプト文字列の一部としてモデルに返します(つまり、ツールの呼び出し/応答があるたびにLLMの推論が再び実行されます)。ツール呼び出しエージェントの中核となる概念は、[200行のコードで実装できます](https://www.mihaileric.com/The-Emperor-Has-No-Clothes/)。
@@ -69,39 +69,39 @@ LLMは、プロンプト文字列(入力)が与えられたときの補完文字
 - **新機能の実装。** 上の例のように、コーディングエージェントに機能の実装を依頼できます。良い仕様を与えることは、現時点では科学というよりも技芸に近いものです。エージェントが意図どおりに動く(少なくとも正しい方向に進み始めて、そこから反復改善できる)程度に十分具体的な入力を与えたい一方で、詳細すぎて自分の作業量が増えてしまうのも避けたいところです。テスト駆動開発は特に効果的です。テストを書き(またはコーディングエージェントにテスト作成を手伝ってもらい)、そのテストが望むものを捉えているか自分で確認したうえで、コーディングエージェントに機能の実装を依頼します。モデルは絶えず進化しているので、モデルに何ができるかについての直観は常にアップデートしていく必要があります。
     > このTufteスタイルのサイドノートは、Claude Codeを使って[実装](https://github.com/missing-semester/missing-semester/pull/345)しました。
 {%- comment %}
-No need to demo this, since the intro of a lecture was a small demo of adding a new feature.
+ここはデモ不要。講義の導入が、新機能を追加する小さなデモになっているため。
 {% endcomment %}
 - **エラーの修正。** コンパイラ、リンタ、型チェッカー、テストからエラーが出ている場合、エージェントに修正を依頼できます。たとえば「fix the issues with mypy」のようなプロンプトを与えます。コーディングモデルはフィードバックループに入れると特に効果を発揮するので、モデル自身が失敗しているチェックを直接実行できるように環境を整えましょう。そうすればモデルは自律的に反復できます。それが難しい場合は、手動でフィードバックを与えることもできます。
     > missing-semesterリポジトリのコミット[f552b55](https://github.com/missing-semester/missing-semester/commit/f552b5523462b22b8893a8404d2110c4e59613dd)で、Claude Codeに「Review the agentic coding lecture for typos and grammatical issues」というプロンプトを与え、続けて見つかった問題の修正を依頼しました。その修正は[f1e1c41](https://github.com/missing-semester/missing-semester/commit/f1e1c417adba6b4149f7eef91ff5624de40dc637)でコミットされています。
 {%- comment %}
-Demo a coding agent fixing the bug in https://github.com/anishathalye/dotbot/commit/cef40c902ef0f52f484153413142b5154bbc5e99.
+コーディングエージェントが https://github.com/anishathalye/dotbot/commit/cef40c902ef0f52f484153413142b5154bbc5e99 のバグを修正する様子をデモする。
 
-Write the failing tests to demo the bug, and then ask the agent to fix. Prepped in branch demo-bugfix.
+バグを示すための失敗するテストを書き、それからエージェントに修正を依頼する。demo-bugfixブランチに準備済み。
 
-Can run the failing test with:
+失敗するテストは次のコマンドで実行できる:
 
     hatch test tests/test_cli.py::test_issue_357
 
-Can prompt coding agent with:
+コーディングエージェントには次のプロンプトを与える:
 
     There is a bug I wrote a failing test for, you can repro it with `hatch test tests/test_cli.py::test_issue_357`. Fix the bug.
 
-Get it to commit the changes.
+変更をエージェントにコミットさせる。
 {% endcomment %}
 - **リファクタリング。** コーディングエージェントは、さまざまな形のリファクタリングに利用できます。メソッドのリネームのような単純なタスク(この種のリファクタリングは[コードインテリジェンス](/2026/development-environment/#code-intelligence-and-language-servers)でも可能です)から、機能を別モジュールに切り出すような複雑なタスクまで対応できます。
     > エージェンティックコーディングを独立した講義に[分割](https://github.com/missing-semester/missing-semester/pull/344)する作業には、Claude Codeを使いました。
 {%- comment %}
-Show usage in Missing Semester, point out that the agent did make some mistakes.
+Missing Semesterでの利用例を見せ、エージェントがいくつかミスをしたことにも触れる。
 {% endcomment %}
 - **コードレビュー。** コーディングエージェントにコードのレビューを依頼できます。「review my latest changes that are not yet committed」のような簡単な指示を与えるだけで構いません。プルリクエストをレビューしたい場合、コーディングエージェントがWebフェッチに対応していたり、[GitHub CLI](https://cli.github.com/)のようなコマンドラインツールがインストールされていれば、「Review the pull request {link}」と頼むだけで、あとはエージェントが処理してくれるかもしれません。
 {%- comment %}
-In Porcupine repo, prompt agent with:
+Porcupineリポジトリで、エージェントに次のプロンプトを与える:
 
     Review this PR: https://github.com/anishathalye/porcupine/pull/39
 {% endcomment %}
 - **コード理解。** コードベースについてコーディングエージェントに質問できます。これは特にオンボーディングの際に役立ちます。
 {%- comment %}
-Some prompts to try in the missing-semester repo:
+missing-semesterリポジトリで試すプロンプトの例:
 
     How do I run this site locally?
 
@@ -109,14 +109,14 @@ Some prompts to try in the missing-semester repo:
 {% endcomment %}
 - **シェルとして。** 特定のツールを使ってタスクを解決するようコーディングエージェントに依頼できます。つまり、自然言語でシェルコマンドを呼び出せるということです。たとえば「use the find command to find all files older than 30 days」や「use mogrify to resize all the jpgs to 50% of their original size」のように指示できます。
 {%- comment %}
-In Dotbot repo, prompt agent with:
+Dotbotリポジトリで、エージェントに次のプロンプトを与える:
 
     Use the ag command to find all Python renaming imports
 {% endcomment %}
 - **バイブコーディング。** エージェントは十分に強力なので、自分では一行もコードを書かずにアプリケーションを実装できることもあります。
     > 講師のひとりがバイブコーディングで作った実際のプロジェクトの[例がこちらです](https://github.com/cleanlab/office-presence-dashboard)。
 {%- comment %}
-In missing-semester repo, prompt agent with:
+missing-semesterリポジトリで、エージェントに次のプロンプトを与える:
 
     Make this site look retro.
 {% endcomment %}
@@ -133,31 +133,31 @@ In missing-semester repo, prompt agent with:
     - **コンテキストウィンドウのクリア。** 最も基本的な制御として、コーディングエージェントはコンテキストウィンドウのクリア(新しい会話の開始)に対応しています。無関係な問い合わせをするときはクリアすべきです。
     - **会話の巻き戻し。** コーディングエージェントの中には、会話履歴のステップを取り消せるものがあります。エージェントを別の方向に誘導するフォローアップメッセージを送るよりも、「取り消し」のほうが理にかなっている状況では、こちらのほうが効果的にコンテキストを管理できます。
 {%- comment %}
-Make up a quick demo.
+簡単なデモをその場で作る。
 {% endcomment %}
     - **コンパクション。** 長さに制限のない会話を可能にするため、コーディングエージェントはコンテキストの「コンパクション」に対応しています。会話履歴が長くなりすぎると、自動的にLLMを呼び出して会話の前半部分を要約し、会話履歴をその要約で置き換えます。ユーザーが任意のタイミングでコンパクションを実行できるエージェントもあります。
 {%- comment %}
-Show `/compact` in Claude Code, show full summary.
+Claude Codeで `/compact` を見せ、要約の全文を表示する。
 {% endcomment %}
     - **llms.txt。** `/llms.txt` ファイルは、LLMが推論時に利用するためのドキュメントの置き場所として提案されている[標準](https://llmstxt.org/)です。製品(例: [cursor.com/llms.txt](https://cursor.com/llms.txt))、ソフトウェアライブラリ(例: [ai.pydantic.dev/llms.txt](https://ai.pydantic.dev/llms.txt))、API(例: [apify.com/llms.txt](https://apify.com/llms.txt))が、開発に便利な `llms.txt` ファイルを提供していることがあります。こうしたドキュメントはトークンあたりの情報密度が高いため、コーディングエージェントにHTMLページを取得して読ませるよりもコンテキスト効率に優れています。外部ドキュメントは、利用しようとしている依存ライブラリについてコーディングエージェントが組み込みの知識を持っていない場合(たとえば、LLMの知識カットオフ以降に公開されたものである場合)に便利です。
 {%- comment %}
-Side-by-side comparison in an empty repo (on Desktop or some other self-contained place, with `git init` run in it):
+空のリポジトリ(デスクトップなど他から独立した場所に作り、`git init` を実行しておく)で、次の2つを並べて比較する:
 
     Write a single-file Python program example in demo.py using semlib to sort "Ilya Sutskever", "Soumith Chintala", and "Donald Knuth" in terms of their fame as AI researchers.
 
     Write a single-file Python program example in demo.py using semlib to sort "Ilya Sutskever", "Soumith Chintala", and "Donald Knuth" in terms of their fame as AI researchers. See https://semlib.anish.io/llms.txt. Follow links to Markdown versions of any pages linked in llms.txt files.
 
-Not sure why the agent doesn't do this by default. You'd probably put that last sentence in a CLAUDE.md file.
+エージェントがなぜデフォルトでこうしないのかは不明。この最後の一文は、おそらくCLAUDE.mdファイルに書いておくことになる。
 {% endcomment %}
     - **AGENTS.md。** ほとんどのコーディングエージェントは、コーディングエージェント向けのREADMEとして[AGENTS.md](https://agents.md/)またはそれに類するもの(たとえばClaude Codeは `CLAUDE.md` を探します)に対応しています。エージェントの起動時に、`AGENTS.md` の内容全体がコンテキストにあらかじめ読み込まれます。これを使って、セッションをまたいで共通するアドバイスをエージェントに与えることができます(たとえば、コード変更後は必ず型チェッカーを実行するよう指示する、ユニットテストの実行方法を説明する、エージェントが参照できるサードパーティのドキュメントへのリンクを載せる、など)。このファイルを自動生成できるコーディングエージェントもあります(たとえばClaude Codeの `/init` コマンド)。実際の `AGENTS.md` の例は[こちら](https://github.com/pydantic/pydantic-ai/blob/main/CLAUDE.md)をご覧ください。
 {%- comment %}
-Dotbot example, CLAUDE.md that includes @DEVELOPMENT.md and says to always run the type checker and code formatter after making any changes to Python code.
+Dotbotの例。CLAUDE.mdが@DEVELOPMENT.mdを取り込んでおり、Pythonコードを変更したあとは必ず型チェッカーとコードフォーマッタを実行するよう指示している。
 
-Example prompt, off of master:
+プロンプトの例(masterから作業する):
 
     Remove the "--version" command-line flag.
 
-This is something that'll be fast, for demonstration purposes.
+デモ用に、すぐに終わるものを選んでいる。
 {% endcomment %}
     - **スキル。** `AGENTS.md` の内容は、常にその全体がエージェントのコンテキストウィンドウに読み込まれます。「スキル」は、コンテキストの肥大化を避けるために一段階の間接参照を加えたものです。エージェントにスキルの一覧とその説明を提供しておき、エージェントは必要に応じてスキルを「開く」(コンテキストウィンドウに読み込む)ことができます。
     - **サブエージェント。** コーディングエージェントの中には、タスク特化のワークフローのためのエージェントであるサブエージェントを定義できるものがあります。トップレベルのコーディングエージェントは、特定のタスクを完了させるためにサブエージェントを呼び出せます。これにより、トップレベルエージェントとサブエージェントの両方がコンテキストをより効果的に管理できます。トップレベルエージェントのコンテキストはサブエージェントが見るすべての情報で肥大化せずに済み、サブエージェントは自分のタスクに必要なコンテキストだけを受け取れます。一例として、Webリサーチをサブエージェントとして実装しているコーディングエージェントがあります。トップレベルエージェントがサブエージェントにクエリを投げると、サブエージェントはWeb検索を実行し、個々のWebページを取得・分析し、クエリへの回答をトップレベルエージェントに返します。こうすることで、トップレベルエージェントのコンテキストは取得したすべてのWebページの全文で肥大化せず、サブエージェントのコンテキストにはトップレベルエージェントの残りの会話履歴が含まれずに済みます。

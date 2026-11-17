@@ -17,16 +17,16 @@ nositetitle: true
 [この授業を開講する理由](/about/)もあわせてお読みください。
 
 {% comment %}
-# Registration
+# 受講登録
 
-Sign up for the IAP 2026 class by filling out this [registration form](https://forms.gle/j2wMzi7qeiZmzEWy9).
+IAP 2026の授業に参加するには、こちらの[登録フォーム](https://forms.gle/j2wMzi7qeiZmzEWy9)に記入してください。
 {% endcomment %}
 
 # シラバス
 
 {% comment %}
-**Lecture**: [35-225](https://whereis.mit.edu/?go=35), 1:30--2:30pm (_exception_: 3--4pm on Friday 1/16)<br>
-**Discussion**: [OSSU Discord](https://ossu.dev/#community) (use `#missing-semester-forum` like you would use Piazza, and `#missing-semester` to chat with the class/instructors)
+**講義**: [35-225](https://whereis.mit.edu/?go=35)、午後1:30--2:30(_例外_: 1/16(金)は午後3--4時)<br>
+**ディスカッション**: [OSSU Discord](https://ossu.dev/#community)(`#missing-semester-forum` はPiazzaのように質問用に、`#missing-semester` は受講者・講師との雑談用にお使いください)
 {% endcomment %}
 
 <ul>
@@ -49,7 +49,7 @@ Sign up for the IAP 2026 class by filling out this [registration form](https://f
 
 扱うトピックは年度によって異なります。これまでに扱ってきたすべてのトピックに興味がある方のために、過去の年度で扱ったものの2026年には扱わなかったトピックを以下に挙げます。
 
-{% comment %} pop to remove default "posts" collection {% endcomment %}
+{% comment %} デフォルトの "posts" コレクションを取り除くためにpopする {% endcomment %}
 {% assign sorted_collections = site.collections | sort: 'label' | pop | reverse %}
 <ul>
 {% for collection in sorted_collections %}
@@ -69,11 +69,9 @@ Sign up for the IAP 2026 class by filling out this [registration form](https://f
 </ul>
 
 {% comment %}
-Lecture videos will be made available to MIT students immediately after lecture (via Panopto). The system has a limitation that only those with an MIT Kerberos can access the raw lecture videos. We are working on editing lecture videos and uploading them to YouTube. A couple have been uploaded already; we expect the rest to be uploaded by mid-February.
+講義動画は、講義の直後からMITの学生向けに(Panopto経由で)視聴できるようになります。システムの制約により、未編集の講義動画にアクセスできるのはMIT Kerberosを持つ人に限られます。現在、講義動画を編集してYouTubeにアップロードする作業を進めています。すでに数本はアップロード済みで、残りも2月中旬までにはアップロードできる見込みです。
 
-If you can't wait until January 2026, you can also take a look at the lectures
-from the [previous offering of the course](/2020/), which covers many of the
-same topics.
+2026年1月まで待てないという方は、同じトピックの多くを扱っている[前回開講時](/2020/)の講義もご覧いただけます。
 {% endcomment %}
 
 # 一般情報
@@ -98,7 +96,7 @@ same topics.
 
 # 翻訳
 
-{% comment %} keep these in alphabetical order {% endcomment %}
+{% comment %} これらはアルファベット順に保つこと {% endcomment %}
 
 - [アラビア語](https://missing-semester-ar.github.io/)
 - [ベンガル語](https://missing-semester-bn.github.io/)
@@ -127,7 +125,7 @@ same topics.
 ## 謝辞
 
 {% comment %}
-2026 acks; previous years' acks are on their respective pages
+2026年の謝辞。過去の年度の謝辞はそれぞれの年度のページにある
 {% endcomment %}
 
 講義動画の収録を可能にしてくださったElaine Melloさんと[MIT Open Learning](https://openlearning.mit.edu/)に感謝します。[SIPB IAP 2026](https://sipb.mit.edu/iap/)の一環としてこの授業を支援してくださったLuis Turinoさん / [SIPB](https://sipb.mit.edu/)に感謝します。

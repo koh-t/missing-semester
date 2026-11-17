@@ -614,13 +614,13 @@ $ uv pip install --index-url https://test.pypi.org/simple/ greeting
 Webサービスをインターネットにデプロイするには、追加のインフラが必要です。ドメイン名の登録、ドメインをサーバーに向けるDNS設定、そして多くの場合、HTTPSの処理とトラフィックのルーティングを行うnginxのようなリバースプロキシです。ドキュメントや静的サイトのようなシンプルな用途には、[GitHub Pages](https://pages.github.com/) がリポジトリから直接無料ホスティングを提供しています。
 
 <!--
-## Documentation
+## ドキュメント
 
-So far we have emphasized the deliverable _artifact_ as the main output of packaging and shipping code.
-In addition to the artifact, we need to document for users the code's functionality, installation instructions, and usage examples.
+ここまでは、コードのパッケージングと出荷の主な成果として、成果物である _アーティファクト_ に重点を置いてきました。
+アーティファクトに加えて、コードの機能、インストール手順、使用例をユーザー向けに文書化する必要があります。
 
-Tools like [Sphinx](https://www.sphinx-doc.org/) (Python) and [MkDocs](https://www.mkdocs.org/) can automatically generate browsable documentation from docstrings and markdown files, often hosted on services like [Read the Docs](https://readthedocs.org/).
-For HTTP-based APIs, the [OpenAPI specification](https://www.openapis.org/) (formerly Swagger) provides a standard format for describing API endpoints, which tools can use to generate interactive documentation and client libraries automatically. -->
+[Sphinx](https://www.sphinx-doc.org/)(Python)や [MkDocs](https://www.mkdocs.org/) のようなツールは、docstringやMarkdownファイルから閲覧可能なドキュメントを自動生成でき、多くの場合 [Read the Docs](https://readthedocs.org/) のようなサービスでホストされます。
+HTTPベースのAPIについては、[OpenAPI仕様](https://www.openapis.org/)(旧Swagger)がAPIエンドポイントを記述するための標準フォーマットを提供しており、ツールはこれを使って対話的なドキュメントやクライアントライブラリを自動生成できます。 -->
 
 
 # 演習

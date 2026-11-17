@@ -427,20 +427,20 @@ trap cleanup EXIT  # Run cleanup when script exits
 trap cleanup SIGINT SIGTERM  # Also on Ctrl-C or kill
 ```
 {% comment %}
-### Users, Files and Permissions
+### ユーザー、ファイル、パーミッション
 
-Lastly, another way programs have to indirectly communicate with each other is using files.
-For a program to be able to correctly read/write/delete files and folders, the file permissions must allow the operation.
+最後に、プログラム同士が間接的にやり取りするもうひとつの方法として、ファイルを使う方法があります。
+プログラムがファイルやフォルダを正しく読み書き・削除できるためには、ファイルのパーミッションがその操作を許可していなければなりません。
 
-Listing a specific file will give the following output
+特定のファイルを一覧表示すると、次のような出力が得られます。
 
 ```console
 $ ls -l notes.txt
 -rw-r--r--  1 alice  users  12693 Jan 11 23:05 notes.txt
 ```
 
-Here `ls` is listing what is the owner of the file, user `alice`, and the group `users`. Then the `rw-r--r--` are a shorthand notation for the permissions.
-In this case, the file `notes.txt` has read/write permissions for the user alice `rw-`, and only read permissions for the group and the rest of users in the file system.
+ここで `ls` は、ファイルの所有者であるユーザー `alice` と、グループ `users` を表示しています。そして `rw-r--r--` はパーミッションの省略表記です。
+この場合、ファイル `notes.txt` には、ユーザーaliceに対する読み書きのパーミッション `rw-` があり、グループとファイルシステム上のその他のユーザーに対しては読み取りのパーミッションだけがあります。
 
 ```console
 $ ./script.sh
@@ -451,9 +451,9 @@ $ ls -l script.sh
 $ ./script.sh
 ```
 
-For a script to be executable, the executable rights must be set, hence why we had to use the `chmod` (change mode) program.
-`chmod` syntax, while intuitive, is not obvious when first encountered.
-If you, like me, prefer to learn by example, this is a good usecase of the `tldr` tool (note that you need to install it first).
+スクリプトを実行可能にするには実行権限が設定されていなければならず、そのため `chmod`(change mode)プログラムを使う必要があったのです。
+`chmod` の構文は直感的ではあるものの、初めて目にしたときにはすぐに理解できるものではありません。
+もし私と同じように例から学ぶのが好きなら、これは `tldr` ツールの格好の使いどころです(先にインストールしておく必要がある点に注意してください)。
 
 ```console
 ❯ tldr chmod
@@ -473,19 +473,19 @@ If you, like me, prefer to learn by example, this is a good usecase of the `tldr
       chmod a+rx path/to/file
 ```
 
-Run `tldr chmod` to see more examples, including recursive operations and group permissions.
+再帰的な操作やグループのパーミッションなど、さらに多くの例を見るには `tldr chmod` を実行してください。
 
-> Your shell might show you something like `command not found: tldr`. That is because it is a more modern tool and it is not pre-installed in most systems. A good reference for how to install tools is the [https://command-not-found.com](https://command-not-found.com) website. It contains instructions for a huge collection of CLI tools for popular OS distributions.
+> シェルが `command not found: tldr` のように表示するかもしれません。これは、`tldr` が比較的新しいツールで、ほとんどのシステムにはあらかじめインストールされていないためです。ツールのインストール方法を調べるのに便利なのが、ウェブサイト [https://command-not-found.com](https://command-not-found.com) です。主要なOSディストリビューション向けに、膨大な数のCLIツールのインストール手順が掲載されています。
 
-Each program is run as a specific user in the system. We can use the `whoami` command to find our user name and `id -u` to find our UID (user id) which is the integer value that the OS associates with the user.
+各プログラムは、システム上の特定のユーザーとして実行されます。`whoami` コマンドで自分のユーザー名を、`id -u` で自分のUID(ユーザーID)を調べられます。UIDは、OSがそのユーザーに対応づけている整数値です。
 
-When running `sudo command`, the `command` is run as the root user which can bypass most permissions in the system.
-Try running `sudo whoami` and `sudo id -u` to see how the output changes (you might be prompted for your password).
-To change the owner of a file or folder, we use the `chown` command.
+`sudo command` を実行すると、`command` はrootユーザーとして実行されます。rootユーザーは、システム上のほとんどのパーミッションを迂回できます。
+`sudo whoami` と `sudo id -u` を実行して、出力がどう変わるか確かめてみてください(パスワードの入力を求められるかもしれません)。
+ファイルやフォルダの所有者を変更するには、`chown` コマンドを使います。
 
-You can learn more about UNIX file permissions [here](https://en.wikipedia.org/wiki/File-system_permissions#Traditional_Unix_permissions)
+UNIXのファイルパーミッションについては、[こちら](https://en.wikipedia.org/wiki/File-system_permissions#Traditional_Unix_permissions)で詳しく学べます。
 
-So far we've focused on your local machine, but many of these skills become even more valuable when working with remote servers.
+ここまでは手元のマシンに焦点を当ててきましたが、これらのスキルの多くは、リモートサーバーを扱うときにいっそう価値を発揮します。
 
 {% endcomment %}
 

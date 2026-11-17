@@ -5,7 +5,7 @@ description: >
   Missing Semesterの過去のすべての開講一覧です。
 ---
 
-{% comment %} pop to remove default "posts" collection {% endcomment %}
+{% comment %} デフォルトの "posts" コレクションを取り除くためにpopする {% endcomment %}
 {% assign sorted_collections = site.collections | sort: 'label' | pop | reverse %}
 <ul>
 {% for collection in sorted_collections %}
