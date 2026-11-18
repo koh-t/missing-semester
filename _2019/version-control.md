@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Version Control"
+title: "バージョン管理"
 presenter: Jon
 date: 2019-01-22
 order: 2
@@ -9,50 +9,26 @@ video:
   id: 3fig2Vz8QXs
 ---
 
-Whenever you are working on something that changes over time, it's
-useful to be able to _track_ those changes. This can be for a number of
-reasons: it gives you a record of what changed, how to undo it, who
-changed it, and possibly even why. Version control systems (VCS) give
-you that ability. They let you _commit_ changes to a set of files, along
-with a message describing the change, as well as look at and undo
-changes you've made in the past.
+時間とともに変化していくものに取り組んでいるときには、その変更を _追跡_ できると便利です。理由はいくつもあります。何が変わったのか、どうすれば元に戻せるのか、誰が変更したのか、そして場合によってはなぜ変更したのかまで、記録が残るのです。バージョン管理システム(VCS)は、その能力を与えてくれます。VCSを使うと、一連のファイルに対する変更を、その変更を説明するメッセージとともに _コミット_ できますし、過去に行った変更を確認したり取り消したりすることもできます。
 
-Most VCS support sharing the commit history between multiple users. This
-allows for convenient collaboration: you can see the changes I've made,
-and I can see the changes you've made. And since the VCS tracks
-_changes_, it can often (though not always) figure out how to combine
-our changes as long as they touch relatively disjoint things.
+ほとんどのVCSは、複数のユーザーの間でコミット履歴を共有することをサポートしています。これによって共同作業が便利になります。私が行った変更をあなたが見ることができ、あなたが行った変更を私が見ることができるのです。そしてVCSは _変更_ を追跡しているので、私たちの変更が比較的重なりのない部分に触れている限り、それらをどう組み合わせればよいかを(常にではないものの)多くの場合は判断できます。
 
-There [_a
-lot_](https://en.wikipedia.org/wiki/Comparison_of_version-control_software)
-of VCSes out there that differ a lot in what they support, how they
-function, and how you interact with them. Here, we'll focus on
-[git](https://git-scm.com/), one of the more commonly used ones, but I
-recommend you also take a look at
-[Mercurial](https://www.mercurial-scm.org/).
+世の中には[_非常に多く_](https://en.wikipedia.org/wiki/Comparison_of_version-control_software)のVCSがあり、何をサポートしているか、どのように機能するか、どうやって操作するかは大きく異なります。ここでは、比較的よく使われているもののひとつである[git](https://git-scm.com/)に焦点を当てますが、[Mercurial](https://www.mercurial-scm.org/)も見てみることをおすすめします。
 
-With that all said -- to the cliffnotes!
+前置きはこのくらいにして、要点に入りましょう!
 
-## Is git dark magic?
+## gitは黒魔術なのか?
 
-not quite.. you need to understand the data model.
-we're going to skip over some of the details, but roughly speaking,
-the _core_ "thing" in git is a commit.
+そこまでではありません。ただ、データモデルを理解する必要があります。細かい点はいくつか省きますが、大まかに言うと、gitの _中核_ となる「もの」はコミットです。
 
- - every commit has a unique name, "revision hash"
-   a long hash like `998622294a6c520db718867354bf98348ae3c7e2`
-   often shortened to a short (unique-ish) prefix: `9986222`
- - commit has author + commit message
- - also has the hash of any _ancestor commits_
-   usually just the hash of the previous commit
- - commit also represents a _diff_, a representation of how you get from
-   the commit's ancestors to the commit (e.g., remove this line in this
-   file, add these lines to this file, rename that file, etc.)
-   - in reality, git stores the full before and after state
-   - probably don't want to store big files that change!
+ - すべてのコミットには「リビジョンハッシュ」という一意な名前があります。これは `998622294a6c520db718867354bf98348ae3c7e2` のような長いハッシュで、短い(ほぼ一意な)プレフィックス `9986222` に短縮されることがよくあります
+ - コミットには作者とコミットメッセージがあります
+ - _祖先コミット_ のハッシュも持っています。たいていは直前のコミットのハッシュだけです
+ - コミットは _差分(diff)_ も表しています。差分とは、そのコミットの祖先からそのコミットに至る方法を表現したものです(たとえば、このファイルのこの行を削除する、このファイルにこれらの行を追加する、あのファイルの名前を変更する、など)
+   - 実際には、gitは変更前と変更後の状態をまるごと保存しています
+   - 変更が入る大きなファイルは、おそらく保存しないほうがよいでしょう!
 
-initially, the _repository_ (roughly: the folder that git manages) has
-no content, and no commits. let's set that up:
+最初は、_リポジトリ_(大まかに言えば、gitが管理するフォルダ)には中身もコミットもありません。それをセットアップしてみましょう。
 
 ```console
 $ git init hackers
@@ -60,109 +36,89 @@ $ cd hackers
 $ git status
 ```
 
-the output here actually gives us a good starting point. let's dig in
-and make sure we understand it all.
+ここでの出力は、実は良い出発点になります。掘り下げて、すべてを理解できているか確かめましょう。
 
-first, "On branch master".
+まず、「On branch master」です。
 
- - don't want to use hashes all the time.
- - branches are names that point to hashes.
- - master is traditionally the name for the "latest" commit.
-   every time a new commit is made, the master name will be made to
-   point to the new commit's hash.
- - special name `HEAD` refers to "current" name
- - you can also make your own names with `git branch` (or `git tag`)
-   we'll get back to that
+ - 常にハッシュを使うのは避けたいところです。
+ - ブランチは、ハッシュを指す名前です。
+ - masterは伝統的に「最新の」コミットに付ける名前です。新しいコミットが作られるたびに、masterという名前は新しいコミットのハッシュを指すように変更されます。
+ - 特別な名前 `HEAD` は「現在の」名前を指します
+ - `git branch`(または `git tag`)で自分で名前を作ることもできます。これについてはあとで触れます
 
-let's skip over "No commits yet" because that's all there is to it.
+「No commits yet」は、文字どおりの意味でしかないので飛ばしましょう。
 
-then, "nothing to commit".
+次に、「nothing to commit」です。
 
- - every commit contains a diff with all the changes you made.
-   but how is that diff constructed in the first place?
- - _could_ just always commit _all_ changes you've made since the last
-   commit
-   - sometimes you want to only commit some of them (e.g., not `TODO`s)
-   - sometimes you want to break up a change into multiple commits to
-     give a separate commit message for each one
- - git lets you _stage_ changes to construct a commit
-   - add changes to a file or files to the staged changes with `git add`
-     - add only some changes in a file with `git add -p`
-     - without argument `git add` operates on "all known files"
-   - remove a file and stage its removal with `git rm`
-   - empty the set of staged changes `git reset`
-     - note that this does *not* change any of your files!
-       it *only* means that no changes will be included in a commit
-     - to remove only some staged changes:
-       `git reset FILE` or `git reset -p`
-   - check staged changes with `git diff --staged`
-   - see remaining changes with `git diff`
-   - when you're happy with the stage, make a commit with `git commit`
-     - if you just want to commit *all* changes: `git commit -a`
-     - `git help add` has a bunch more helpful info
+ - すべてのコミットには、あなたが行ったすべての変更を含む差分が入っています。しかし、そもそもその差分はどのように組み立てられるのでしょうか?
+ - 最後のコミット以降に行った _すべて_ の変更を常にコミットする、というやり方も _ありえます_
+   - 一部だけをコミットしたいこともあります(たとえば、`TODO` は含めないなど)
+   - ひとつの変更を複数のコミットに分割して、それぞれに別々のコミットメッセージを付けたいこともあります
+ - gitでは、変更を _ステージ_ してコミットを組み立てられます
+   - `git add` で、1つまたは複数のファイルへの変更をステージ済みの変更に追加します
+     - `git add -p` で、ファイル内の一部の変更だけを追加します
+     - 引数なしの `git add` は「既知のすべてのファイル」を対象にします
+   - `git rm` で、ファイルを削除し、その削除をステージします
+   - `git reset` で、ステージ済みの変更を空にします
+     - これはあなたのファイルを一切 *変更しない* ことに注意してください! コミットに変更が何も含まれなくなる、という意味 *でしかありません*
+     - ステージ済みの変更の一部だけを取り除くには: `git reset FILE` または `git reset -p`
+   - `git diff --staged` で、ステージ済みの変更を確認します
+   - `git diff` で、残りの変更を確認します
+   - ステージの内容に満足したら、`git commit` でコミットを作ります
+     - *すべて* の変更をそのままコミットしたいだけなら: `git commit -a`
+     - `git help add` には、役に立つ情報がほかにもたくさんあります
 
-while you're playing with the above, try to run `git status` to see what
-git thinks you're doing -- it's surprisingly helpful!
+上記を試している間、`git status` を実行して、gitがあなたのしていることをどう捉えているか見てみてください。驚くほど役に立ちます!
 
-## A commit you say...
+## コミットと言いますが...
 
-okay, we have a commit, now what?
+さて、コミットができました。次はどうしましょう?
 
- - we can look at recent changes: `git log` (or `git log --oneline`)
- - we can look at the full changes: `git log -p`
- - we can show a particular commit: `git show master`
-   - or with `-p` for full diff/patch
- - we can go back to the state at a commit using `git checkout NAME`
-   - if `NAME` is a commit hash, git says we're "detached". this just
-     means there's no `NAME` that refers to this commit, so if we make
-     commits, no-one will know about them.
- - we can revert a change with `git revert NAME`
-   - applies the diff in the commit at `NAME` in reverse.
- - we can compare an older version to this one using `git diff NAME..`
-   - `a..b` is a commit _range_. if either is left out, it means `HEAD`.
- - we can show all the commits between using `git log NAME..`
-   - `-p` works here too
- - we can change `master` to point to a particular commit (effectively
-   undoing everything since) with `git reset NAME`:
-   - huh, why? wasn't `reset` to change staged changes?
-     reset has a "second" form (see `git help reset`) which sets `HEAD`
-     to the commit pointed to by the given name.
-   - notice that this didn't change any files -- `git diff` now
-     effectively shows `git diff NAME..`.
+ - 最近の変更を見られます: `git log`(または `git log --oneline`)
+ - 変更の全体を見られます: `git log -p`
+ - 特定のコミットを表示できます: `git show master`
+   - `-p` を付けると完全な差分/パッチを表示します
+ - `git checkout NAME` で、あるコミットの時点の状態に戻れます
+   - `NAME` がコミットハッシュの場合、gitは「detached」の状態だと言います。これは、このコミットを指す `NAME` が存在しないという意味にすぎません。そのため、ここでコミットを作っても、誰もそれを知ることができません。
+ - `git revert NAME` で、変更を打ち消せます
+   - `NAME` のコミットにある差分を逆向きに適用します。
+ - `git diff NAME..` で、古いバージョンと現在のバージョンを比較できます
+   - `a..b` はコミットの _範囲_ です。どちらかを省略すると、それは `HEAD` を意味します。
+ - `git log NAME..` で、その間にあるすべてのコミットを表示できます
+   - ここでも `-p` が使えます
+ - `git reset NAME` で、`master` が特定のコミットを指すように変更できます(事実上、それ以降のすべてを取り消すことになります):
+   - あれ、なぜでしょう? `reset` はステージ済みの変更を変えるためのものではなかったでしょうか? resetには「第2の」形式があり(`git help reset` を参照)、`HEAD` を、与えられた名前が指すコミットに設定します。
+   - これはファイルを一切変更しなかったことに注目してください -- `git diff` は今や、事実上 `git diff NAME..` を表示します。
 
-## What's in a name?
+## 名前には何が込められているのか?
 
-clearly, names are important in git. and they're the key to
-understanding *a lot* of what goes on in git. so far, we've talked about
-commit hashes, master, and `HEAD`. but there's more!
+明らかに、gitでは名前が重要です。そして名前は、gitの中で起きていることの *多く* を理解するための鍵です。ここまで、コミットハッシュ、master、`HEAD` について話してきました。しかし、ほかにもあります!
 
- - you can make your own branches (like master) with `git branch b`
-   - creates a new name, `b`, which points to the commit at `HEAD`
-   - you're still "on" master though, so if you make a new commit,
-     master will point to that new commit, `b` will not.
-   - switch to a branch with `git checkout b`
-     - any commits you make will now update the `b` name
-     - switch back to master with `git checkout master`
-       - all your changes in `b` are hidden away
-     - a very handy way to be able to easily test out changes
- - tags are other names that never change, and that have their own
-   message. often used to mark releases + changelogs.
- - `NAME^` means "the commit before `NAME`
-   - can apply recursively: `NAME^^^`
-   - you _most likely_ mean `~` when you use `~`
-     - `~` is "temporal", whereas `^` goes by ancestors
-     - `~~` is the same as `^^`
-     - with `~` you can also write `X~3` for "3 commits older than `X`
-     - you don't want `^3`
+ - `git branch b` で、(masterのような)自分のブランチを作れます
+   - `HEAD` のコミットを指す新しい名前 `b` を作ります
+   - ただし、あなたはまだmaster「上」にいるので、新しいコミットを作ると、masterはその新しいコミットを指しますが、`b` は指しません。
+   - `git checkout b` でブランチを切り替えます
+     - これ以降に作るコミットは、`b` という名前を更新します
+     - `git checkout master` でmasterに戻ります
+       - `b` での変更はすべて隠されます
+     - 変更を手軽に試せるようにする、とても便利な方法です
+ - タグは、決して変化しないもうひとつの種類の名前で、独自のメッセージを持ちます。リリースや変更履歴(changelog)の目印としてよく使われます。
+ - `NAME^` は「`NAME` の前のコミット」を意味します
+   - 再帰的に適用できます: `NAME^^^`
+   - `~` を使うとき、あなたが意図しているのは _ほぼ間違いなく_ `~` です
+     - `~` は「時間的」であるのに対し、`^` は祖先をたどります
+     - `~~` は `^^` と同じです
+     - `~` では、「`X` より3つ古いコミット」を `X~3` と書くこともできます
+     - `^3` は、あなたが望むものではありません
    - `git diff HEAD^`
- - `-` means "the previous name"
- - most commands operate on `HEAD` unless you give another argument
+ - `-` は「直前の名前」を意味します
+ - ほとんどのコマンドは、別の引数を与えない限り `HEAD` を対象にします
 
-## Clean up your mess
+## 散らかったものを片付ける
 
-your commit history will _very_ often end up as:
+コミット履歴は、次のようになってしまうことが _非常に_ よくあります。
 
- - `add feature x` -- maybe even with a commit message about `x`!
+ - `add feature x` -- `x` についてのコミットメッセージまで付いているかもしれません!
  - `forgot to add file`
  - `fix bug`
  - `typo`
@@ -177,152 +133,98 @@ your commit history will _very_ often end up as:
  - `x`
  - `x`
 
-that's _fine_ as far as git is concerned, but is not very helpful to
-your future self, or to other people who are curious about what has
-changed. git lets you clean up these things:
+gitにとってはこれで _問題ありません_ が、将来の自分にとっても、何が変わったのかを知りたい他の人にとっても、あまり役に立ちません。gitでは、こうしたものを片付けられます。
 
- - `git commit --amend`: fold staged changes into previous commit
-   - note that this _changes_ the previous commit, giving it a new hash!
- - `git rebase -i HEAD~13` is _magical_.
-   for each commit from past 13, choose what to do:
-   - default is `pick`; do nothing
-   - `r`: change commit message
-   - `e`: change commit (add or remove files)
-   - `s`: combine commit with previous and edit commit message
-   - `f`: "fixup" -- combine commit with previous; discard commit msg
-   - at the end, `HEAD` is made to point to what is now the last commit
-   - often referred to as _squashing_ commits
-   - what it really does: rewind `HEAD` to rebase start point, then
-     re-apply the commits in order as directed.
- - `git reset --hard NAME`: reset the state of all files to that of
-   `NAME` (or `HEAD` if no name is given). handy for undoing changes.
+ - `git commit --amend`: ステージ済みの変更を直前のコミットに取り込みます
+   - これは直前のコミットを _変更_ し、新しいハッシュを与えることに注意してください!
+ - `git rebase -i HEAD~13` は _魔法のよう_ です。直近13個のコミットのそれぞれについて、どうするかを選びます:
+   - デフォルトは `pick` で、何もしません
+   - `r`: コミットメッセージを変更します
+   - `e`: コミットを変更します(ファイルを追加または削除します)
+   - `s`: コミットを直前のコミットと結合し、コミットメッセージを編集します
+   - `f`: 「fixup」 -- コミットを直前のコミットと結合し、コミットメッセージは破棄します
+   - 最後に、`HEAD` は、新たに最後となったコミットを指すように変更されます
+   - コミットの _スカッシュ(squash)_ と呼ばれることがよくあります
+   - 実際に行っていること: `HEAD` をリベースの開始地点まで巻き戻し、指示どおりの順番でコミットを再適用します。
+ - `git reset --hard NAME`: すべてのファイルの状態を `NAME`(名前を与えなければ `HEAD`)の状態にリセットします。変更を取り消すのに便利です。
 
-## Playing with others
+## 他の人と一緒に遊ぶ
 
-a common use-case for version control is to allow multiple people to
-make changes to a set of files without stepping on each other's toes.
-or rather, to make sure that _if_ they step on each other's toes, they
-won't just silently overwrite each other's changes.
+バージョン管理のよくある用途のひとつは、複数の人が互いの邪魔をすることなく、一連のファイルに変更を加えられるようにすることです。より正確に言えば、_もし_ 互いの邪魔をしてしまっても、互いの変更を黙って上書きしてしまうことがないようにすることです。
 
-git is a _distributed_ VCS: everyone has a local copy of the entire
-repository (well, of everything others have chosen to publish). some
-VCSes are _centralized_ (e.g., subversion): a server has all the
-commits, clients only have the files they have "checked out". basically,
-they only have the _current_ files, and need to ask the server if they
-want anything else.
+gitは _分散型_ のVCSです。全員がリポジトリ全体の(正確には、他の人が公開することにしたものすべての)ローカルコピーを持っています。VCSの中には _集中型_ のものもあります(たとえばsubversion)。サーバーがすべてのコミットを持ち、クライアントは「チェックアウト」したファイルだけを持ちます。基本的には、クライアントは _現在の_ ファイルしか持っておらず、それ以外のものが欲しければサーバーに問い合わせる必要があります。
 
-every copy of a git repository can be listed as a "remote". you can copy
-an existing git repository using `git clone ADDRESS` (instead of `git
-init`). this creates a remote called _origin_ that points to `ADDRESS`.
-you can fetch names and the commits they point to from a remote with
-`git fetch REMOTE`. all names at a remote are available to you as
-`REMOTE/NAME`, and you can use them just like local names.
+gitリポジトリのあらゆるコピーは、「リモート」として登録できます。既存のgitリポジトリは、(`git init` の代わりに)`git clone ADDRESS` を使ってコピーできます。これは、`ADDRESS` を指す _origin_ というリモートを作ります。`git fetch REMOTE` で、リモートから名前と、それらが指すコミットを取得できます。リモートにあるすべての名前は `REMOTE/NAME` として利用でき、ローカルの名前とまったく同じように使えます。
 
-if you have write access to a remote, you can change names at the remote
-to point to commits you've made using `git push`. for example, let's
-make the master name (branch) at the remote `origin` point to the commit
-that our master branch currently points to:
+リモートへの書き込み権限があれば、`git push` を使って、リモートにある名前が自分の作ったコミットを指すように変更できます。たとえば、リモート `origin` にあるmasterという名前(ブランチ)が、手元のmasterブランチが現在指しているコミットを指すようにしてみましょう。
 
    - `git push origin master:master`
-   - for convenience, you can set `origin/master` as the default target
-     for when you `git push` from the current branch with `-u`
-   - consider: what does this do? `git push origin master:HEAD^`
+   - 便宜上、`-u` を使うと、現在のブランチから `git push` するときのデフォルトの対象として `origin/master` を設定できます
+   - 考えてみましょう: これは何をするでしょうか? `git push origin master:HEAD^`
 
-often you'll use GitHub, GitLab, BitBucket, or something else as your
-remote. there's nothing "special" about that as far as git is concerned.
-it's all just names and commits. if someone makes a change to master and
-updates `github/master` to point to their commit (we'll get back to
-that in a second), then when you `git fetch github`, you'll be able to
-see their changes with `git log github/master`.
+多くの場合、リモートとしてGitHub、GitLab、BitBucketなどを使うことになるでしょう。gitにとっては、それらに何も「特別な」ところはありません。すべては名前とコミットにすぎません。誰かがmasterに変更を加え、`github/master` がその人のコミットを指すように更新したなら(これについてはすぐあとで触れます)、あなたが `git fetch github` を実行すると、`git log github/master` でその人の変更を見られるようになります。
 
-## Working with others
+## 他の人と一緒に作業する
 
-so far, branches seem pretty useless: you can create them, do work on
-them, but then what? eventually, you'll just make master point to them
-anyway, right?
+ここまでのところ、ブランチはあまり役に立たないように見えます。作成して、その上で作業することはできますが、それからどうするのでしょう? 結局は、masterがそれを指すようにするだけですよね?
 
- - what if you had to fix something while working on a big feature?
- - what if someone else made a change to master in the meantime?
+ - 大きな機能に取り組んでいる最中に、何かを修正しなければならなくなったらどうでしょうか?
+ - その間に、他の誰かがmasterに変更を加えていたらどうでしょうか?
 
-inevitably, you will have to _merge_ changes in one branch with changes
-in another, whether those changes are made by you or someone else. git
-lets you do this with, unsurprisingly, `git merge NAME`. `merge` will:
+必然的に、あるブランチの変更を別のブランチの変更と _マージ_ しなければならなくなります。それらの変更が自分によるものでも、他の誰かによるものでもです。gitでは、当然ながら `git merge NAME` でこれを行えます。`merge` は次のことを行います。
 
- - look for the latest point where `HEAD` and `NAME` shared a commit
-   ancestor (i.e., where they diverged)
- - (try to) apply all those changes to the current `HEAD`
- - produce a commit that contains all those changes, and lists both
-   `HEAD` and `NAME` as its ancestors
- - set `HEAD` to that commit's hash
+ - `HEAD` と `NAME` がコミットの祖先を共有していた最新の地点(つまり、両者が分岐した地点)を探します
+ - それ以降のすべての変更を、現在の `HEAD` に適用します(適用しようと試みます)
+ - それらの変更をすべて含み、`HEAD` と `NAME` の両方を祖先として記録するコミットを作ります
+ - `HEAD` をそのコミットのハッシュに設定します
 
-once your big feature has been finished, you can merge its branch into
-master, and git will ensure that you don't lose any changes from either
-branch!
+大きな機能が完成したら、そのブランチをmasterにマージできます。gitは、どちらのブランチの変更も失われないことを保証してくれます!
 
-if you've used git in the past, you may recognize `merge` by a different
-name: `pull`. when you do `git pull REMOTE BRANCH`, that is:
+過去にgitを使ったことがあれば、`merge` を別の名前、つまり `pull` として知っているかもしれません。`git pull REMOTE BRANCH` を実行すると、それは次のことを意味します。
 
  - `git fetch REMOTE`
  - `git merge REMOTE/BRANCH`
- - where, like `push`, `REMOTE` and `BRANCH` are often omitted and use
-   the "tracking" remote branch (remember `-u`?)
+ - `push` と同じように、`REMOTE` と `BRANCH` は省略されることが多く、その場合は「追跡」しているリモートブランチが使われます(`-u` を覚えていますか?)
 
-this usually works _great_. as long as the changes to the branches being
-merged are disjoint. if they are not, you get a _merge conflict_. sounds
-scary...
+これはたいてい _とてもうまく_ いきます。マージされるブランチへの変更が互いに重なっていない限りは、ですが。重なっている場合は、_マージ競合_ が発生します。恐ろしく聞こえますが...
 
- - a merge conflict is just git telling you that it doesn't know what
-   the final diff should look like
- - git pauses and asks you to finish staging the "merge commit"
- - open the conflicted file in your editor and look for lots of angle
-   brackets (`<<<<<<<`). the stuff above `=======` is the change made in
-   the `HEAD` since the shared ancestor commit. the stuff below is the
-   change made in the `NAME` since the shared commit.
- - `git mergetool` is pretty handy -- opens a diff editor
- - once you've _resolved_ the conflict by figuring out what the file
-   should now look like, stage those changes with `git add`.
- - when all the conflicts are resolved, finish with `git commit`
-   - you can give up with `git merge --abort`
+ - マージ競合とは、最終的な差分がどうあるべきかわからない、とgitが伝えているだけのことです
+ - gitは一時停止して、「マージコミット」のステージングを完了するよう求めます
+ - 競合したファイルをエディタで開き、山括弧が大量に並んだ箇所(`<<<<<<<`)を探してください。`=======` より上にあるのは、共有の祖先コミット以降に `HEAD` で行われた変更です。下にあるのは、共有のコミット以降に `NAME` で行われた変更です。
+ - `git mergetool` はかなり便利です -- 差分エディタを開いてくれます
+ - ファイルが最終的にどうあるべきかを判断して競合を _解決_ したら、その変更を `git add` でステージします。
+ - すべての競合が解決したら、`git commit` で完了します
+   - `git merge --abort` で諦めることもできます
 
-you've just resolved your first git merge conflict! \o/
-now you can publish your finished changes with `git push`
+これで、初めてのgitのマージ競合を解決できました! \o/ あとは `git push` で、完成した変更を公開できます
 
-## When worlds collide
+## 世界が衝突するとき
 
-when you `push`, git checks that no-one else's work is lost if you
-update the remote name you're pushing too. it does this by checking
-that the current commit of the remote name is an ancestor of the commit
-you are pushing. if it is, git can safely just update the name; this is
-called _fast-forwarding_. if it is not, git will refuse to update the
-remote name, and tell you there have been changes.
+`push` するとき、gitは、プッシュ先のリモートの名前を更新しても他の誰の作業も失われないことを確認します。これは、リモートの名前の現在のコミットが、あなたがプッシュしようとしているコミットの祖先であるかどうかを調べることで行われます。祖先であれば、gitは安全に名前を更新するだけで済みます。これは _ファストフォワード(fast-forward)_ と呼ばれます。祖先でなければ、gitはリモートの名前の更新を拒否し、変更があったことを知らせます。
 
-if your push is rejected, what do you do?
+プッシュが拒否されたら、どうすればよいでしょうか?
 
- - merge remote changes with `git pull` (i.e., `fetch` + `merge`)
- - force the push with `--force`: this will lose other people's changes!
-   - there's also `--force-with-lease`, which will only force the change
-     if the remote name hasn't changed since the last time you fetched
-     from that remote. much safer!
-   - if you've rebased local commits that you've previously pushed
-     ("history rewriting"; probably don't do this), you'll have to force
-     push. think about why!
- - try to re-apply your changes "on top of" the changes made remotely
-   - this is a `rebase`!
-     - rewind all local commits since shared ancestor
-     - fast-forward `HEAD` to commit at remote name
-     - apply local commits in-order
-       - may have conflicts you have to manually resolve
-       - `git rebase --continue` or `--abort`
-     - lots more [here](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)
-   - `git pull --rebase` will start this process for you
-   - whether you should merge or rebase is a hot topic! some good reads:
-     - [this](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
-     - [this](https://web.archive.org/web/20210106220723/https://derekgourlay.com/blog/git-when-to-merge-vs-when-to-rebase/)
-     - [this](https://stackoverflow.com/questions/804115/when-do-you-use-git-rebase-instead-of-git-merge)
+ - `git pull`(つまり `fetch` + `merge`)で、リモートの変更をマージします
+ - `--force` でプッシュを強制します: これをすると他の人の変更が失われます!
+   - `--force-with-lease` もあります。これは、あなたが最後にそのリモートからフェッチしたとき以降、リモートの名前が変わっていない場合にのみ、変更を強制します。ずっと安全です!
+   - 以前にプッシュしたローカルのコミットをリベースした場合(「履歴の書き換え」。おそらくやるべきではありません)は、強制プッシュをしなければなりません。なぜなのか考えてみましょう!
+ - リモートで行われた変更の「上に」、自分の変更を再適用してみます
+   - これが `rebase` です!
+     - 共有の祖先以降のローカルコミットをすべて巻き戻します
+     - `HEAD` をリモートの名前のコミットまでファストフォワードします
+     - ローカルコミットを順番に適用します
+       - 手動で解決しなければならない競合が発生することがあります
+       - `git rebase --continue` または `--abort`
+     - さらに詳しくは[こちら](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)
+   - `git pull --rebase` が、この手順を開始してくれます
+   - マージすべきかリベースすべきかは、盛んに議論されている話題です! 良い読み物をいくつか挙げます:
+     - [これ](https://www.atlassian.com/git/tutorials/merging-vs-rebasing)
+     - [これ](https://web.archive.org/web/20210106220723/https://derekgourlay.com/blog/git-when-to-merge-vs-when-to-rebase/)
+     - [これ](https://stackoverflow.com/questions/804115/when-do-you-use-git-rebase-instead-of-git-merge)
 
-# Further reading
+# 参考資料
 
-[![XKCD on git](https://imgs.xkcd.com/comics/git.png)](https://xkcd.com/1597/)
+[![gitについてのXKCD](https://imgs.xkcd.com/comics/git.png)](https://xkcd.com/1597/)
 
  - [Learn git branching](https://learngitbranching.js.org/)
  - [How to explain git in simple words](https://smusamashah.github.io/blog/2017/10/14/explain-git-in-simple-words)
@@ -331,35 +233,35 @@ if your push is rejected, what do you do?
  - [Oh shit, git!](https://ohshitgit.com/)
  - [The Pro Git book](https://git-scm.com/book/en/v2)
 
-# Exercises
+# 演習
 
-1. On a repo try modifying an existing file. What happens when you do `git stash`? What do you see when running `git log --all --oneline`? Run `git stash pop` to undo what you did with `git stash`. In what scenario might this be useful?
+1. リポジトリで既存のファイルを変更してみましょう。`git stash` を実行すると何が起こりますか? `git log --all --oneline` を実行すると何が見えますか? `git stash pop` を実行して、`git stash` で行ったことを取り消してください。これはどのような場面で役に立つでしょうか?
 
-1. One common mistake when learning git is to commit large files that should not be managed by git or adding sensitive information. Try adding a file to a repository, making some commits and then deleting that file from history (you may want to look at [this](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)). Also if you do want git to manage large  files for you, look into [Git-LFS](https://git-lfs.github.com/)
+1. gitを学ぶときによくある間違いのひとつは、gitで管理すべきではない大きなファイルをコミットしてしまったり、機密情報を追加してしまったりすることです。リポジトリにファイルを追加し、いくつかコミットを作ってから、そのファイルを履歴から削除してみてください([こちら](https://help.github.com/articles/removing-sensitive-data-from-a-repository/)を見るとよいでしょう)。また、大きなファイルをgitに管理させたい場合は、[Git-LFS](https://git-lfs.github.com/)を調べてみてください
 
-1. Git is really convenient for undoing changes but one has to be familiar even with the most unlikely changes
-   1. If a file is mistakenly modified in some commit it can be reverted with `git revert`. However if a commit involves several changes `revert` might not be the best option. How can we use `git checkout` to recover a file version from a specific commit?
-   1. Create a branch, make a commit in said branch and then delete it. Can you still recover said commit? Try looking into `git reflog`. (Note: Recover dangling things quickly, git will periodically automatically clean up commits that nothing points to.)
-   1. If one is too trigger happy with `git reset --hard` instead of `git reset` changes can be easily lost. However since the changes were staged, we can recover them. (look into `git fsck --lost-found` and `.git/lost-found`)
+1. gitは変更を取り消すのにとても便利ですが、めったに起きないような変更についても慣れておく必要があります
+   1. あるコミットでファイルが誤って変更された場合は、`git revert` で元に戻せます。しかし、コミットに複数の変更が含まれている場合、`revert` は最良の選択肢ではないかもしれません。`git checkout` を使って、特定のコミットからファイルのバージョンを復元するにはどうすればよいでしょうか?
+   1. ブランチを作成し、そのブランチでコミットを作ってから、ブランチを削除してください。そのコミットをまだ復元できるでしょうか? `git reflog` を調べてみてください。(注: 宙に浮いたものは早めに復元しましょう。gitは、何からも指されていないコミットを定期的に自動で掃除します。)
+   1. `git reset` の代わりに `git reset --hard` を安易に使いすぎると、変更は簡単に失われてしまいます。しかし、変更はステージされていたので、復元できます。(`git fsck --lost-found` と `.git/lost-found` を調べてみてください)
 
-1. In any git repo look under the folder `.git/hooks` you will find a bunch of scripts that end with `.sample`. If you rename them without the `.sample` they will run based on their name. For instance `pre-commit` will execute before doing a commit. Experiment with them
+1. どのgitリポジトリでも、`.git/hooks` フォルダの中を見ると、`.sample` で終わるスクリプトがたくさん見つかります。`.sample` を取り除いた名前に変更すると、その名前に応じて実行されるようになります。たとえば `pre-commit` は、コミットを行う前に実行されます。これらを試してみてください
 
-1. Like many command line tools `git` provides a configuration file (or dotfile) called `~/.gitconfig` . Create and alias using `~/.gitconfig` so that when you run `git graph` you get the output of `git log --oneline --decorate --all --graph` (this is a good command to quickly visualize the commit graph)
+1. 多くのコマンドラインツールと同様に、`git` は `~/.gitconfig` という設定ファイル(ドットファイル)を提供しています。`~/.gitconfig` を使ってエイリアスを作成し、`git graph` を実行すると `git log --oneline --decorate --all --graph` の出力が得られるようにしてください(これはコミットグラフを手早く可視化するのに適したコマンドです)
 
-1. Git also lets you define global ignore patterns under `~/.gitignore_global`, this is useful to prevent common errors like adding RSA keys. Create a `~/.gitignore_global` file and add the pattern `*rsa`, then test that it works in a repo.
+1. gitでは、`~/.gitignore_global` にグローバルな無視パターンを定義することもできます。これは、RSA鍵を追加してしまうといった、よくあるミスを防ぐのに役立ちます。`~/.gitignore_global` ファイルを作成してパターン `*rsa` を追加し、リポジトリでそれが機能することを確かめてください。
 
-1. Once you start to get more familiar with `git`, you will find yourself running into common tasks, such as editing your `.gitignore`. [git extras](https://github.com/tj/git-extras/blob/master/Commands.md) provides a bunch of little utilities that integrate with `git`. For example `git ignore PATTERN` will add the specified pattern to the `.gitignore` file in your repo and `git ignore-io LANGUAGE` will fetch the common ignore patterns for that language from [gitignore.io](https://www.gitignore.io). Install `git extras` and try using some tools like `git alias` or `git ignore`.
+1. `git` に慣れてくると、`.gitignore` の編集のような、よくある作業に何度も出くわすようになります。[git extras](https://github.com/tj/git-extras/blob/master/Commands.md)は、`git` と統合された小さなユーティリティをたくさん提供しています。たとえば `git ignore PATTERN` は指定したパターンをリポジトリの `.gitignore` ファイルに追加し、`git ignore-io LANGUAGE` はその言語でよく使われる無視パターンを[gitignore.io](https://www.gitignore.io)から取得します。`git extras` をインストールして、`git alias` や `git ignore` のようなツールをいくつか使ってみてください。
 
-1. Git GUI programs can be a great resource sometimes. Try running [gitk](https://git-scm.com/docs/gitk) in a git repo an explore the different parts of the interface. Then run `gitk --all` what are the differences?
+1. GitのGUIプログラムは、ときにとても役立ちます。gitリポジトリで[gitk](https://git-scm.com/docs/gitk)を実行して、インターフェースのさまざまな部分を調べてみてください。次に `gitk --all` を実行してみましょう。何が違うでしょうか?
 
-1. Once you get used to command line applications GUI tools can feel cumbersome/bloated. A nice compromise between the two are ncurses based tools which can be navigated from the command line and still provide an interactive interface. Git has [tig](https://github.com/jonas/tig), try installing it and running it in a repo. You can find some usage examples [here](https://www.atlassian.com/blog/git/git-tig).
+1. コマンドラインアプリケーションに慣れてくると、GUIツールは扱いにくく肥大化したものに感じられることがあります。その両者のちょうどよい折衷案がncursesベースのツールで、コマンドラインから操作でき、それでいて対話的なインターフェースを提供します。Gitには[tig](https://github.com/jonas/tig)があります。インストールして、リポジトリで実行してみてください。使用例は[こちら](https://www.atlassian.com/blog/git/git-tig)にあります。
 
 
 {% comment %}
 
- - forced push + `--force-with-lease`
+ - 強制プッシュ + `--force-with-lease`
  - git merge/rebase --abort
  - git blame
- - exercise about why rebasing public commits is bad
+ - 公開済みのコミットをリベースするのがなぜ良くないのかについての演習
 
 {% endcomment %}

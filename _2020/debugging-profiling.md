@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Debugging and Profiling"
+title: "デバッグとプロファイリング"
 description: >
-  Learn how to debug programs using logging, debuggers, and static analysis, and how to profile code for performance.
+  ロギング、デバッガ、静的解析を使ったプログラムのデバッグ方法と、パフォーマンスのためのコードのプロファイリング方法を学びます。
 thumbnail: /static/assets/thumbnails/2020/lec7.png
 date: 2020-01-23
 ready: true
@@ -11,25 +11,23 @@ video:
   id: l812pUnKxME
 ---
 
-A golden rule in programming is that code does not do what you expect it to do, but what you tell it to do.
-Bridging that gap can sometimes be a quite difficult feat.
-In this lecture we are going to cover useful techniques for dealing with buggy and resource hungry code: debugging and profiling.
+プログラミングにおける黄金律は、コードはあなたが期待した通りには動かず、あなたが命じた通りに動く、というものです。そのギャップを埋めるのは、時にかなり難しい仕事になります。この講義では、バグを含むコードやリソースを大量に消費するコードに対処するための有用な技術、すなわちデバッグとプロファイリングを扱います。
 
-# Debugging
+# デバッグ
 
-## Printf debugging and Logging
+## printfデバッグとロギング
 
-"The most effective debugging tool is still careful thought, coupled with judiciously placed print statements" — Brian Kernighan, _Unix for Beginners_.
+「最も効果的なデバッグツールは、今でも注意深い思考と、要所要所に配置されたprint文である」 — Brian Kernighan, _Unix for Beginners_
 
-A first approach to debug a program is to add print statements around where you have detected the problem, and keep iterating until you have extracted enough information to understand what is responsible for the issue.
+プログラムをデバッグする最初のアプローチは、問題を検出したあたりにprint文を追加し、問題の原因を理解するのに十分な情報が得られるまで繰り返すことです。
 
-A second approach is to use logging in your program, instead of ad hoc print statements. Logging is better than regular print statements for several reasons:
+2つ目のアプローチは、その場しのぎのprint文の代わりに、プログラムでロギングを使うことです。ロギングは、いくつかの理由で通常のprint文より優れています。
 
-- You can log to files, sockets or even remote servers instead of standard output.
-- Logging supports severity levels (such as INFO, DEBUG, WARN, ERROR, &c), that allow you to filter the output accordingly.
-- For new issues, there's a fair chance that your logs will contain enough information to detect what is going wrong.
+- 標準出力の代わりに、ファイルやソケット、さらにはリモートサーバーにもログを出力できます。
+- ロギングは深刻度レベル(INFO、DEBUG、WARN、ERRORなど)をサポートしており、それに応じて出力をフィルタリングできます。
+- 新たに発生した問題であっても、何がおかしいのかを突き止めるのに十分な情報がログに含まれている可能性がかなりあります。
 
-[Here](/static/files/logger.py) is an example code that logs messages:
+メッセージをログに出力するコードの例は[こちら](/static/files/logger.py)です。
 
 ```bash
 $ python logger.py
@@ -42,11 +40,9 @@ $ python logger.py color
 # Color formatted output
 ```
 
-One of my favorite tips for making logs more readable is to color code them.
-By now you probably have realized that your terminal uses colors to make things more readable. But how does it do it?
-Programs like `ls` or `grep` are using [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code), which are special sequences of characters to indicate your shell to change the color of the output. For example, executing `echo -e "\e[38;2;255;0;0mThis is red\e[0m"` prints the message `This is red` in red on your terminal, as long as it supports [true color](https://github.com/termstandard/colors#truecolor-support-in-output-devices). If your terminal doesn't support this (e.g. macOS's Terminal.app), you can use the more universally supported escape codes for 16 color choices, for example `echo -e "\e[31;1mThis is red\e[0m"`.
+ログを読みやすくするための私のお気に入りのコツのひとつは、色分けすることです。ここまでで、ターミナルが読みやすさのために色を使っていることには、おそらく気づいているでしょう。しかし、どのようにして実現しているのでしょうか? `ls` や `grep` のようなプログラムは、[ANSIエスケープコード](https://en.wikipedia.org/wiki/ANSI_escape_code)を使っています。これは、出力の色を変えるようシェルに指示するための特殊な文字の並びです。たとえば、`echo -e "\e[38;2;255;0;0mThis is red\e[0m"` を実行すると、ターミナルが[トゥルーカラー](https://github.com/termstandard/colors#truecolor-support-in-output-devices)をサポートしている限り、`This is red` というメッセージが赤色で表示されます。ターミナルがこれをサポートしていない場合(たとえばmacOSのTerminal.app)は、より広くサポートされている16色のエスケープコードを使えます。たとえば `echo -e "\e[31;1mThis is red\e[0m"` のようにします。
 
-The following script shows how to print many RGB colors into your terminal (again, as long as it supports true color).
+次のスクリプトは、多数のRGBカラーをターミナルに表示する方法を示しています(これも、トゥルーカラーをサポートしている場合に限ります)。
 
 ```bash
 #!/usr/bin/env bash
@@ -59,24 +55,13 @@ for R in $(seq 0 20 255); do
 done
 ```
 
-## Third party logs
+## サードパーティのログ
 
-As you start building larger software systems you will most probably run into dependencies that run as separate programs.
-Web servers, databases or message brokers are common examples of this kind of dependencies.
-When interacting with these systems it is often necessary to read their logs, since client side error messages might not suffice.
+より大きなソフトウェアシステムを構築するようになると、別のプログラムとして動作する依存先にほぼ確実に出くわします。Webサーバー、データベース、メッセージブローカーは、この種の依存先のよくある例です。こうしたシステムとやり取りする際には、クライアント側のエラーメッセージだけでは不十分なことがあるため、それらのログを読む必要がしばしばあります。
 
-Luckily, most programs write their own logs somewhere in your system.
-In UNIX systems, it is commonplace for programs to write their logs under `/var/log`.
-For instance, the [NGINX](https://www.nginx.com/) webserver places its logs under `/var/log/nginx`.
-More recently, systems have started using a **system log**, which is increasingly where all of your log messages go.
-Most (but not all) Linux systems use `systemd`, a system daemon that controls many things in your system such as which services are enabled and running.
-`systemd` places the logs under `/var/log/journal` in a specialized format and you can use the [`journalctl`](https://www.man7.org/linux/man-pages/man1/journalctl.1.html) command to display the messages.
-Similarly, on macOS there is still `/var/log/system.log` but an increasing number of tools use the system log, that can be displayed with [`log show`](https://www.manpagez.com/man/1/log/).
-On most UNIX systems you can also use the [`dmesg`](https://www.man7.org/linux/man-pages/man1/dmesg.1.html) command to access the kernel log.
+幸い、ほとんどのプログラムは自分のログをシステムのどこかに書き出しています。UNIXシステムでは、プログラムがログを `/var/log` 以下に書き出すのが一般的です。たとえば、Webサーバーの[NGINX](https://www.nginx.com/)は、ログを `/var/log/nginx` 以下に置きます。最近では、システムは**システムログ**を使うようになっており、すべてのログメッセージがますますここに集まるようになってきています。すべてではないもののほとんどのLinuxシステムは `systemd` を使っています。これはシステムデーモンで、どのサービスが有効化され実行されているかなど、システムの多くのものを制御しています。`systemd` はログを専用のフォーマットで `/var/log/journal` 以下に置き、[`journalctl`](https://www.man7.org/linux/man-pages/man1/journalctl.1.html) コマンドを使ってそのメッセージを表示できます。同様に、macOSにも依然として `/var/log/system.log` がありますが、システムログを使うツールが増えており、これは [`log show`](https://www.manpagez.com/man/1/log/) で表示できます。ほとんどのUNIXシステムでは、[`dmesg`](https://www.man7.org/linux/man-pages/man1/dmesg.1.html) コマンドを使ってカーネルログにアクセスすることもできます。
 
-For logging under the system logs you can use the [`logger`](https://www.man7.org/linux/man-pages/man1/logger.1.html) shell program.
-Here's an example of using `logger` and how to check that the entry made it to the system logs.
-Moreover, most programming languages have bindings logging to the system log.
+システムログにログを出力するには、シェルプログラムの [`logger`](https://www.man7.org/linux/man-pages/man1/logger.1.html) が使えます。以下は、`logger` の使用例と、そのエントリがシステムログに入ったことを確認する方法です。さらに、ほとんどのプログラミング言語には、システムログに出力するためのバインディングがあります。
 
 ```bash
 logger "Hello Logs"
@@ -86,35 +71,31 @@ log show --last 1m | grep Hello
 journalctl --since "1m ago" | grep Hello
 ```
 
-As we saw in the data wrangling lecture, logs can be quite verbose and they require some level of processing and filtering to get the information you want.
-If you find yourself heavily filtering through `journalctl` and `log show` you can consider using their flags, which can perform a first pass of filtering of their output.
-There are also some tools like  [`lnav`](https://lnav.org/), that provide an improved presentation and navigation for log files.
+データラングリングの講義で見たように、ログはかなり冗長になることがあり、欲しい情報を得るにはある程度の加工とフィルタリングが必要です。`journalctl` や `log show` の出力を大量にフィルタリングしていることに気づいたら、それらのフラグを使うことを検討してみてください。フラグを使えば、出力に対する最初のフィルタリングを行えます。また、[`lnav`](https://lnav.org/) のように、ログファイルの表示とナビゲーションを改善してくれるツールもあります。
 
-## Debuggers
+## デバッガ
 
-When printf debugging is not enough you should use a debugger.
-Debuggers are programs that let you interact with the execution of a program, allowing the following:
+printfデバッグでは不十分なときは、デバッガを使うべきです。デバッガは、プログラムの実行に介入できるプログラムで、次のようなことができます。
 
-- Halt execution of the program when it reaches a certain line.
-- Step through the program one instruction at a time.
-- Inspect values of variables after the program crashed.
-- Conditionally halt the execution when a given condition is met.
-- And many more advanced features
+- 特定の行に到達したときにプログラムの実行を停止する。
+- プログラムを一度に1命令ずつステップ実行する。
+- プログラムがクラッシュした後に変数の値を調べる。
+- 特定の条件が満たされたときに条件付きで実行を停止する。
+- その他多くの高度な機能
 
-Many programming languages come with some form of debugger.
-In Python this is the Python Debugger [`pdb`](https://docs.python.org/3/library/pdb.html).
+多くのプログラミング言語には、何らかの形のデバッガが付属しています。Pythonの場合は、Pythonデバッガの [`pdb`](https://docs.python.org/3/library/pdb.html) です。
 
-Here is a brief description of some of the commands `pdb` supports:
+`pdb` がサポートするコマンドのいくつかを簡単に説明します。
 
-- **l**(ist) - Displays 11 lines around the current line or continue the previous listing.
-- **s**(tep) - Execute the current line, stop at the first possible occasion.
-- **n**(ext) - Continue execution until the next line in the current function is reached or it returns.
-- **b**(reak) - Set a breakpoint (depending on the argument provided).
-- **p**(rint) - Evaluate the expression in the current context and print its value. There's also **pp** to display using [`pprint`](https://docs.python.org/3/library/pprint.html) instead.
-- **r**(eturn) - Continue execution until the current function returns.
-- **q**(uit) - Quit the debugger.
+- **l**(ist) - 現在の行の前後11行を表示するか、前回の表示の続きを表示します。
+- **s**(tep) - 現在の行を実行し、最初に停止可能な場所で停止します。
+- **n**(ext) - 現在の関数の次の行に到達するか、関数が戻るまで実行を続けます。
+- **b**(reak) - ブレークポイントを設定します(場所は与えた引数によって決まります)。
+- **p**(rint) - 現在のコンテキストで式を評価し、その値を表示します。代わりに [`pprint`](https://docs.python.org/3/library/pprint.html) を使って表示する**pp**もあります。
+- **r**(eturn) - 現在の関数が戻るまで実行を続けます。
+- **q**(uit) - デバッガを終了します。
 
-Let's go through an example of using `pdb` to fix the following buggy python code. (See the lecture video).
+`pdb` を使って、次のバグのあるPythonコードを修正する例を見ていきましょう(講義動画を参照してください)。
 
 ```python
 def bubble_sort(arr):
@@ -130,20 +111,16 @@ print(bubble_sort([4, 2, 1, 8, 7, 6]))
 ```
 
 
-Note that since Python is an interpreted language we can use the `pdb` shell to execute commands and to execute instructions.
-[`ipdb`](https://pypi.org/project/ipdb/) is an improved `pdb` that uses the [`IPython`](https://ipython.org) REPL enabling tab completion, syntax highlighting, better tracebacks, and better introspection while retaining the same interface as the `pdb` module.
+Pythonはインタプリタ言語なので、`pdb` シェルを使ってコマンドや命令を実行できることに注意してください。[`ipdb`](https://pypi.org/project/ipdb/) は改良版の `pdb` で、[`IPython`](https://ipython.org) のREPLを使うことで、`pdb` モジュールと同じインターフェースを保ちながら、タブ補完、シンタックスハイライト、より分かりやすいトレースバック、より優れたイントロスペクションを可能にします。
 
-For more low level programming you will probably want to look into [`gdb`](https://www.gnu.org/software/gdb/) (and its quality of life modification [`pwndbg`](https://github.com/pwndbg/pwndbg)) and [`lldb`](https://lldb.llvm.org/).
-They are optimized for C-like language debugging but will let you probe pretty much any process and get its current machine state: registers, stack, program counter, &c.
+より低レベルなプログラミングでは、おそらく [`gdb`](https://www.gnu.org/software/gdb/)(およびその使い勝手を向上させる改造版である [`pwndbg`](https://github.com/pwndbg/pwndbg))や [`lldb`](https://lldb.llvm.org/) を調べてみるとよいでしょう。これらはC系言語のデバッグ向けに最適化されていますが、ほぼあらゆるプロセスを調査して、レジスタ、スタック、プログラムカウンタなど、現在のマシン状態を取得できます。
 
 
-## Specialized Tools
+## 専用ツール
 
-Even if what you are trying to debug is a black box binary there are tools that can help you with that.
-Whenever programs need to perform actions that only the kernel can, they use [System Calls](https://en.wikipedia.org/wiki/System_call).
-There are commands that let you trace the syscalls your program makes. In Linux there's [`strace`](https://www.man7.org/linux/man-pages/man1/strace.1.html) and macOS and BSD have [`dtrace`](https://dtrace.org/about/). `dtrace` can be tricky to use because it uses its own `D` language, but there is a wrapper called [`dtruss`](https://www.manpagez.com/man/1/dtruss/) that provides an interface more similar to `strace` (more details [here](https://8thlight.com/blog/colin-jones/2015/11/06/dtrace-even-better-than-strace-for-osx.html)).
+デバッグしようとしているものがブラックボックスのバイナリであっても、役に立つツールがあります。プログラムは、カーネルにしかできない操作を行う必要があるときは必ず[システムコール](https://en.wikipedia.org/wiki/System_call)を使います。プログラムが発行するシステムコールをトレースできるコマンドがあります。Linuxには [`strace`](https://www.man7.org/linux/man-pages/man1/strace.1.html) があり、macOSとBSDには [`dtrace`](https://dtrace.org/about/) があります。`dtrace` は独自の `D` 言語を使うため扱いが難しいことがありますが、[`dtruss`](https://www.manpagez.com/man/1/dtruss/) というラッパーがあり、`strace` により近いインターフェースを提供してくれます(詳細は[こちら](https://8thlight.com/blog/colin-jones/2015/11/06/dtrace-even-better-than-strace-for-osx.html))。
 
-Below are some examples of using `strace` or `dtruss` to show [`stat`](https://www.man7.org/linux/man-pages/man2/stat.2.html) syscall traces for an execution of `ls`. For a deeper dive into `strace`, [this article](https://blogs.oracle.com/linux/strace-the-sysadmins-microscope-v2) and [this zine](https://jvns.ca/strace-zine-unfolded.pdf) are good reads.
+以下は、`strace` または `dtruss` を使って、`ls` の実行における [`stat`](https://www.man7.org/linux/man-pages/man2/stat.2.html) システムコールのトレースを表示する例です。`strace` をさらに深く知るには、[この記事](https://blogs.oracle.com/linux/strace-the-sysadmins-microscope-v2)と[このzine](https://jvns.ca/strace-zine-unfolded.pdf)が良い読み物です。
 
 ```bash
 # On Linux
@@ -152,25 +129,20 @@ sudo strace -e lstat ls -l > /dev/null
 sudo dtruss -t lstat64_extended ls -l > /dev/null
 ```
 
-Under some circumstances, you may need to look at the network packets to figure out the issue in your program.
-Tools like [`tcpdump`](https://www.man7.org/linux/man-pages/man1/tcpdump.1.html) and [Wireshark](https://www.wireshark.org/) are network packet analyzers that let you read the contents of network packets and filter them based on different criteria.
+状況によっては、プログラムの問題を突き止めるためにネットワークパケットを調べる必要があるかもしれません。[`tcpdump`](https://www.man7.org/linux/man-pages/man1/tcpdump.1.html) や[Wireshark](https://www.wireshark.org/)のようなツールはネットワークパケットアナライザで、ネットワークパケットの内容を読み取り、さまざまな条件でフィルタリングできます。
 
-For web development, the Chrome/Firefox developer tools are quite handy. They feature a large number of tools, including:
-- Source code - Inspect the HTML/CSS/JS source code of any website.
-- Live HTML, CSS, JS modification - Change the website content, styles and behavior to test (you can see for yourself that website screenshots are not valid proofs).
-- Javascript shell - Execute commands in the JS REPL.
-- Network - Analyze the requests timeline.
-- Storage - Look into the Cookies and local application storage.
+Web開発では、Chrome/Firefoxの開発者ツールがとても便利です。次のような多数のツールを備えています。
+- ソースコード - 任意のWebサイトのHTML/CSS/JSのソースコードを調べます。
+- HTML、CSS、JSのライブ編集 - Webサイトの内容、スタイル、挙動を変更してテストします(Webサイトのスクリーンショットが有効な証拠にならないことを、自分で確かめられます)。
+- JavaScriptシェル - JSのREPLでコマンドを実行します。
+- ネットワーク - リクエストのタイムラインを分析します。
+- ストレージ - Cookieやアプリケーションのローカルストレージを調べます。
 
-## Static Analysis
+## 静的解析
 
-For some issues you do not need to run any code.
-For example, just by carefully looking at a piece of code you could realize that your loop variable is shadowing an already existing variable or function name; or that a program reads a variable before defining it.
-Here is where [static analysis](https://en.wikipedia.org/wiki/Static_program_analysis) tools come into play.
-Static analysis programs take source code as input and analyze it using coding rules to reason about its correctness.
+問題によっては、コードをまったく実行する必要がありません。たとえば、コードを注意深く眺めるだけで、ループ変数が既存の変数や関数名をシャドーイングしていることや、プログラムが変数を定義する前に読み出していることに気づけるでしょう。ここで役立つのが[静的解析](https://en.wikipedia.org/wiki/Static_program_analysis)ツールです。静的解析プログラムはソースコードを入力として受け取り、コーディング規則を使って解析することで、その正しさを推論します。
 
-In the following Python snippet there are several mistakes.
-First, our loop variable `foo` shadows the previous definition of the function `foo`. We also wrote `baz` instead of `bar` in the last line, so the program will crash after completing the `sleep` call (which will take one minute).
+次のPythonのコード片には、いくつかの間違いがあります。まず、ループ変数 `foo` が、それより前にある関数 `foo` の定義をシャドーイングしています。また、最後の行で `bar` の代わりに `baz` と書いてしまったので、プログラムは(1分かかる)`sleep` の呼び出しが終わった後にクラッシュします。
 
 ```python
 import time
@@ -186,8 +158,7 @@ time.sleep(60)
 print(baz)
 ```
 
-Static analysis tools can identify these kinds of issues. When we run [`pyflakes`](https://pypi.org/project/pyflakes) on the code we get the errors related to both bugs. [`mypy`](https://mypy-lang.org/) is another tool that can detect type checking issues. Here, `mypy` will warn us that `bar` is initially an `int` and is then casted to a `float`.
-Again, note that all these issues were detected without having to run the code.
+静的解析ツールは、この種の問題を特定できます。このコードに対して [`pyflakes`](https://pypi.org/project/pyflakes) を実行すると、両方のバグに関するエラーが得られます。[`mypy`](https://mypy-lang.org/) は、型チェックの問題を検出できるもうひとつのツールです。ここでは `mypy` が、`bar` が最初は `int` であり、その後 `float` にキャストされていると警告してくれます。繰り返しになりますが、これらの問題はすべて、コードを実行することなく検出されたことに注目してください。
 
 ```bash
 $ pyflakes foobar.py
@@ -201,29 +172,21 @@ foobar.py:11: error: Name 'baz' is not defined
 Found 3 errors in 1 file (checked 1 source file)
 ```
 
-In the shell tools lecture we covered [`shellcheck`](https://www.shellcheck.net/), which is a similar tool for shell scripts.
+シェルツールの講義では [`shellcheck`](https://www.shellcheck.net/) を扱いました。これはシェルスクリプト向けの同様のツールです。
 
-Most editors and IDEs support displaying the output of these tools within the editor itself, highlighting the locations of warnings and errors.
-This is often called **code linting** and it can also be used to display other types of issues such as stylistic violations or insecure constructs.
+ほとんどのエディタやIDEは、これらのツールの出力をエディタ内に表示し、警告やエラーの場所をハイライトすることをサポートしています。これはよく**コードリンティング**と呼ばれ、スタイル違反や安全でない構文など、他の種類の問題を表示するためにも使えます。
 
-In vim, the plugins [`ale`](https://vimawesome.com/plugin/ale) or [`syntastic`](https://vimawesome.com/plugin/syntastic) will let you do that.
-For Python, [`pylint`](https://github.com/PyCQA/pylint) and [`pep8`](https://pypi.org/project/pep8/) are examples of stylistic linters and [`bandit`](https://pypi.org/project/bandit/) is a tool designed to find common security issues.
-For other languages people have compiled comprehensive lists of useful static analysis tools, such as [Awesome Static Analysis](https://github.com/mre/awesome-static-analysis) (you may want to take a look at the _Writing_ section) and for linters there is [Awesome Linters](https://github.com/caramelomartins/awesome-linters).
+vimでは、[`ale`](https://vimawesome.com/plugin/ale) や [`syntastic`](https://vimawesome.com/plugin/syntastic) といったプラグインでこれが可能になります。Pythonでは、[`pylint`](https://github.com/PyCQA/pylint) や [`pep8`](https://pypi.org/project/pep8/) がスタイルリンタの例で、[`bandit`](https://pypi.org/project/bandit/) はよくあるセキュリティ上の問題を見つけるために設計されたツールです。その他の言語については、[Awesome Static Analysis](https://github.com/mre/awesome-static-analysis)(_Writing_ のセクションを見てみるとよいでしょう)のように、便利な静的解析ツールの包括的なリストを有志がまとめており、リンタについては[Awesome Linters](https://github.com/caramelomartins/awesome-linters)があります。
 
-A complementary tool to stylistic linting are code formatters such as [`black`](https://github.com/psf/black) for Python, `gofmt` for Go, `rustfmt` for Rust or [`prettier`](https://prettier.io/) for JavaScript, HTML and CSS.
-These tools autoformat your code so that it's consistent with common stylistic patterns for the given programming language.
-Although you might be unwilling to give stylistic control about your code, standardizing code format will help other people read your code and will make you better at reading other people's (stylistically standardized) code.
+スタイルのリンティングを補完するツールが、Python向けの [`black`](https://github.com/psf/black)、Go向けの `gofmt`、Rust向けの `rustfmt`、JavaScript・HTML・CSS向けの [`prettier`](https://prettier.io/) といったコードフォーマッタです。これらのツールは、対象のプログラミング言語の一般的なスタイルのパターンに沿うよう、コードを自動整形します。自分のコードのスタイルを自分で決められなくなるのは気が進まないかもしれませんが、コードのフォーマットを標準化すれば、他の人があなたのコードを読みやすくなり、あなた自身も他の人の(スタイルが標準化された)コードを読むのがうまくなります。
 
-# Profiling
+# プロファイリング
 
-Even if your code functionally behaves as you would expect, that might not be good enough if it takes all your CPU or memory in the process.
-Algorithms classes often teach big _O_ notation but not how to find hot spots in your programs.
-Since [premature optimization is the root of all evil](https://wiki.c2.com/?PrematureOptimization), you should learn about profilers and monitoring tools. They will help you understand which parts of your program are taking most of the time and/or resources so you can focus on optimizing those parts.
+たとえコードが機能的に期待通りに動作していても、その過程でCPUやメモリを食い尽くしてしまうなら、それでは不十分かもしれません。アルゴリズムの授業ではビッグ _O_ 記法は教えても、プログラムのホットスポットの見つけ方は教えないことが多いものです。[早すぎる最適化は諸悪の根源](https://wiki.c2.com/?PrematureOptimization)なので、プロファイラと監視ツールについて学ぶべきです。これらは、プログラムのどの部分が時間やリソースの大半を消費しているのかを理解する助けになり、その部分の最適化に集中できるようになります。
 
-## Timing
+## 時間計測 {#timing}
 
-Similarly to the debugging case, in many scenarios it can be enough to just print the time it took your code between two points.
-Here is an example in Python using the [`time`](https://docs.python.org/3/library/time.html) module.
+デバッグの場合と同様に、多くの場面では、コードの2点間でかかった時間を表示するだけで十分なことがあります。以下は、Pythonで [`time`](https://docs.python.org/3/library/time.html) モジュールを使った例です。
 
 ```python
 import time, random
@@ -244,13 +207,13 @@ print(time.time() - start)
 # 0.5713930130004883
 ```
 
-However, wall clock time can be misleading since your computer might be running other processes at the same time or waiting for events to happen. It is common for tools to make a distinction between _Real_, _User_ and _Sys_ time. In general, _User_ + _Sys_ tells you how much time your process actually spent in the CPU (more detailed explanation [here](https://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1)).
+しかし、実時間(wall clock time)は誤解を招くことがあります。コンピュータが同時に他のプロセスを実行していたり、イベントの発生を待っていたりするかもしれないからです。ツールは _Real_、_User_、_Sys_ の時間を区別するのが一般的です。一般に、_User_ + _Sys_ が、プロセスが実際にCPU上で費やした時間を示します(より詳しい説明は[こちら](https://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1))。
 
-- _Real_ - Wall clock elapsed time from start to finish of the program, including the time taken by other processes and time taken while blocked (e.g. waiting for I/O or network)
-- _User_ - Amount of time spent in the CPU running user code
-- _Sys_ - Amount of time spent in the CPU running kernel code
+- _Real_ - プログラムの開始から終了までの実時間。他のプロセスに使われた時間や、ブロックされていた時間(たとえばI/Oやネットワークの待ち時間)を含みます
+- _User_ - CPU上でユーザーコードの実行に費やされた時間
+- _Sys_ - CPU上でカーネルコードの実行に費やされた時間
 
-For example, try running a command that performs an HTTP request and prefixing it with [`time`](https://www.man7.org/linux/man-pages/man1/time.1.html). Under a slow connection you might get an output like the one below. Here it took over 2 seconds for the request to complete but the process only took 15ms of CPU user time and 12ms of kernel CPU time.
+たとえば、HTTPリクエストを行うコマンドの先頭に [`time`](https://www.man7.org/linux/man-pages/man1/time.1.html) を付けて実行してみてください。接続が遅いと、以下のような出力になるかもしれません。ここでは、リクエストの完了に2秒以上かかりましたが、プロセスが使ったのはユーザーCPU時間15ミリ秒とカーネルCPU時間12ミリ秒だけでした。
 
 ```bash
 $ time curl https://missing.csail.mit.edu &> /dev/null
@@ -259,20 +222,15 @@ user    0m0.015s
 sys     0m0.012s
 ```
 
-## Profilers
+## プロファイラ
 
 ### CPU
 
-Most of the time when people refer to _profilers_ they actually mean _CPU profilers_,  which are the most common.
-There are two main types of CPU profilers: _tracing_ and _sampling_ profilers.
-Tracing profilers keep a record of every function call your program makes whereas sampling profilers probe your program periodically (commonly every millisecond) and record the program's stack.
-They use these records to present aggregate statistics of what your program spent the most time doing.
-[Here](https://jvns.ca/blog/2017/12/17/how-do-ruby---python-profilers-work-) is a good intro article if you want more detail on this topic.
+人々が _プロファイラ_ と言うとき、たいていは実際には _CPUプロファイラ_ のことを指しており、これが最も一般的です。CPUプロファイラには主に2種類あります。_トレーシング_ プロファイラと _サンプリング_ プロファイラです。トレーシングプロファイラはプログラムが行うすべての関数呼び出しを記録するのに対し、サンプリングプロファイラはプログラムを定期的に(一般的には1ミリ秒ごとに)調べて、プログラムのスタックを記録します。プロファイラはこれらの記録を使って、プログラムが何に最も時間を費やしたかについての集計統計を提示します。このトピックについてさらに詳しく知りたい場合は、[こちら](https://jvns.ca/blog/2017/12/17/how-do-ruby---python-profilers-work-)が良い入門記事です。
 
-Most programming languages have some sort of command line profiler that you can use to analyze your code.
-They often integrate with full fledged IDEs but for this lecture we are going to focus on the command line tools themselves.
+ほとんどのプログラミング言語には、コードの分析に使える何らかのコマンドラインプロファイラがあります。これらは本格的なIDEと統合されていることも多いのですが、この講義ではコマンドラインツールそのものに焦点を当てます。
 
-In Python we can use the `cProfile` module to profile time per function call. Here is a simple example that implements a rudimentary grep in Python:
+Pythonでは、`cProfile` モジュールを使って関数呼び出しごとの時間をプロファイルできます。以下は、Pythonで初歩的なgrepを実装した簡単な例です。
 
 ```python
 #!/usr/bin/env python
@@ -296,7 +254,7 @@ if __name__ == '__main__':
             grep(pattern, file)
 ```
 
-We can profile this code using the following command. Analyzing the output we can see that IO is taking most of the time and that compiling the regex takes a fair amount of time as well. Since the regex only needs to be compiled once, we can factor it out of the for.
+このコードは、次のコマンドでプロファイルできます。出力を分析すると、IOが時間の大半を占めていること、そして正規表現のコンパイルにもかなりの時間がかかっていることが分かります。正規表現は一度だけコンパイルすれば済むので、forの外に出すことができます。
 
 ```
 $ python -m cProfile -s tottime grep.py 1000 '^(import|\s*def)[^,]*$' *.py
@@ -318,10 +276,9 @@ $ python -m cProfile -s tottime grep.py 1000 '^(import|\s*def)[^,]*$' *.py
 ```
 
 
-A caveat of Python's `cProfile` profiler (and many profilers for that matter) is that they display time per function call. That can become unintuitive really fast, especially if you are using third party libraries in your code since internal function calls are also accounted for.
-A more intuitive way of displaying profiling information is to include the time taken per line of code, which is what _line profilers_ do.
+Pythonの `cProfile` プロファイラ(さらに言えば多くのプロファイラ)の注意点は、関数呼び出しごとの時間を表示することです。これはあっという間に直感的でなくなります。特に、コードでサードパーティのライブラリを使っている場合は、内部の関数呼び出しも計上されるためです。プロファイリング情報をより直感的に表示する方法は、コードの行ごとにかかった時間を含めることで、これを行うのが _ラインプロファイラ_ です。
 
-For instance, the following piece of Python code performs a request to the class website and parses the response to get all URLs in the page:
+たとえば、次のPythonコードは、この授業のWebサイトにリクエストを送り、レスポンスをパースしてページ内のすべてのURLを取得します。
 
 ```python
 #!/usr/bin/env python
@@ -342,7 +299,7 @@ if __name__ == '__main__':
     get_urls()
 ```
 
-If we used Python's `cProfile` profiler we'd get over 2500 lines of output, and even with sorting it'd be hard to understand where the time is being spent. A quick run with [`line_profiler`](https://github.com/pyutils/line_profiler) shows the time taken per line:
+Pythonの `cProfile` プロファイラを使った場合、2500行を超える出力が得られ、ソートしたとしても、どこに時間が費やされているのかを理解するのは難しいでしょう。[`line_profiler`](https://github.com/pyutils/line_profiler) でさっと実行すると、行ごとにかかった時間が表示されます。
 
 ```bash
 $ kernprof -l -v a.py
@@ -364,13 +321,11 @@ Line #  Hits         Time  Per Hit   % Time  Line Contents
 11        24         33.0      1.4      0.0          urls.append(url['href'])
 ```
 
-### Memory
+### メモリ
 
-In languages like C or C++ memory leaks can cause your program to never release memory that it doesn't need anymore.
-To help in the process of memory debugging you can use tools like [Valgrind](https://valgrind.org/) that will help you identify memory leaks.
+CやC++のような言語では、メモリリークによって、もう必要のないメモリをプログラムがいつまでも解放しないことがあります。メモリのデバッグ作業を助けるために、[Valgrind](https://valgrind.org/)のようなツールを使ってメモリリークを特定できます。
 
-In garbage collected languages like Python it is still useful to use a memory profiler because as long as you have pointers to objects in memory they won't be garbage collected.
-Here's an example program and its associated output when running it with [memory-profiler](https://pypi.org/project/memory-profiler/) (note the decorator like in `line-profiler`).
+Pythonのようなガベージコレクションのある言語でも、メモリプロファイラを使うことはやはり有用です。メモリ上のオブジェクトへのポインタを持っている限り、それらはガベージコレクションされないからです。以下は、プログラムの例と、それを[memory-profiler](https://pypi.org/project/memory-profiler/)で実行したときの出力です(`line-profiler` と同様のデコレータに注目してください)。
 
 ```python
 @profile
@@ -396,60 +351,47 @@ Line #    Mem usage  Increment   Line Contents
      8     13.61 MB    0.00 MB       return a
 ```
 
-### Event Profiling
+### イベントプロファイリング
 
-As it was the case for `strace` for debugging, you might want to ignore the specifics of the code that you are running and treat it like a black box when profiling.
-The [`perf`](https://www.man7.org/linux/man-pages/man1/perf.1.html) command abstracts CPU differences away and does not report time or memory, but instead it reports system events related to your programs.
-For example, `perf` can easily report poor cache locality, high amounts of page faults or livelocks. Here is an overview of the command:
+デバッグにおける `strace` の場合と同じように、プロファイリングの際にも、実行しているコードの詳細は無視して、ブラックボックスのように扱いたいことがあります。[`perf`](https://www.man7.org/linux/man-pages/man1/perf.1.html) コマンドはCPUの違いを抽象化し、時間やメモリを報告する代わりに、プログラムに関連するシステムイベントを報告します。たとえば `perf` は、キャッシュ局所性の悪さ、大量のページフォールト、ライブロックを簡単に報告できます。このコマンドの概要は次のとおりです。
 
-- `perf list` - List the events that can be traced with perf
-- `perf stat COMMAND ARG1 ARG2` - Gets counts of different events related to a process or command
-- `perf record COMMAND ARG1 ARG2` - Records the run of a command and saves the statistical data into a file called `perf.data`
-- `perf report` - Formats and prints the data collected in `perf.data`
+- `perf list` - perfでトレースできるイベントを一覧表示します
+- `perf stat COMMAND ARG1 ARG2` - プロセスまたはコマンドに関連するさまざまなイベントの回数を取得します
+- `perf record COMMAND ARG1 ARG2` - コマンドの実行を記録し、統計データを `perf.data` というファイルに保存します
+- `perf report` - `perf.data` に収集されたデータを整形して表示します
 
 
-### Visualization
+### 可視化
 
-Profiler output for real world programs will contain large amounts of information because of the inherent complexity of software projects.
-Humans are visual creatures and are quite terrible at reading large amounts of numbers and making sense of them.
-Thus there are many tools for displaying profiler's output in an easier to parse way.
+実世界のプログラムに対するプロファイラの出力は、ソフトウェアプロジェクトに本質的に備わる複雑さのために、大量の情報を含みます。人間は視覚的な生き物であり、大量の数値を読んでその意味を理解するのはかなり苦手です。そのため、プロファイラの出力をより解釈しやすい形で表示するツールが数多くあります。
 
-One common way to display CPU profiling information for sampling profilers is to use a [Flame Graph](https://www.brendangregg.com/flamegraphs.html), which will display a hierarchy of function calls across the Y axis and time taken proportional to the X axis. They are also interactive, letting you zoom into specific parts of the program and get their stack traces (try clicking in the image below).
+サンプリングプロファイラのCPUプロファイリング情報を表示する一般的な方法のひとつが、[フレームグラフ(Flame Graph)](https://www.brendangregg.com/flamegraphs.html)です。これは、Y軸に関数呼び出しの階層を、X軸に所要時間に比例した幅を表示します。インタラクティブでもあり、プログラムの特定の部分にズームインして、そのスタックトレースを取得できます(下の画像をクリックしてみてください)。
 
-[![FlameGraph](https://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg)](https://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg)
+[![フレームグラフ](https://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg)](https://www.brendangregg.com/FlameGraphs/cpu-bash-flamegraph.svg)
 
-Call graphs or control flow graphs display the relationships between subroutines within a program by including functions as nodes and functions calls between them as directed edges. When coupled with profiling information such as the number of calls and time taken, call graphs can be quite useful for interpreting the flow of a program.
-In Python you can use the [`pycallgraph`](https://pycallgraph.readthedocs.io/) library to generate them.
+コールグラフや制御フローグラフは、関数をノードとして、関数間の呼び出しを有向エッジとして含めることで、プログラム内のサブルーチン間の関係を表示します。呼び出し回数や所要時間といったプロファイリング情報と組み合わせると、コールグラフはプログラムの流れを解釈するのにとても役立ちます。Pythonでは、[`pycallgraph`](https://pycallgraph.readthedocs.io/) ライブラリを使って生成できます。
 
-![Call Graph](https://upload.wikimedia.org/wikipedia/commons/2/2f/A_Call_Graph_generated_by_pycallgraph.png)
+![コールグラフ](https://upload.wikimedia.org/wikipedia/commons/2/2f/A_Call_Graph_generated_by_pycallgraph.png)
 
 
-## Resource Monitoring
+## リソース監視
 
-Sometimes, the first step towards analyzing the performance of your program is to understand what its actual resource consumption is.
-Programs often run slowly when they are resource constrained, e.g. without enough memory or on a slow network connection.
-There are a myriad of command line tools for probing and displaying different system resources like CPU usage, memory usage, network, disk usage and so on.
+プログラムのパフォーマンスを分析する最初の一歩が、実際のリソース消費量を把握することである場合もあります。プログラムは、メモリが足りない、ネットワーク接続が遅いなど、リソースが制約されているときに遅くなることがよくあります。CPU使用率、メモリ使用量、ネットワーク、ディスク使用量など、さまざまなシステムリソースを調べて表示するためのコマンドラインツールは無数にあります。
 
-- **General Monitoring** - Probably the most popular is [`htop`](https://htop.dev/), which is an improved version of [`top`](https://www.man7.org/linux/man-pages/man1/top.1.html).
-`htop` presents various statistics for the currently running processes on the system. `htop` has a myriad of options and keybinds, some useful ones  are: `<F6>` to sort processes, `t` to show tree hierarchy and `h` to toggle threads.
-See also [`glances`](https://nicolargo.github.io/glances/) for similar implementation with a great UI. For getting aggregate measures across all processes, [`dool`](https://github.com/scottchiefbaker/dool) is another nifty tool that computes real-time resource metrics for lots of different subsystems like I/O, networking, CPU utilization, context switches, &c.
-- **I/O operations** - [`iotop`](https://www.man7.org/linux/man-pages/man8/iotop.8.html) displays live I/O usage information and is handy to check if a process is doing heavy I/O disk operations
-- **Disk Usage** - [`df`](https://www.man7.org/linux/man-pages/man1/df.1.html) displays metrics per partitions and [`du`](https://man7.org/linux/man-pages/man1/du.1.html) displays **d**isk **u**sage per file for the current directory. In these tools the `-h` flag tells the program to print with **h**uman readable format.
-A more interactive version of `du` is [`ncdu`](https://dev.yorhel.nl/ncdu) which lets you navigate folders and delete files and folders as you navigate.
-- **Memory Usage** - [`free`](https://www.man7.org/linux/man-pages/man1/free.1.html) displays the total amount of free and used memory in the system. Memory is also displayed in tools like `htop`.
-- **Open Files** - [`lsof`](https://www.man7.org/linux/man-pages/man8/lsof.8.html)  lists file information about files opened by processes. It can be quite useful for checking which process has opened a specific file.
-- **Network Connections and Config** - [`ss`](https://www.man7.org/linux/man-pages/man8/ss.8.html) lets you monitor incoming and outgoing network packets statistics as well as interface statistics. A common use case of `ss` is figuring out what process is using a given port in a machine. For displaying routing, network devices and interfaces you can use [`ip`](https://man7.org/linux/man-pages/man8/ip.8.html). Note that `netstat` and `ifconfig` have been deprecated in favor of the former tools respectively.
-- **Network Usage** -  [`nethogs`](https://github.com/raboof/nethogs) and [`iftop`](https://pdw.ex-parrot.com/iftop/) are good interactive CLI tools for monitoring network usage.
+- **全般的な監視** - おそらく最も人気があるのは [`htop`](https://htop.dev/) で、これは [`top`](https://www.man7.org/linux/man-pages/man1/top.1.html) の改良版です。`htop` は、システム上で現在実行中のプロセスについてさまざまな統計を表示します。`htop` には無数のオプションとキーバインドがあり、便利なものとしては、プロセスをソートする `<F6>`、ツリー階層を表示する `t`、スレッドの表示を切り替える `h` などがあります。優れたUIを備えた同様の実装として、[`glances`](https://nicolargo.github.io/glances/) も参照してください。全プロセスにまたがる集計値を得るには、[`dool`](https://github.com/scottchiefbaker/dool) も気の利いたツールで、I/O、ネットワーク、CPU使用率、コンテキストスイッチなど、多数のサブシステムのリソース指標をリアルタイムで計算します。
+- **I/O操作** - [`iotop`](https://www.man7.org/linux/man-pages/man8/iotop.8.html) はI/Oの使用状況をリアルタイムで表示し、プロセスがディスクI/Oを大量に行っていないかを確認するのに便利です
+- **ディスク使用量** - [`df`](https://www.man7.org/linux/man-pages/man1/df.1.html) はパーティションごとの指標を表示し、[`du`](https://man7.org/linux/man-pages/man1/du.1.html) はカレントディレクトリのファイルごとのディスク使用量(**d**isk **u**sage)を表示します。これらのツールでは、`-h` フラグを付けると、人間が読みやすい(**h**uman readable)形式で出力します。`du` のよりインタラクティブなバージョンが [`ncdu`](https://dev.yorhel.nl/ncdu) で、フォルダ間を移動しながら、ファイルやフォルダを削除できます。
+- **メモリ使用量** - [`free`](https://www.man7.org/linux/man-pages/man1/free.1.html) は、システムの空きメモリと使用中メモリの総量を表示します。メモリは `htop` のようなツールでも表示されます。
+- **開いているファイル** - [`lsof`](https://www.man7.org/linux/man-pages/man8/lsof.8.html) は、プロセスが開いているファイルについての情報を一覧表示します。特定のファイルをどのプロセスが開いているかを確認するのにとても便利です。
+- **ネットワーク接続と設定** - [`ss`](https://www.man7.org/linux/man-pages/man8/ss.8.html) を使うと、送受信されるネットワークパケットの統計やインターフェースの統計を監視できます。`ss` のよくある使い道は、マシン上の特定のポートをどのプロセスが使っているかを突き止めることです。ルーティング、ネットワークデバイス、インターフェースを表示するには、[`ip`](https://man7.org/linux/man-pages/man8/ip.8.html) が使えます。なお、`netstat` と `ifconfig` は非推奨となり、それぞれ前述のツールに置き換えられています。
+- **ネットワーク使用量** - [`nethogs`](https://github.com/raboof/nethogs) と [`iftop`](https://pdw.ex-parrot.com/iftop/) は、ネットワーク使用量を監視するための優れたインタラクティブCLIツールです。
 
-If you want to test these tools you can also artificially impose loads on the machine using the [`stress`](https://linux.die.net/man/1/stress) command.
+これらのツールを試したい場合は、[`stress`](https://linux.die.net/man/1/stress) コマンドを使ってマシンに人為的に負荷をかけることもできます。
 
 
-### Specialized tools
+### 専用ツール
 
-Sometimes, black box benchmarking is all you need to determine what software to use.
-Tools like [`hyperfine`](https://github.com/sharkdp/hyperfine) let you quickly benchmark command line programs.
-For instance, in the shell tools and scripting lecture we recommended `fd` over `find`. We can use `hyperfine` to compare them in tasks we run often.
-E.g. in the example below `fd` was 20x faster than `find` in my machine.
+どのソフトウェアを使うかを決めるのに、ブラックボックスのベンチマークさえあれば十分なこともあります。[`hyperfine`](https://github.com/sharkdp/hyperfine) のようなツールを使えば、コマンドラインプログラムのベンチマークをすばやく取れます。たとえば、シェルツールとスクリプトの講義では、`find` よりも `fd` をおすすめしました。`hyperfine` を使えば、よく実行するタスクでこれらを比較できます。たとえば以下の例では、私のマシンで `fd` は `find` より20倍高速でした。
 
 ```bash
 $ hyperfine --warmup 3 'fd -e jpg' 'find . -iname "*.jpg"'
@@ -466,18 +408,16 @@ Summary
    21.89 ± 2.33 times faster than 'find . -iname "*.jpg"'
 ```
 
-As it was the case for debugging, browsers also come with a fantastic set of tools for profiling webpage loading, letting you figure out where time is being spent (loading, rendering, scripting, &c).
-More info for [Firefox](https://profiler.firefox.com/docs/) and [Chrome](https://developers.google.com/web/tools/chrome-devtools/rendering-tools).
+デバッグの場合と同じく、ブラウザにもWebページの読み込みをプロファイリングするための素晴らしいツール群が付属しており、どこに時間が費やされているのか(読み込み、レンダリング、スクリプト実行など)を突き止められます。詳しくは[Firefox](https://profiler.firefox.com/docs/)と[Chrome](https://developers.google.com/web/tools/chrome-devtools/rendering-tools)の情報を参照してください。
 
-# Exercises
+# 演習
 
-## Debugging
-1. Use `journalctl` on Linux or `log show` on macOS to get the super user accesses and commands in the last day.
-If there aren't any you can execute some harmless commands such as `sudo ls` and check again.
+## デバッグ
+1. Linuxでは `journalctl`、macOSでは `log show` を使って、過去1日間のスーパーユーザーによるアクセスとコマンドを取得してください。ひとつもなければ、`sudo ls` のような無害なコマンドを実行してから、もう一度確認してください。
 
-1. Do [this](https://github.com/spiside/pdb-tutorial) hands on `pdb` tutorial to familiarize yourself with the commands. For a more in depth tutorial read [this](https://realpython.com/python-debugging-pdb).
+1. [こちら](https://github.com/spiside/pdb-tutorial)の `pdb` ハンズオンチュートリアルに取り組んで、コマンドに慣れてください。より詳しいチュートリアルとしては、[こちら](https://realpython.com/python-debugging-pdb)を読んでください。
 
-1. Install [`shellcheck`](https://www.shellcheck.net/) and try checking the following script. What is wrong with the code? Fix it. Install a linter plugin in your editor so you can get your warnings automatically.
+1. [`shellcheck`](https://www.shellcheck.net/) をインストールして、次のスクリプトをチェックしてみてください。このコードのどこが間違っているでしょうか? 修正してください。警告が自動的に得られるように、エディタにリンタのプラグインをインストールしてください。
 
    ```bash
    #!/bin/sh
@@ -489,12 +429,12 @@ If there aren't any you can execute some harmless commands such as `sudo ls` and
    done
    ```
 
-1. (Advanced) Read about [reversible debugging](https://undo.io/resources/reverse-debugging-whitepaper/) and get a simple example working using [`rr`](https://rr-project.org/) or [`RevPDB`](https://morepypy.blogspot.com/2016/07/reverse-debugging-for-python.html).
-## Profiling
+1. (上級)[リバースデバッグ](https://undo.io/resources/reverse-debugging-whitepaper/)について読み、[`rr`](https://rr-project.org/) または [`RevPDB`](https://morepypy.blogspot.com/2016/07/reverse-debugging-for-python.html) を使って簡単な例を動かしてください。
+## プロファイリング
 
-1. [Here](/static/files/sorts.py) are some sorting algorithm implementations. Use [`cProfile`](https://docs.python.org/3/library/profile.html) and [`line_profiler`](https://github.com/pyutils/line_profiler) to compare the runtime of insertion sort and quicksort. What is the bottleneck of each algorithm? Use then `memory_profiler` to check the memory consumption, why is insertion sort better? Check now the inplace version of quicksort. Challenge: Use `perf` to look at the cycle counts and cache hits and misses of each algorithm.
+1. [こちら](/static/files/sorts.py)に、いくつかのソートアルゴリズムの実装があります。[`cProfile`](https://docs.python.org/3/library/profile.html) と [`line_profiler`](https://github.com/pyutils/line_profiler) を使って、挿入ソートとクイックソートの実行時間を比較してください。それぞれのアルゴリズムのボトルネックは何でしょうか? 次に `memory_profiler` を使ってメモリ消費量を確認してください。なぜ挿入ソートのほうが優れているのでしょうか? 今度はインプレース版のクイックソートを確認してください。チャレンジ: `perf` を使って、各アルゴリズムのサイクル数とキャッシュのヒット・ミスを見てください。
 
-1. Here's some (arguably convoluted) Python code for computing Fibonacci numbers using a function for each number.
+1. 以下は、数ごとにひとつの関数を使ってフィボナッチ数を計算する(回りくどいと言えなくもない)Pythonコードです。
 
    ```python
    #!/usr/bin/env python
@@ -514,13 +454,11 @@ If there aren't any you can execute some harmless commands such as `sudo ls` and
        print(eval("fib9()"))
    ```
 
-   Put the code into a file and make it executable. Install prerequisites: [`pycallgraph`](https://lewiscowles1986.github.io/py-call-graph/) and [`graphviz`](https://graphviz.org/). (If you can run `dot`, you already have GraphViz.) Run the code as is with `pycallgraph graphviz -- ./fib.py` and check the `pycallgraph.png` file. How many times is `fib0` called?. We can do better than that by memoizing the functions. Uncomment the commented lines and regenerate the images. How many times are we calling each `fibN` function now?
+   このコードをファイルに保存して、実行可能にしてください。前提となる [`pycallgraph`](https://lewiscowles1986.github.io/py-call-graph/) と [`graphviz`](https://graphviz.org/) をインストールしてください(`dot` を実行できるなら、GraphVizはすでに入っています)。`pycallgraph graphviz -- ./fib.py` でコードをそのまま実行し、`pycallgraph.png` ファイルを確認してください。`fib0` は何回呼ばれているでしょうか? 関数をメモ化すれば、これを改善できます。コメントアウトされている行のコメントを外し、画像を再生成してください。今度は、各 `fibN` 関数を何回呼んでいるでしょうか?
 
-1. A common issue is that a port you want to listen on is already taken by another process. Let's learn how to discover that process pid. First execute `python -m http.server 4444` to start a minimal web server listening on port `4444`. On a separate terminal run `lsof | grep LISTEN` to print all listening processes and ports. Find that process pid and terminate it by running `kill <PID>`.
+1. よくある問題として、待ち受けたいポートがすでに別のプロセスに使われていることがあります。そのプロセスのpidを調べる方法を学びましょう。まず `python -m http.server 4444` を実行して、ポート `4444` で待ち受ける最小限のWebサーバーを起動してください。別のターミナルで `lsof | grep LISTEN` を実行し、待ち受け中のすべてのプロセスとポートを表示してください。そのプロセスのpidを見つけ、`kill <PID>` を実行して終了させてください。
 
-1. Limiting a process's resources can be another handy tool in your toolbox.
-Try running `stress -c 3` and visualize the CPU consumption with `htop`. Now, execute `taskset --cpu-list 0,2 stress -c 3` and visualize it. Is `stress` taking three CPUs? Why not? Read [`man taskset`](https://www.man7.org/linux/man-pages/man1/taskset.1.html).
-Challenge: achieve the same using [`cgroups`](https://www.man7.org/linux/man-pages/man7/cgroups.7.html). Try limiting the memory consumption of `stress -m`.
+1. プロセスのリソースを制限することも、道具箱に入れておくと便利な手段のひとつです。`stress -c 3` を実行し、`htop` でCPU消費を可視化してみてください。次に `taskset --cpu-list 0,2 stress -c 3` を実行して、可視化してください。`stress` は3つのCPUを使っているでしょうか? なぜ使っていないのでしょうか? [`man taskset`](https://www.man7.org/linux/man-pages/man1/taskset.1.html) を読んでください。チャレンジ: [`cgroups`](https://www.man7.org/linux/man-pages/man7/cgroups.7.html) を使って同じことを実現してください。`stress -m` のメモリ消費を制限してみてください。
 
-1. (Advanced) The command `curl ipinfo.io` performs a HTTP request and fetches information about your public IP. Open [Wireshark](https://www.wireshark.org/) and try to sniff the request and reply packets that `curl` sent and received. (Hint: Use the `http` filter to just watch HTTP packets).
+1. (上級)コマンド `curl ipinfo.io` はHTTPリクエストを行い、あなたのパブリックIPについての情報を取得します。[Wireshark](https://www.wireshark.org/)を開いて、`curl` が送受信したリクエストとレスポンスのパケットをスニッフィングしてみてください(ヒント: `http` フィルタを使うと、HTTPパケットだけを見られます)。
 

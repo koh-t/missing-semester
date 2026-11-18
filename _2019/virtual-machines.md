@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Virtual Machines and Containers"
+title: "仮想マシンとコンテナ"
 presenter: Anish, Jon
 date: 2019-01-15
 order: 2
@@ -9,125 +9,91 @@ video:
   id: LJ9ki5zq6Ik
 ---
 
-# Virtual Machines
+# 仮想マシン
 
-Virtual machines are simulated computers. You can configure a guest virtual
-machine with some operating system and configuration and use it without
-affecting your host environment.
+仮想マシンは、シミュレートされたコンピュータです。ゲストの仮想マシンに任意のオペレーティングシステムと設定を構成して、ホスト環境に影響を与えることなく使うことができます。
 
-For this class, you can use VMs to experiment with operating systems, software,
-and configurations without risk: you won't affect your primary development
-environment.
+この授業では、VMを使うことで、オペレーティングシステム、ソフトウェア、設定をリスクなしに試すことができます。普段使っている開発環境に影響を与えることはありません。
 
-In general, VMs have lots of uses. They are commonly used for running software
-that only runs on a certain operating system (e.g. using a Windows VM on Linux
-to run Windows-specific software). They are often used for experimenting with
-potentially malicious software.
+一般に、VMには多くの用途があります。特定のオペレーティングシステムでしか動かないソフトウェアを実行するためによく使われます(たとえば、Linux上でWindowsのVMを使ってWindows専用のソフトウェアを動かす、など)。また、悪意がある可能性のあるソフトウェアを試すためにもよく使われます。
 
-## Useful features
+## 便利な機能
 
-- **Isolation**: hypervisors do a pretty good job of isolating the guest from
-the host, so you can use VMs to run buggy or untrusted software reasonably
-safely.
+- **隔離**: ハイパーバイザはゲストをホストから隔離する仕事をかなりうまくこなすので、VMを使えば、バグのあるソフトウェアや信頼できないソフトウェアをそれなりに安全に実行できます。
 
-- **Snapshots**: you can take "snapshots" of your virtual machine, capturing
-the entire machine state (disk, memory, etc.), make changes to your machine,
-and then restore to an earlier state. This is useful for testing out
-potentially destructive actions, among other things.
+- **スナップショット**: 仮想マシンの「スナップショット」を取って、マシンの状態全体(ディスク、メモリなど)を記録し、マシンに変更を加えたあとで、以前の状態に復元できます。これは、とりわけ、破壊的になりうる操作を試すのに便利です。
 
-## Disadvantages
+## 欠点
 
-Virtual machines are generally slower than running on bare metal, so they may
-be unsuitable for certain applications.
+仮想マシンは一般に、ベアメタルで実行するよりも遅いので、用途によっては適さないかもしれません。
 
-## Setup
+## セットアップ
 
-- **Resources**: shared with host machine; be aware of this when allocating
-physical resources.
+- **リソース**: ホストマシンと共有されます。物理リソースを割り当てる際には、このことを意識しておきましょう。
 
-- **Networking**: many options, default NAT should work fine for most use
-cases.
+- **ネットワーク**: 選択肢は多数ありますが、ほとんどのユースケースではデフォルトのNATで問題なく動くはずです。
 
-- **Guest addons**: many hypervisors can install software in the guest to
-enable nicer integration with host system. You should use this if you can.
+- **ゲストアドオン**: 多くのハイパーバイザは、ホストシステムとの連携をより快適にするためのソフトウェアをゲストにインストールできます。可能であれば使うべきです。
 
-## Resources
+## 参考資料
 
-- Hypervisors
-    - [VirtualBox](https://www.virtualbox.org/) (open-source)
-    - [Virt-manager](https://virt-manager.org/) (open-source, manages KVM virtual machines and LXC containers)
-    - [VMWare](https://www.vmware.com/) (commercial, available from IS&T [for
-    MIT students](https://ist.mit.edu/vmware-fusion))
+- ハイパーバイザ
+    - [VirtualBox](https://www.virtualbox.org/)(オープンソース)
+    - [Virt-manager](https://virt-manager.org/)(オープンソース。KVMの仮想マシンとLXCのコンテナを管理します)
+    - [VMWare](https://www.vmware.com/)(商用。[MITの学生向け](https://ist.mit.edu/vmware-fusion)にIS&Tから入手できます)
 
-If you are already familiar with popular hypervisors/VMs you may want to learn more about how to do this from a command line friendly way. One option is the [libvirt](https://wiki.libvirt.org/page/UbuntuKVMWalkthrough) toolkit which allows you to manage multiple different virtualization providers/hypervisors.
+人気のあるハイパーバイザ/VMにすでに馴染みがあるなら、コマンドラインと相性の良い方法でこれを行うやり方についてもっと学びたくなるかもしれません。選択肢のひとつが [libvirt](https://wiki.libvirt.org/page/UbuntuKVMWalkthrough) ツールキットで、複数の異なる仮想化プロバイダ/ハイパーバイザを管理できます。
 
-## Exercises
+## 演習
 
-1. Download and install a hypervisor.
+1. ハイパーバイザをダウンロードしてインストールしてください。
 
-1. Create a new virtual machine and install a Linux distribution (e.g.
-[Debian](https://www.debian.org/)).
+1. 新しい仮想マシンを作成し、Linuxディストリビューション(たとえば [Debian](https://www.debian.org/))をインストールしてください。
 
-1. Experiment with snapshots. Try things that you've always wanted to try, like
-   running `sudo rm -rf --no-preserve-root /`, and see if you can recover
-   easily.
+1. スナップショットを試してみてください。`sudo rm -rf --no-preserve-root /` を実行するなど、ずっと試してみたかったことをやってみて、簡単に復旧できるか確かめてください。
 
-1. Read what a [fork-bomb](https://en.wikipedia.org/wiki/Fork_bomb) (`:(){ :|:& };:`) is and run it on the VM to see that the resource isolation (CPU, Memory, &c) works.
+1. [フォーク爆弾](https://en.wikipedia.org/wiki/Fork_bomb)(`:(){ :|:& };:`)とは何かを読み、VM上で実行して、リソースの隔離(CPU、メモリなど)が機能することを確かめてください。
 
-1. Install guest addons and experiment with different windowing modes, file
-   sharing, and other features.
+1. ゲストアドオンをインストールし、さまざまなウィンドウモード、ファイル共有、その他の機能を試してみてください。
 
-# Containers
+# コンテナ
 
-Virtual Machines are relatively heavy-weight; what if you want to spin
-up machines in an automated fashion? Enter containers!
+仮想マシンは比較的重量級です。マシンを自動的に立ち上げたい場合はどうすればよいでしょうか? そこでコンテナの出番です!
 
  - Amazon Firecracker
  - Docker
  - rkt
  - lxc
 
-Containers are _mostly_ just an assembly of various Linux security
-features, like virtual file system, virtual network interfaces, chroots,
-virtual memory tricks, and the like, that together give the appearance
-of virtualization.
+コンテナは _ほとんど_ の部分が、仮想ファイルシステム、仮想ネットワークインターフェース、chroot、仮想メモリのトリックといった、Linuxのさまざまなセキュリティ機能の寄せ集めにすぎず、それらが一体となって仮想化されているかのように見せています。
 
-Not quite as secure or isolated as a VM, but pretty close and getting
-better. Usually higher performance, and much faster to start, but not
-always.
+VMほど安全でも隔離されてもいませんが、かなり近く、改善も進んでいます。たいていはより高性能で、起動もはるかに速いですが、常にそうとは限りません。
 
-The performance boost comes from the fact that unlike VMs which run an entire copy of the operating system, containers share the linux kernel with the host. However note that if you are running linux containers on Windows/macOS a Linux VM will need to be active as a middle layer between the two.
+性能が向上するのは、オペレーティングシステムの完全なコピーを実行するVMとは異なり、コンテナがLinuxカーネルをホストと共有するためです。ただし、Windows/macOS上でLinuxコンテナを実行する場合は、両者の間の中間層としてLinuxのVMを動かしておく必要があることに注意してください。
 
 ![Docker vs VM](/2019/files/containers-vs-vms.png)
-_Comparison between Docker containers and Virtual Machines. Credit: blog.docker.com_
+_Dockerコンテナと仮想マシンの比較。出典: blog.docker.com_
 
-Containers are handy for when you want to run an automated task in a
-standardized setup:
+コンテナは、標準化された構成の中で自動化されたタスクを実行したいときに便利です。
 
- - Build systems
- - Development environments
- - Pre-packaged servers
- - Running untrusted programs
-   - Grading student submissions
-   - (Some) cloud computing
- - Continuous integration
+ - ビルドシステム
+ - 開発環境
+ - あらかじめパッケージ化されたサーバー
+ - 信頼できないプログラムの実行
+   - 学生の提出物の採点
+   - (一部の)クラウドコンピューティング
+ - 継続的インテグレーション
    - Travis CI
    - GitHub Actions
 
-Moreover, container software like Docker has also been extensively used as a solution for [dependency hell](https://en.wikipedia.org/wiki/Dependency_hell). If a machine needs to be running many services with conflicting dependencies they can be isolated using containers.
+さらに、Dockerのようなコンテナソフトウェアは、[依存関係地獄](https://en.wikipedia.org/wiki/Dependency_hell)の解決策としても広く使われてきました。あるマシンで、依存関係が競合する多数のサービスを動かす必要がある場合、コンテナを使ってそれらを隔離できます。
 
-Usually, you write a file that defines how to construct your container.
-You start with some minimal _base image_ (like Alpine Linux), and then
-a list of commands to run to set up the environment you want (install
-packages, copy files, build stuff, write config files, etc.). Normally,
-there's also a way to specify any external ports that should be
-available, and an _entrypoint_ that dictates what command should be run
-when the container is started (like a grading script).
+通常は、コンテナをどう構築するかを定義するファイルを書きます。何らかの最小限の _ベースイメージ_(Alpine Linuxなど)から始めて、望む環境をセットアップするために実行するコマンドの一覧(パッケージのインストール、ファイルのコピー、ビルド、設定ファイルの書き込みなど)を続けます。たいていは、外部に公開すべきポートを指定する方法や、コンテナの起動時に実行するコマンド(採点スクリプトなど)を決める _エントリポイント_ を指定する方法も用意されています。
 
-In a similar fashion to code repository websites (like [GitHub](https://github.com/)) there are some container repository websites (like [DockerHub](https://hub.docker.com/))where many software services have prebuilt images that one can easily deploy.
+コードリポジトリのWebサイト([GitHub](https://github.com/)など)と同じように、コンテナリポジトリのWebサイト([DockerHub](https://hub.docker.com/)など)もあり、そこでは多くのソフトウェアサービスが、簡単にデプロイできるビルド済みイメージを公開しています。
 
-## Exercises
+## 演習
 
-1. Choose a container software (Docker, LXC, …) and install a simple Linux image. Try SSHing into it.
+1. コンテナソフトウェア(Docker、LXCなど)を選び、シンプルなLinuxイメージをインストールしてください。そこにSSHで接続してみてください。
 
-1. Search and download a prebuilt container image for a popular web server (nginx, apache, …)
+1. 人気のあるWebサーバー(nginx、apacheなど)のビルド済みコンテナイメージを検索してダウンロードしてください

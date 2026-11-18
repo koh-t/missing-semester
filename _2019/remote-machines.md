@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Remote Machines"
+title: "リモートマシン"
 presenter: Jose
 date: 2019-01-29
 order: 4
@@ -9,98 +9,97 @@ video:
   id: X5c2Y8BCowM
 ---
 
-It has become more and more common for programmers to use remote servers in their everyday work. If you need to use remote servers in order to deploy backend software or you need a server with higher computational capabilities, you will end up using a Secure Shell (SSH). As with most tools covered, SSH is highly configurable so it is worth learning about it.
+プログラマーが日々の仕事でリモートサーバーを使うことは、ますます一般的になっています。バックエンドのソフトウェアをデプロイするためにリモートサーバーを使う必要がある場合や、より高い計算能力を持つサーバーが必要な場合には、Secure Shell(SSH)を使うことになります。ここで扱うほとんどのツールと同様に、SSHは高度に設定可能なので、学んでおく価値があります。
 
 
-## Executing commands
+## コマンドの実行
 
-An often overlooked feature of `ssh` is the ability to run commands directly.
+`ssh` の見落とされがちな機能に、コマンドを直接実行できるというものがあります。
 
-- `ssh foobar@server ls` will execute ls in the home folder of foobar
-- It works with pipes, so `ssh foobar@server ls | grep PATTERN` will grep locally the remote output of `ls` and `ls | ssh foobar@server grep PATTERN` will grep remotely the local output of `ls`.
+- `ssh foobar@server ls` は、foobarのホームフォルダでlsを実行します
+- パイプとも組み合わせられるので、`ssh foobar@server ls | grep PATTERN` はリモートの `ls` の出力をローカルでgrepし、`ls | ssh foobar@server grep PATTERN` はローカルの `ls` の出力をリモートでgrepします。
 
-## SSH Keys
+## SSH鍵
 
-Key-based authentication exploits public-key cryptography to prove to the server that the client owns the secret private key without revealing the key. This way you do not need to reenter your password every time. Nevertheless the private key (e.g. `~/.ssh/id_rsa`) is effectively your password so treat it like so.
+鍵ベースの認証は公開鍵暗号を利用して、鍵そのものを明かすことなく、クライアントが秘密鍵を所有していることをサーバーに証明します。こうすれば、毎回パスワードを入力し直す必要がありません。とはいえ、秘密鍵(たとえば `~/.ssh/id_rsa`)は実質的にあなたのパスワードなので、パスワードと同様に扱ってください。
 
-- Key generation. To generate a pair you can simply run `ssh-keygen -t rsa -b 4096`. If you do not choose a passphrase anyone that gets hold of your private key will be able to access authorized servers so it is recommended to choose  one and use `ssh-agent` to manage shell sessions.
+- 鍵の生成。鍵のペアを生成するには、単に `ssh-keygen -t rsa -b 4096` を実行します。パスフレーズを設定しないと、あなたの秘密鍵を手に入れた人は誰でも、認可されたサーバーにアクセスできてしまいます。そのため、パスフレーズを設定し、`ssh-agent` を使ってシェルセッションを管理することをおすすめします。
 
-If you have configured pushing to Github using SSH keys you have probably done the steps outlined [here](https://help.github.com/articles/connecting-to-github-with-ssh/) and have a valid pair already. To check if you have a passphrase and validate it you can run `ssh-keygen -y -f /path/to/key`.
+SSH鍵を使ってGithubにプッシュする設定をしたことがあるなら、おそらく[こちら](https://help.github.com/articles/connecting-to-github-with-ssh/)で説明されている手順を済ませていて、すでに有効な鍵のペアを持っているはずです。パスフレーズが設定されているかを確認し、それを検証するには、`ssh-keygen -y -f /path/to/key` を実行します。
 
-- Key based authentication. `ssh` will look into `.ssh/authorized_keys` to determine which clients it should let in. To copy a public key over we can use the
+- 鍵ベースの認証。`ssh` は `.ssh/authorized_keys` を参照して、どのクライアントを受け入れるべきかを判断します。公開鍵をコピーするには、次のようにします
 
 ```bash
 cat .ssh/id_dsa.pub | ssh foobar@remote 'cat >> ~/.ssh/authorized_keys'
 ```
 
-A simpler solution can be achieved with `ssh-copy-id` where available.
+`ssh-copy-id` が利用できる環境では、より簡単な方法があります。
 
 ```bash
 ssh-copy-id -i .ssh/id_dsa.pub foobar@remote
 ```
 
-## Copying files over ssh
+## ssh経由でのファイルのコピー
 
-There are many ways to copy files over ssh
+ssh経由でファイルをコピーする方法はたくさんあります
 
-- `ssh+tee`, the simplest is to use `ssh` command execution and stdin input by doing `cat localfile | ssh remote_server tee serverfile`
-- `scp` when copying large amounts of files/directories, the secure copy `scp` command is more convenient since it can easily recurse over paths. The syntax is `scp path/to/local_file remote_host:path/to/remote_file`
-- `rsync` improves upon `scp` by detecting identical files in local and remote and preventing copying them again. It also provides more fine grained control over symlinks, permissions and has extra features like the `--partial` flag that can resume from a previously interrupted copy. `rsync` has a similar syntax to `scp`.
-
-
-## Backgrounding processes
-
-By default when interrupting a ssh connection, child processes of the parent shell are killed along with it. There are a couple of alternatives
-
-- `nohup` - the `nohup` tool effectively allows for a process to live when the terminal gets killed. Although this can sometimes be achieved with `&` and `disown`, nohup is a better default. More details can be found [here](https://unix.stackexchange.com/questions/3886/difference-between-nohup-disown-and).
-
-- `tmux`, `screen` - whereas `nohup` effectively backgrounds the process it is not convenient for interactive shell sessions. In that case using a terminal multiplexer like `screen` or `tmux` is a convenient choice since one can easily detach and reattach the associated shells.
-
-Lastly, if you disown a program and want to reattach it to the current terminal, you can look into [reptyr](https://github.com/nelhage/reptyr). `reptyr PID` will grab the process with id PID and attach it to your current terminal.
-
-## Port Forwarding
-
-In many scenarios you will run into software that works by listening to ports in the machine. When this happens in your local machine you can simply do `localhost:PORT` or `127.0.0.1:PORT`, but what do you do with a remote server that does not have its ports directly available through the network/internet?. This is called port forwarding and it
-comes in two flavors: Local Port Forwarding and Remote Port Forwarding (see the pictures for more details, credit of the pictures from [this SO post](https://unix.stackexchange.com/questions/115897/whats-ssh-port-forwarding-and-whats-the-difference-between-ssh-local-and-remot)).
+- `ssh+tee`。もっとも単純なのは、`ssh` のコマンド実行とstdinからの入力を使って、`cat localfile | ssh remote_server tee serverfile` とする方法です
+- `scp`。大量のファイル/ディレクトリをコピーするときは、パスを簡単に再帰的にたどれるセキュアコピーの `scp` コマンドのほうが便利です。構文は `scp path/to/local_file remote_host:path/to/remote_file` です
+- `rsync` は `scp` を改良したもので、ローカルとリモートで同一のファイルを検出し、それらを再度コピーするのを防ぎます。また、シンボリックリンクやパーミッションをより細かく制御でき、中断されたコピーを途中から再開できる `--partial` フラグのような追加機能もあります。`rsync` の構文は `scp` に似ています。
 
 
-**Local Port Forwarding**
+## プロセスのバックグラウンド実行
+
+デフォルトでは、ssh接続が中断されると、親シェルの子プロセスも一緒にkillされます。これに対する代替手段がいくつかあります
+
+- `nohup` - `nohup` ツールを使うと、ターミナルがkillされてもプロセスを実質的に生かしておけます。これは `&` と `disown` で実現できることもありますが、デフォルトの選択肢としてはnohupのほうが優れています。詳しくは[こちら](https://unix.stackexchange.com/questions/3886/difference-between-nohup-disown-and)を参照してください。
+
+- `tmux`、`screen` - `nohup` はプロセスを実質的にバックグラウンドに送りますが、対話的なシェルセッションには向いていません。その場合は、`screen` や `tmux` のようなターミナルマルチプレクサを使うのが便利です。関連付けられたシェルを簡単にデタッチして再アタッチできるからです。
+
+最後に、プログラムをdisownしたあとで現在のターミナルに再アタッチしたくなった場合は、[reptyr](https://github.com/nelhage/reptyr)を調べてみてください。`reptyr PID` は、idがPIDのプロセスを捕まえて、現在のターミナルにアタッチします。
+
+## ポートフォワーディング
+
+マシンのポートで待ち受けることによって動作するソフトウェアに出会う場面は多くあります。これが手元のマシンであれば、単に `localhost:PORT` や `127.0.0.1:PORT` とすれば済みますが、ネットワーク/インターネット経由でポートに直接アクセスできないリモートサーバーの場合はどうすればよいでしょうか? これがポートフォワーディングと呼ばれるもので、ローカルポートフォワーディングとリモートポートフォワーディングの2種類があります(詳しくは図を参照してください。図の出典は[このSOの投稿](https://unix.stackexchange.com/questions/115897/whats-ssh-port-forwarding-and-whats-the-difference-between-ssh-local-and-remot)です)。
+
+
+**ローカルポートフォワーディング**
 ![Local Port Forwarding](https://i.stack.imgur.com/a28N8.png)
 
-**Remote Port Forwarding**
+**リモートポートフォワーディング**
 ![Remote Port Forwarding](https://i.stack.imgur.com/4iK3b.png)
 
 
-The most common scenario is local port forwarding where a service in the remote machine listens in a port and you want to link a port in your local machine to forward to the remote port. For example if we execute  `jupyter notebook` in the remote server that listens to the port `8888`. Thus to forward that to the local port `9999` we would do `ssh -L 9999:localhost:8888 foobar@remote_server` and then navigate to `localhost:9999` in our local machine.
+もっとも一般的なシナリオはローカルポートフォワーディングで、リモートマシン上のサービスがあるポートで待ち受けており、手元のマシンのポートをそのリモートのポートに転送されるようつなぎたい、というものです。たとえば、リモートサーバーで `jupyter notebook` を実行し、それがポート `8888` で待ち受けているとします。これをローカルのポート `9999` に転送するには、`ssh -L 9999:localhost:8888 foobar@remote_server` を実行し、手元のマシンで `localhost:9999` にアクセスします。
 
-## Graphics Forwarding
+## グラフィックスフォワーディング
 
-Sometimes forwarding ports is not enough since we want to run a GUI based program in the server. You can always resort to Remote Desktop Software that sends the entire Desktop Environment (ie. options like RealVNC, Teamviewer, &c). However for a single GUI tool, SSH provides a good alternative: Graphics Forwarding.
+サーバー上でGUIベースのプログラムを実行したい場合など、ポートの転送だけでは足りないことがあります。デスクトップ環境全体を送信するリモートデスクトップソフトウェア(RealVNC、Teamviewerなどの選択肢)に頼ることはいつでもできます。しかし、単一のGUIツールのためであれば、SSHが良い代替手段を提供しています。グラフィックスフォワーディングです。
 
-Using the `-X` flag tells SSH to forward
+`-X` フラグを使うと、SSHに転送するよう指示します
 
- For trusted X11 forwarding the `-Y` flag can be used.
+ 信頼されたX11フォワーディングには、`-Y` フラグが使えます。
 
-Final note is that for this to work the `sshd_config` on the server must have the following options
+最後の注意点として、これが動作するためには、サーバーの `sshd_config` に次のオプションが設定されていなければなりません
 
 ```bash
 X11Forwarding yes
 X11DisplayOffset 10
 ```
 
-## Roaming
+## ローミング
 
-A common pain when connecting to a remote server are disconnections due to shutting down/sleeping your computer or changing a network. Moreover if one has a connection with significant lag using ssh can become quite frustrating. [Mosh](https://mosh.org/), the mobile shell, improves upon ssh, allowing roaming connections, intermittent connectivity and providing intelligent local echo.
+リモートサーバーに接続しているときによくある悩みが、コンピュータのシャットダウン/スリープやネットワークの切り替えによる切断です。さらに、遅延の大きい回線では、sshを使うのがかなり苛立たしいものになることがあります。モバイルシェルである[Mosh](https://mosh.org/)はsshを改良したもので、ローミング接続や断続的な接続を可能にし、賢いローカルエコーを提供します。
 
-Mosh is present in all common distributions and package managers. Mosh requires an ssh server to be working in the server. You do not need to be superuser to install mosh  but it does require that ports 60000 through 60010 to be open in the server (they usually are since they are not in the privileged range).
+Moshは、一般的なディストリビューションとパッケージマネージャのすべてで提供されています。Moshは、サーバー上でsshサーバーが動作していることを必要とします。moshをインストールするのにスーパーユーザーである必要はありませんが、サーバーでポート60000から60010までが開いている必要があります(これらは特権ポートの範囲外なので、たいていは開いています)。
 
-A downside of `mosh` is that is does not support roaming port/graphics forwarding so if you use those often `mosh` won't be of much help.
+`mosh` の欠点は、ポート/グラフィックスフォワーディングのローミングに対応していないことです。そのため、これらをよく使う場合には `mosh` はあまり役に立ちません。
 
-## SSH Configuration
+## SSHの設定
 
-### Client
+### クライアント
 
-We have covered many arguments that we can pass. A tempting alternative is to create shell aliases that look like `alias my_server="ssh -X -i ~/.ssh/id_rsa -L 9999:localhost:8888 foobar@remote_server"`, however there is a better alternative, using `~/.ssh/config`.
+ここまで、渡すことのできる引数をたくさん見てきました。`alias my_server="ssh -X -i ~/.ssh/id_rsa -L 9999:localhost:8888 foobar@remote_server"` のようなシェルのエイリアスを作りたくなりますが、もっと良い方法があります。`~/.ssh/config` を使うことです。
 
 ```bash
 Host vm
@@ -116,50 +115,49 @@ Host *.mit.edu
 ```
 
 
-An additional advantage of using the `~/.ssh/config` file over aliases  is that other programs like `scp`, `rsync`, `mosh`, &c are able to read it as well and convert the settings into the corresponding flags.
+エイリアスではなく `~/.ssh/config` ファイルを使うことのもうひとつの利点は、`scp`、`rsync`、`mosh` などの他のプログラムもこれを読み込んで、設定を対応するフラグに変換できることです。
 
 
-Note that the `~/.ssh/config` file can be considered a dotfile, and in general it is fine for it to be included with the rest of your dotfiles. However if you make it public, think about the information that you are potentially providing strangers on the internet: the addresses of your servers, the users you are using, the open ports, &c. This may facilitate some types of attacks so be thoughtful about sharing your SSH configuration.
+`~/.ssh/config` ファイルはドットファイルの一種と考えることができ、一般には他のドットファイルと一緒に管理してかまいません。ただし、公開する場合は、インターネット上の見知らぬ人に与えてしまうかもしれない情報について考えてください。サーバーのアドレス、使っているユーザー名、開いているポートなどです。これによって一部の攻撃が容易になるおそれがあるので、SSHの設定を共有する際はよく考えましょう。
 
-Warning: Never include your RSA keys ( `~/.ssh/id_rsa*` ) in a public repository!
+警告: RSA鍵(`~/.ssh/id_rsa*`)は、決して公開リポジトリに含めないでください!
 
-### Server side
+### サーバー側
 
-Server side configuration is usually specified in `/etc/ssh/sshd_config`. Here you can make  changes like disabling password authentication, changing ssh ports, enabling X11 forwarding, &c. You can specify config settings in a per user basis.
+サーバー側の設定は、通常 `/etc/ssh/sshd_config` で指定します。ここでは、パスワード認証の無効化、sshのポートの変更、X11フォワーディングの有効化などの変更ができます。設定はユーザーごとに指定することもできます。
 
-## Remote Filesystem
+## リモートファイルシステム
 
-Sometimes it is convenient to mount a remote folder. [sshfs](https://github.com/libfuse/sshfs) can mount a folder on a remote server
-locally, and then you can use a local editor.
+リモートのフォルダをマウントできると便利なことがあります。[sshfs](https://github.com/libfuse/sshfs)を使うと、リモートサーバー上のフォルダをローカルにマウントでき、ローカルのエディタを使えるようになります。
 
-## Exercises
+## 演習
 
-1. For SSH to work the host needs to be running an SSH server. Install an SSH server (such as OpenSSH) in a virtual machine so you can do the rest of the exercises. To figure out what is the ip of the machine run the command `ip addr` and look for the inet field (ignore the `127.0.0.1` entry, that corresponds to the loopback interface).
+1. SSHが動作するためには、ホストでSSHサーバーが動いている必要があります。残りの演習ができるように、仮想マシンにSSHサーバー(OpenSSHなど)をインストールしてください。マシンのIPを調べるには、`ip addr` コマンドを実行してinetフィールドを探してください(`127.0.0.1` のエントリは無視してください。これはループバックインターフェースに対応するものです)。
 
-1. Go to `~/.ssh/` and check if you have a pair of SSH keys there. If not, generate them with `ssh-keygen -t rsa -b 4096`. It is recommended that you use a password and use `ssh-agent` , more info [here](https://www.ssh.com/ssh/agent).
+1. `~/.ssh/` を開いて、SSH鍵のペアがあるかどうかを確認してください。なければ、`ssh-keygen -t rsa -b 4096` で生成してください。パスワードを設定し、`ssh-agent` を使うことをおすすめします。詳しくは[こちら](https://www.ssh.com/ssh/agent)。
 
-1. Use `ssh-copy-id` to copy the key to your virtual machine. Test that you can ssh without a password. Then, edit your `sshd_config` in the server to disable password authentication by editing the value of `PasswordAuthentication`. Disable root login by editing the value of `PermitRootLogin`.
+1. `ssh-copy-id` を使って、鍵を仮想マシンにコピーしてください。パスワードなしでsshできることを確かめてください。次に、サーバーの `sshd_config` を編集し、`PasswordAuthentication` の値を変更してパスワード認証を無効化してください。さらに `PermitRootLogin` の値を変更してrootログインを無効化してください。
 
-1. Edit the `sshd_config` in the server to change the ssh port and check that you can still ssh. If you ever have a public facing server, a non default port and key only login will throttle a significant amount of malicious attacks.
+1. サーバーの `sshd_config` を編集してsshのポートを変更し、それでもsshできることを確認してください。公開サーバーを持つことになった場合、デフォルト以外のポートと鍵のみのログインにしておけば、悪意のある攻撃のかなりの部分を抑えられます。
 
-1. Install mosh in your server/VM, establish a connection and then disconnect the network adapter of the server/VM. Can mosh properly recover from it?
+1. サーバー/VMにmoshをインストールして接続を確立し、その後サーバー/VMのネットワークアダプタを切断してください。moshは正しく復帰できるでしょうか?
 
-1. Another use of local port forwarding is to tunnel certain host to the server. If your network filters some website like for example `reddit.com` you can tunnel it through the server as follows:
+1. ローカルポートフォワーディングのもうひとつの使い道は、特定のホストへの通信をサーバー経由でトンネルすることです。たとえば `reddit.com` のようなWebサイトがネットワークでフィルタリングされている場合、次のようにしてサーバー経由でトンネルできます。
 
-    - Run `ssh remote_server -L 80:reddit.com:80`
-    - Set `reddit.com` and `www.reddit.com` to `127.0.0.1` in `/etc/hosts`
-    - Check that you are accessing that website through the server
-    - If it is not obvious use a website such as [ipinfo.io](https://ipinfo.io/) which will change depending on your host public ip.
-
-
-1. Background port forwarding can easily be achieved with a couple of extra flags. Look into what the `-N` and `-f` flags do in `ssh` and figure out what a command such as this `ssh -N -f -L 9999:localhost:8888 foobar@remote_server` does.
+    - `ssh remote_server -L 80:reddit.com:80` を実行します
+    - `/etc/hosts` で `reddit.com` と `www.reddit.com` を `127.0.0.1` に設定します
+    - そのWebサイトにサーバー経由でアクセスしていることを確認します
+    - はっきりしない場合は、[ipinfo.io](https://ipinfo.io/)のようなWebサイトを使ってください。これはホストのパブリックIPによって表示が変わります。
 
 
-## References
+1. バックグラウンドでのポートフォワーディングは、フラグをいくつか追加するだけで簡単に実現できます。`ssh` の `-N` フラグと `-f` フラグが何をするのかを調べ、`ssh -N -f -L 9999:localhost:8888 foobar@remote_server` のようなコマンドが何をするのか考えてください。
+
+
+## 参考文献
 
 - [SSH Hacks](https://matt.might.net/articles/ssh-hacks/)
 - [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 
 {% comment %}
-Lecture notes will be available by the start of lecture.
+講義ノートは、講義の開始までに公開されます。
 {% endcomment %}

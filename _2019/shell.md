@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Shell and Scripting"
+title: "シェルとスクリプト"
 presenter: Jon
 date: 2019-01-15
 order: 3
@@ -9,276 +9,244 @@ video:
   id: dbDRfmH5uSI
 ---
 
-The shell is an efficient, textual interface to your computer.
+シェルは、コンピュータに対する効率的なテキストベースのインターフェースです。
 
-The shell prompt: what greets you when you open a terminal.
-Lets you run programs and commands; common ones are:
+シェルのプロンプトは、ターミナルを開いたときに出迎えてくれるものです。ここからプログラムやコマンドを実行できます。よく使うものは次のとおりです。
 
- - `cd` to change directory
- - `ls` to list files and directories
- - `mv` and `cp` to move and copy files
+ - `cd` でディレクトリを移動する
+ - `ls` でファイルとディレクトリを一覧表示する
+ - `mv` と `cp` でファイルを移動・コピーする
 
-But the shell lets you do _so_ much more; you can invoke any program on
-your computer, and command-line tools exist for doing pretty much
-anything you may want to do. And they're often more efficient than their
-graphical counterparts. We'll go through a bunch of those in this class.
+しかし、シェルでできることはそれよりも _はるかに_ 多くあります。コンピュータ上のどんなプログラムでも呼び出せますし、やりたいと思うことのほとんどには、それを行うコマンドラインツールが存在します。しかも、それらはグラフィカルな同等品よりも効率的であることが多いのです。この授業では、そうしたツールを数多く見ていきます。
 
-The shell provides an interactive programming language ("scripting").
-There are many shells:
+シェルは、対話的なプログラミング言語(「スクリプト」)を提供します。シェルにはたくさんの種類があります。
 
- - You've probably used `sh` or `bash`.
- - Also shells that match languages: `csh`.
- - Or "better" shells: `fish`, `zsh`, `ksh`.
+ - `sh` や `bash` はおそらく使ったことがあるでしょう。
+ - 特定の言語に合わせたシェルもあります: `csh`。
+ - 「より良い」シェルもあります: `fish`、`zsh`、`ksh`。
 
-In this class we'll focus on the ubiquitous `sh` and `bash`, but feel
-free to play around with others. I like `fish`.
+この授業では、どこにでもある `sh` と `bash` に焦点を当てますが、他のシェルも自由に試してみてください。私は `fish` が好きです。
 
-Shell programming is a *very* useful tool in your toolbox.
-Can either write programs directly at the prompt, or into a file.
-`#!/bin/sh` + `chmod +x` to make shell executable.
+シェルプログラミングは、道具箱に入れておくと *とても* 役に立つツールです。プログラムはプロンプトに直接書くことも、ファイルに書くこともできます。`#!/bin/sh` + `chmod +x` で、シェルスクリプトを実行可能にできます。
 
-## Working with the shell
+## シェルを使う
 
-Run a command a bunch of times:
+あるコマンドを何度も実行するには、次のようにします。
 
 ```bash
 for i in $(seq 1 5); do echo hello; done
 ```
 
-There's a lot to unpack:
+ここには読み解くべきことがたくさんあります。
 
  - `for x in list; do BODY; done`
-   - `;` terminates a command -- equivalent to newline
-   - split `list`, assign each to `x`, and run body
-   - splitting is "whitespace splitting", which we'll get back to
-   - no curly braces in shell, so `do` + `done`
+   - `;` はコマンドを終端します -- 改行と同等です
+   - `list` を分割し、それぞれを `x` に代入して、本体を実行します
+   - この分割は「空白による分割」で、これについてはあとでまた触れます
+   - シェルには波括弧がないので、`do` + `done` を使います
  - `$(seq 1 5)`
-   - run the program `seq` with arguments `1` and `5`
-   - substitute entire `$()` with the output of that program
-   - equivalent to
+   - プログラム `seq` を引数 `1` と `5` で実行します
+   - `$()` 全体を、そのプログラムの出力で置き換えます
+   - 次と同等です
      ```bash
      for i in 1 2 3 4 5
      ```
  - `echo hello`
-   - everything in a shell script is a command
-   - in this case, run the `echo` command, which prints its arguments
-     with the argument `hello`.
-   - all commands are searched for in `$PATH` (colon-separated)
+   - シェルスクリプトでは、すべてがコマンドです
+   - この場合は、引数を表示する `echo` コマンドを、引数 `hello` を付けて実行します。
+   - すべてのコマンドは `$PATH`(コロン区切り)の中から探されます
 
-We have variables:
+変数もあります。
 ```bash
 for f in $(ls); do echo $f; done
 ```
 
-Will print each file name in the current directory.
-Can also set variables using `=` (no space!):
+これは、カレントディレクトリにある各ファイルの名前を表示します。変数は `=` を使って設定することもできます(スペースは入れません!)。
 
 ```bash
 foo=bar
 echo $foo
 ```
 
-There are a bunch of "special" variables too:
+「特別な」変数もたくさんあります。
 
- - `$1` to `$9`: arguments to the script
- - `$0` name of the script itself
- - `$#` number of arguments
- - `$$` process ID of current shell
+ - `$1` から `$9`: スクリプトへの引数
+ - `$0`: スクリプト自身の名前
+ - `$#`: 引数の個数
+ - `$$`: 現在のシェルのプロセスID
 
-To only print directories
+ディレクトリだけを表示するには、次のようにします。
 
 ```bash
 for f in $(ls); do if test -d $f; then echo dir $f; fi; done
 ```
 
-More to unpack here:
+ここにも読み解くべきことがあります。
 
  - `if CONDITION; then BODY; fi`
-   - `CONDITION` is a command; if it returns with exit status 0
-     (success), then `BODY` is run.
-   - can also hook in an `else` or `elif`
-   - again, no curly braces, so `then` + `fi`
- - `test` is another program that provides various checks and
-   comparisons, and exits with 0 if they're true (`$?`)
-   - `man COMMAND` is your friend: `man test`
-   - can also be invoked with `[` + `]`: `[ -d $f ]`
-     - take a look at `man test` and `which "["`
+   - `CONDITION` はコマンドです。これが終了ステータス0(成功)で戻ると、`BODY` が実行されます。
+   - `else` や `elif` を組み込むこともできます
+   - ここでも波括弧がないので、`then` + `fi` を使います
+ - `test` は、さまざまなチェックや比較を提供する別のプログラムで、それらが真であれば0で終了します(`$?`)
+   - `man COMMAND` が頼りになります: `man test`
+   - `[` + `]` で呼び出すこともできます: `[ -d $f ]`
+     - `man test` と `which "["` を見てみましょう
 
-But wait! This is wrong! What if a file is called "My Documents"?
+でも待ってください! これは間違っています! 「My Documents」という名前のファイルがあったらどうなるでしょうか?
 
- - `for f in $(ls)` expands to `for f in My Documents`
- - first do the test on `My`, then on `Documents`
- - not what we wanted!
- - biggest source of bugs in shell scripts
+ - `for f in $(ls)` は `for f in My Documents` に展開されます
+ - まず `My` に対してテストを行い、次に `Documents` に対して行います
+ - 望んでいた動作ではありません!
+ - これがシェルスクリプトにおける最大のバグの原因です
 
-## Argument splitting
+## 引数の分割
 
-Bash splits arguments by whitespace; not always what you want!
+Bashは引数を空白で分割します。これは必ずしも望みどおりの動作ではありません!
 
- - need to use quoting to handle spaces in arguments
-   `for f in "My Documents"` would work correctly
- - same problem somewhere else -- do you see where?
-   `test -d $f`: if `$f` contains whitespace, `test` will error!
- - `echo` happens to be okay, because split + join by space
-   but what if a filename contains a newline?! turns into space!
- - quote all use of variables that you don't want split
- - but how do we fix our script above?
-   what do you think `for f in "$(ls)"` does?
+ - 引数に含まれるスペースを扱うには、クォートを使う必要があります。`for f in "My Documents"` なら正しく動作します
+ - 同じ問題が別の場所にもあります -- どこだか分かりますか? `test -d $f` です。`$f` に空白が含まれていると、`test` はエラーになります!
+ - `echo` はたまたま問題ありません。分割されたあと、スペースで連結されるからです。でも、ファイル名に改行が含まれていたらどうでしょう?! スペースに変わってしまいます!
+ - 分割されたくない変数は、使うときに必ずクォートしましょう
+ - では、上のスクリプトはどう直せばよいのでしょうか? `for f in "$(ls)"` は何をすると思いますか?
 
-Globbing is the answer!
+グロブがその答えです!
 
- - bash knows how to look for files using patterns:
-   - `*` any string of characters
-   - `?` any single character
-   - `{a,b,c}` any of these characters
- - `for f in *`: all files in this directory
- - when globbing, each matching file becomes its own argument
-   - still need to make sure to quote when _using_: `test -d "$f"`
- - can make advanced patterns:
-   - `for f in a*`: all files starting with `a` in the current directory
-   - `for f in foo/*.txt`: all `.txt` files in `foo`
-   - `for f in foo/*/p??.txt`
-     all three-letter text files starting with p in subdirs of `foo`
+ - bashは、パターンを使ってファイルを探す方法を知っています。
+   - `*` 任意の文字列
+   - `?` 任意の1文字
+   - `{a,b,c}` これらの文字のいずれか
+ - `for f in *`: このディレクトリにあるすべてのファイル
+ - グロブを使うと、マッチした各ファイルがそれぞれ独立した引数になります
+   - それでも、_使う_ ときには必ずクォートする必要があります: `test -d "$f"`
+ - 高度なパターンも作れます。
+   - `for f in a*`: カレントディレクトリにある、`a` で始まるすべてのファイル
+   - `for f in foo/*.txt`: `foo` にあるすべての `.txt` ファイル
+   - `for f in foo/*/p??.txt`: `foo` のサブディレクトリにある、pで始まる3文字の名前のテキストファイルすべて
 
-Whitespace issues don't stop there:
+空白の問題はこれで終わりではありません。
 
- - `if [ $foo = "bar" ]; then` -- see the issue?
- - what if `$foo` is empty? arguments to `[` are `=` and `bar`...
- - _can_ work around this with `[ x$foo = "xbar" ]`, but bleh
- - instead, use `[[`: bash built-in comparator that has special parsing
-   - also allows `&&` instead of `-a`, `||` over `-o`, etc.
+ - `if [ $foo = "bar" ]; then` -- 問題が分かりますか?
+ - `$foo` が空だったらどうなるでしょうか? `[` への引数は `=` と `bar` になってしまいます...
+ - `[ x$foo = "xbar" ]` で回避することも _できます_ が、あまり気持ちのよいものではありません
+ - 代わりに `[[` を使いましょう。これは特別な構文解析を行う、bash組み込みの比較演算子です
+   - `-a` の代わりに `&&`、`-o` の代わりに `||` なども使えます
 
-<!-- TODO: arrays? $@. ${array[@]} vs "${array[@]}". -->
+<!-- TODO: 配列? $@. ${array[@]} と "${array[@]}" の違い。 -->
 
-## Composability
+## 合成可能性
 
-Shell is powerful in part because of composability. Can chain multiple
-programs together rather than have one program that does everything.
+シェルが強力である理由のひとつは、合成可能性にあります。ひとつのプログラムにすべてをやらせるのではなく、複数のプログラムをつなぎ合わせることができるのです。
 
-The key character is `|` (pipe).
+鍵となる文字は `|`(パイプ)です。
 
- - `a | b` means run both `a` and `b`
-   send all output of `a` as input to `b`
-   print the output of `b`
+ - `a | b` は、`a` と `b` の両方を実行し、`a` のすべての出力を `b` への入力として送り、`b` の出力を表示する、という意味です
 
-All programs you launch ("processes") have three "streams":
+あなたが起動するすべてのプログラム(「プロセス」)は、3つの「ストリーム」を持っています。
 
- - `STDIN`: when the program reads input, it comes from here
- - `STDOUT`: when the program prints something, it goes here
- - `STDERR`: a 2nd output the program can choose to use
- - by default, `STDIN` is your keyboard, `STDOUT` and `STDERR` are both
-   your terminal. but you can change that!
-   - `a | b` makes `STDOUT` of `a` `STDIN` of `b`.
-   - also have:
-     - `a > foo` (`STDOUT` of `a` goes to the file `foo`)
-     - `a 2> foo` (`STDERR` of `a` goes to the file `foo`)
-     - `a < foo` (`STDIN` of `a` is read from the file `foo`)
-     - hint: `tail -f` will print a file as it's being written
- - why is this useful? lets you manipulate output of a program!
-   - `ls | grep foo`: all files that contain the word `foo`
-   - `ps | grep foo`: all processes that contain the word `foo`
-   - `journalctl | grep -i intel | tail -n5`:
-     last 5 system log messages with the word intel (case insensitive)
-   - `who | sendmail -t me@example.com`
-     send the list of logged-in users to `me@example.com`
-   - forms the basis for much data-wrangling, as we'll cover later
+ - `STDIN`: プログラムが入力を読むとき、入力はここから来ます
+ - `STDOUT`: プログラムが何かを出力するとき、出力はここに行きます
+ - `STDERR`: プログラムが必要に応じて使える2つ目の出力です
+ - デフォルトでは、`STDIN` はキーボードで、`STDOUT` と `STDERR` はどちらもターミナルです。しかし、これは変更できます!
+   - `a | b` は、`a` の `STDOUT` を `b` の `STDIN` にします。
+   - 次のようなものもあります。
+     - `a > foo`(`a` の `STDOUT` がファイル `foo` に行きます)
+     - `a 2> foo`(`a` の `STDERR` がファイル `foo` に行きます)
+     - `a < foo`(`a` の `STDIN` がファイル `foo` から読み込まれます)
+     - ヒント: `tail -f` は、ファイルが書き込まれるそばからその内容を表示します
+ - これがなぜ便利なのでしょうか? プログラムの出力を加工できるようになるからです!
+   - `ls | grep foo`: `foo` という語を含むすべてのファイル
+   - `ps | grep foo`: `foo` という語を含むすべてのプロセス
+   - `journalctl | grep -i intel | tail -n5`: intelという語(大文字・小文字を区別しない)を含むシステムログメッセージの最後の5件
+   - `who | sendmail -t me@example.com`: ログイン中のユーザーの一覧を `me@example.com` に送ります
+   - あとで扱うように、これは多くのデータラングリングの基礎になります
 
-Bash also provides a number of other ways to compose programs.
+Bashは、プログラムを合成する方法を他にもいくつか提供しています。
 
-You can group commands with `(a; b) | tac`: run `a`, then `b`, and send
-all their output to `tac`, which prints its input in reverse order.
+`(a; b) | tac` のようにコマンドをグループ化できます。これは `a` を実行し、次に `b` を実行して、それらすべての出力を `tac` に送ります。`tac` は入力を逆順に表示します。
 
-A lesser-known, but super useful one is _process substitution_.
-`b <(a)` will run `a`, generate a temporary file-name for its output
-stream, and pass that file-name to `b`. For example:
+あまり知られていないものの非常に便利なのが、_プロセス置換_ です。`b <(a)` は `a` を実行し、その出力ストリームのための一時的なファイル名を生成して、そのファイル名を `b` に渡します。たとえば次のコマンドです。
 
 ```bash
 diff <(journalctl -b -1 | head -n20) <(journalctl -b -2 | head -n20)
 ```
-will show you the difference between the first 20 lines of the last boot
-log and the one before that.
+これは、前回のブートログの最初の20行と、そのひとつ前のブートログの最初の20行との差分を表示します。
 
-<!-- TODO: exit codes? -->
+<!-- TODO: 終了コード? -->
 
-## Job and process control
+## ジョブとプロセスの制御
 
-What if you want to run longer-term things in the background?
+時間のかかる処理をバックグラウンドで実行したい場合は、どうすればよいでしょうか?
 
- - the `&` suffix runs a program "in the background"
-   - it will give you back your prompt immediately
-   - handy if you want to run two programs at the same time
-     like a server and client: `server & client`
-   - note that the running program still has your terminal as `STDOUT`!
-     try: `server > server.log & client`
- - see all such processes with `jobs`
-   - notice that it shows "Running"
- - bring it to the foreground with `fg %JOB` (no argument is latest)
- - if you want to background the current program: `^Z` + `bg` (Here `^Z` means pressing `Ctrl+Z`)
-   - `^Z` stops the current process and makes it a "job"
-   - `bg` runs the last job in the background (as if you did `&`)
- - background jobs are still tied to your current session, and exit if
-   you log out. `disown` lets you sever that connection. or use `nohup`.
- - `$!` is pid of last background process
+ - 末尾に `&` を付けると、プログラムを「バックグラウンドで」実行します
+   - プロンプトがすぐに戻ってきます
+   - サーバーとクライアントのように、2つのプログラムを同時に実行したいときに便利です: `server & client`
+   - 実行中のプログラムは、依然としてあなたのターミナルを `STDOUT` として使っていることに注意してください! 次を試してみましょう: `server > server.log & client`
+ - `jobs` で、そのようなプロセスをすべて確認できます
+   - 「Running」と表示されていることに注目してください
+ - `fg %JOB` でフォアグラウンドに戻せます(引数なしの場合は最新のジョブ)
+ - 現在のプログラムをバックグラウンドに回したい場合: `^Z` + `bg`(ここで `^Z` は `Ctrl+Z` を押すことを意味します)
+   - `^Z` は現在のプロセスを停止し、それを「ジョブ」にします
+   - `bg` は最後のジョブをバックグラウンドで実行します(`&` を付けた場合と同じように)
+ - バックグラウンドジョブは依然として現在のセッションに結び付いており、ログアウトすると終了します。`disown` を使うと、その結び付きを断ち切れます。あるいは `nohup` を使いましょう。
+ - `$!` は最後のバックグラウンドプロセスのpidです
 
-<!-- TODO: process output control (^S and ^Q)? -->
+<!-- TODO: プロセスの出力制御(^S と ^Q)? -->
 
-What about other stuff running on your computer?
+コンピュータ上で動いている他のものについては、どうでしょうか?
 
- - `ps` is your friend: lists running processes
-   - `ps -A`: print processes from all users (also `ps ax`)
-   - `ps` has *many* arguments: see `man ps`
- - `pgrep`: find processes by searching (like `ps -A | grep`)
-   - `pgrep -af`: search and display with arguments
- - `kill`: send a _signal_ to a process by ID (`pkill` by search + `-f`)
-   - signals tell a process to "do something"
-   - most common: `SIGKILL` (`-9` or `-KILL`): tell it to exit *now*
-     equivalent to `^\`
-   - also `SIGTERM` (`-15` or `-TERM`): tell it to exit gracefully
-     equivalent to `^C`
+ - `ps` が頼りになります: 実行中のプロセスを一覧表示します
+   - `ps -A`: すべてのユーザーのプロセスを表示します(`ps ax` でも可)
+   - `ps` には *たくさんの* 引数があります: `man ps` を参照してください
+ - `pgrep`: 検索によってプロセスを見つけます(`ps -A | grep` のようなもの)
+   - `pgrep -af`: 検索して、引数付きで表示します
+ - `kill`: IDを指定してプロセスに _シグナル_ を送ります(`pkill` は検索で指定 + `-f`)
+   - シグナルは、プロセスに「何かをする」よう伝えます
+   - もっとも一般的なもの: `SIGKILL`(`-9` または `-KILL`): *今すぐ* 終了するよう伝えます。`^\` と同等です
+   - `SIGTERM`(`-15` または `-TERM`)もあります: 行儀よく終了するよう伝えます。`^C` と同等です
 
 
-## Flags
+## フラグ
 
-Most command line utilities take parameters using **flags**. Flags usually come in short form (`-h`) and long form (`--help`). Usually running `CMD -h` or `man CMD` will give you a list of the flags the program takes.
-Short flags can usually be combined, running `rm -r -f` is equivalent to running `rm -rf` or `rm -fr`.
-Some common flags are a de facto standard and you will seem them in many applications:
+ほとんどのコマンドラインユーティリティは、**フラグ** を使ってパラメータを受け取ります。フラグにはたいてい、短い形式(`-h`)と長い形式(`--help`)があります。通常は、`CMD -h` または `man CMD` を実行すれば、そのプログラムが受け取るフラグの一覧が得られます。
+短いフラグはたいていまとめて指定でき、`rm -r -f` を実行するのは `rm -rf` や `rm -fr` を実行するのと同等です。
+よく使われるフラグの中には事実上の標準になっているものがあり、多くのアプリケーションで目にすることになります。
 
-* `-a` commonly refers to all files (i.e. also including those that start with a period)
-* `-f` usually refers to forcing something, like `rm -f`
-* `-h` displays the help for most commands
-* `-v` usually enables a verbose output
-* `-V` usually prints the version of the command
+* `-a` は一般に、すべてのファイル(つまり、ピリオドで始まるものも含む)を指します
+* `-f` は通常、`rm -f` のように何かを強制することを指します
+* `-h` は、ほとんどのコマンドでヘルプを表示します
+* `-v` は通常、詳細な出力を有効にします
+* `-V` は通常、コマンドのバージョンを表示します
 
-Also, a double dash `--` is used in built-in commands and many other commands to signify the end of command options, after which only positional parameters are accepted. So if you have a file called `-v` (which you can) and want to grep it `grep pattern -- -v` will work whereas `grep pattern -v` won't. In fact, one way to create such file is to do `touch -- -v`.
+また、二重ダッシュ `--` は、組み込みコマンドや他の多くのコマンドで、コマンドオプションの終わりを示すために使われます。これ以降は位置パラメータだけが受け付けられます。そのため、`-v` という名前のファイルがあって(そういうファイルは作れます)、それをgrepしたい場合、`grep pattern -- -v` はうまくいきますが、`grep pattern -v` はうまくいきません。実のところ、そのようなファイルを作る方法のひとつが `touch -- -v` です。
 
-## Exercises
+## 演習
 
-1. If you are completely new to the shell you may want to read a more comprehensive guide about it such as [BashGuide](https://mywiki.wooledge.org/BashGuide). If you want a more in-depth introduction [The Linux Command Line](https://linuxcommand.org/tlcl.php) is a good resource.
+1. シェルにまったく触れたことがない場合は、[BashGuide](https://mywiki.wooledge.org/BashGuide)のような、より包括的なガイドを読むとよいでしょう。さらに踏み込んだ入門がほしい場合は、[The Linux Command Line](https://linuxcommand.org/tlcl.php)が良い参考資料です。
 
-1. **PATH, which, type**
+1. **PATH、which、type**
 
-    We briefly discussed that the `PATH` environment variable is used to locate the programs that you run through the command line. Let's explore that a little further
-    - Run `echo $PATH` (or `echo $PATH | tr -s ':' '\n'` for pretty printing) and examine its contents, what locations are listed?
-    - The command `which` locates a program in the user PATH. Try running `which` for common commands like `echo`, `ls` or `mv`. Note that `which` is a bit limited since it does not understand shell aliases. Try running `type` and `command -v` for those same commands. How is the output different?
-    - Run `PATH=` and try running the previous commands again, some work and some don't, can you figure out why?
+    `PATH` 環境変数が、コマンドラインから実行するプログラムの場所を見つけるために使われることを簡単に説明しました。これをもう少し詳しく見てみましょう。
+    - `echo $PATH`(見やすく表示するなら `echo $PATH | tr -s ':' '\n'`)を実行して、その内容を調べてください。どんな場所が並んでいますか?
+    - `which` コマンドは、ユーザーのPATHの中からプログラムを探します。`echo`、`ls`、`mv` のようなよく使うコマンドに対して `which` を実行してみてください。なお、`which` はシェルのエイリアスを理解しないため、少し機能が限られています。同じコマンドに対して `type` と `command -v` も実行してみてください。出力はどう違いますか?
+    - `PATH=` を実行してから、先ほどのコマンドをもう一度実行してみてください。動くものと動かないものがありますが、なぜだか分かりますか?
 
-1. **Special Variables**
-    - What does the variable `~` expands as? What about `.`? And `..`?
-    - What does the variable `$?` do?
-    - What does the variable `$_` do?
-    - What does the variable `!!` expand to? What about `!!*`? And `!l`?
-    - Look for documentation for these options and familiarize yourself with them
+1. **特殊変数**
+    - 変数 `~` は何に展開されますか? `.` はどうでしょうか? `..` は?
+    - 変数 `$?` は何をしますか?
+    - 変数 `$_` は何をしますか?
+    - 変数 `!!` は何に展開されますか? `!!*` はどうでしょうか? `!l` は?
+    - これらのオプションのドキュメントを探して、慣れ親しんでおきましょう
 
 1. **xargs**
 
-    Sometimes piping doesn't quite work because the command being piped into does not expect the newline separated format. For example `file` command tells you properties of the file.
+    パイプ先のコマンドが改行区切りの形式を想定していないために、パイプがうまく機能しないことがあります。たとえば `file` コマンドは、ファイルの属性を教えてくれます。
 
-    Try running `ls | file` and `ls | xargs file`. What is `xargs` doing?
+    `ls | file` と `ls | xargs file` を実行してみてください。`xargs` は何をしているのでしょうか?
 
 
-1. **Shebang**
+1. **シェバン**
 
-    When you write a script you can specify to your shell what interpreter should be used to interpret the script by using a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line. Write a script called `hello` with the following contentsmake  it executable with `chmod +x hello`. Then execute it with `./hello`. Then remove the first line and execute it again? How is the shell using that first line?
+    スクリプトを書くとき、[シェバン](https://en.wikipedia.org/wiki/Shebang_(Unix))行を使うことで、そのスクリプトの解釈にどのインタプリタを使うべきかをシェルに指定できます。次の内容で `hello` というスクリプトを書き、`chmod +x hello` で実行可能にしてください。それから `./hello` で実行します。次に、1行目を削除してもう一度実行してみてください。シェルはこの1行目をどのように使っているのでしょうか?
 
 
     ```bash
@@ -287,12 +255,12 @@ Also, a double dash `--` is used in built-in commands and many other commands to
       print("Hello World!")
     ```
 
-    You will often see programs that have a shebang that looks like `#! usr/bin/env bash`. This is a more portable solution with it own set of [advantages and disadvantages](https://unix.stackexchange.com/questions/29608/why-is-it-better-to-use-usr-bin-env-name-instead-of-path-to-name-as-my). How is `env` different from `which`? What environment variable does `env` use to decide what program to run?
+    `#! usr/bin/env bash` のようなシェバンを持つプログラムをよく見かけるでしょう。これはより移植性の高い解決策ですが、それなりの[利点と欠点](https://unix.stackexchange.com/questions/29608/why-is-it-better-to-use-usr-bin-env-name-instead-of-path-to-name-as-my)があります。`env` は `which` とどう違うのでしょうか? `env` は、どのプログラムを実行するかを決めるためにどの環境変数を使いますか?
 
 
-1. **Pipes, process substitution, subshell**
+1. **パイプ、プロセス置換、サブシェル**
 
-    Create a script called `slow_seq.sh` with the following contents and do `chmod +x slow_seq.sh` to make it executable.
+    次の内容で `slow_seq.sh` というスクリプトを作り、`chmod +x slow_seq.sh` で実行可能にしてください。
 
     ```bash
       #! /usr/bin/env bash
@@ -303,20 +271,20 @@ Also, a double dash `--` is used in built-in commands and many other commands to
       done
     ```
 
-    There is a way in which pipes (and process substitution) differ from using subshell execution, i.e. `$()`. Run the following commands and observe the differences:
+    パイプ(およびプロセス置換)には、サブシェル実行、つまり `$()` を使う場合とは異なる点があります。次のコマンドを実行して、違いを観察してください。
 
     - `./slow_seq.sh | grep -P "[3-6]"`
     - `grep -P "[3-6]" <(./slow_seq.sh)`
     - `echo $(./slow_seq.sh) | grep -P "[3-6]"`
 
 
-1. **Misc**
-    - Try running `touch {a,b}{a,b}` then `ls` what did appear?
-    - Sometimes you want to keep STDIN and still pipe it to a file. Try running `echo HELLO | tee hello.txt`
-    - Try running `cat hello.txt > hello.txt ` what do you expect to happen? What does happen?
-    - Run `echo HELLO > hello.txt` and then run `echo WORLD >> hello.txt`. What are the contents of `hello.txt`? How is `>` different from `>>`?
-    - Run `printf "\e[38;5;81mfoo\e[0m\n"`. How was the output different? If you want to know more, search for ANSI color escape sequences.
-    - Run `touch a.txt` then run `^txt^log` what did bash do for you? In the same vein, run `fc`. What does it do?
+1. **その他**
+    - `touch {a,b}{a,b}` を実行してから `ls` を実行してみてください。何が現れましたか?
+    - STDINをそのまま流しつつ、ファイルにもパイプしたいことがあります。`echo HELLO | tee hello.txt` を実行してみてください
+    - `cat hello.txt > hello.txt ` を実行してみてください。何が起こると予想しますか? 実際には何が起こりますか?
+    - `echo HELLO > hello.txt` を実行してから、`echo WORLD >> hello.txt` を実行してください。`hello.txt` の内容はどうなっていますか? `>` は `>>` とどう違うのでしょうか?
+    - `printf "\e[38;5;81mfoo\e[0m\n"` を実行してください。出力はどう違いましたか? もっと知りたければ、ANSIカラーエスケープシーケンスについて検索してみてください。
+    - `touch a.txt` を実行してから `^txt^log` を実行してください。bashは何をしてくれましたか? 同じ流れで、`fc` も実行してみてください。これは何をするのでしょうか?
 
 {% comment %}
 
@@ -324,16 +292,16 @@ TODO
 
 1. **parallel**
 - set -e, set -x
-- traps
+- トラップ
 
 {% endcomment %}
 
-1. **Keyboard shortcuts**
+1. **キーボードショートカット**
 
-    As with any application you use frequently is worth familiarising yourself with its keyboard shortcuts. Type the following ones and try figuring out what they do and in what scenarios it might be convenient knowing about them. For some of them it might be easier searching online about what they do. (remember that `^X` means pressing `Ctrl+X`)
+    頻繁に使うアプリケーションはどれもそうですが、キーボードショートカットに慣れ親しんでおく価値があります。以下のものを入力して、それぞれが何をするのか、どんな場面で知っていると便利なのかを考えてみてください。ものによっては、何をするのかをオンラインで検索したほうが簡単かもしれません。(`^X` は `Ctrl+X` を押すことを意味するのを思い出してください)
 
-    - `^A`, `^E`
+    - `^A`、`^E`
     - `^R`
     - `^L`
-    - `^C`, `^\` and  `^D`
-    - `^U` and `^Y`
+    - `^C`、`^\`、`^D`
+    - `^U` と `^Y`

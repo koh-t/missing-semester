@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Dotfiles"
+title: "ドットファイル"
 presenter: Anish
 date: 2019-01-24
 order: 1
@@ -9,56 +9,35 @@ video:
   id: YSZBWWJw3mI
 ---
 
-Many programs are configured using plain-text files known as "dotfiles"
-(because the file names begin with a `.`, e.g. `~/.gitconfig`, so that they are
-hidden in the directory listing `ls` by default).
+多くのプログラムは、「ドットファイル」と呼ばれるプレーンテキストのファイルで設定されます(`~/.gitconfig` のようにファイル名が `.` で始まるためこう呼ばれます。そのおかげで、デフォルトでは `ls` のディレクトリ一覧に表示されず隠されます)。
 
-A lot of the tools you use probably have a lot of settings that can be tuned
-pretty finely. Often times, tools are customized with specialized languages,
-e.g. Vimscript for Vim or the shell's own language for a shell.
+あなたが使っているツールの多くには、おそらく、かなり細かく調整できる設定がたくさんあります。多くの場合、ツールは専用の言語でカスタマイズします。たとえばVimならVimscript、シェルならシェル自身の言語です。
 
-Customizing and adapting your tools to your preferred workflow will make you
-more productive. We advise you to invest time in customizing your tool yourself
-rather than cloning someone else's dotfiles from GitHub.
+ツールをカスタマイズして自分好みのワークフローに合わせれば、生産性が上がります。GitHubから他人のドットファイルをクローンするのではなく、時間をかけて自分でツールをカスタマイズすることをおすすめします。
 
-You probably have some dotfiles set up already. Some places to look:
+おそらく、すでにいくつかのドットファイルが設定されているはずです。次のような場所を見てみましょう。
 
 - `~/.bashrc`
 - `~/.emacs`
 - `~/.vim`
 - `~/.gitconfig`
 
-Some programs don't put the files under your home folder directly and instead they put them in a folder under `~/.config`.
+プログラムによっては、ホームフォルダの直下にファイルを置かず、代わりに `~/.config` 以下のフォルダに置くものもあります。
 
-Dotfiles are not exclusive to command line applications, for instance the [MPV](https://mpv.io/) video player can be configured editing files under `~/.config/mpv`
+ドットファイルはコマンドラインアプリケーションだけのものではありません。たとえば動画プレーヤーの[MPV](https://mpv.io/)は、`~/.config/mpv` 以下のファイルを編集して設定できます。
 
-# Learning to customize tools
+# ツールのカスタマイズを学ぶ
 
-You can learn about your tool's settings by reading online documentation or
-[man pages](https://en.wikipedia.org/wiki/Man_page). Another great way is to
-search the internet for blog posts about specific programs, where authors will
-tell you about their preferred customizations. Yet another way to learn about
-customizations is to look through other people's dotfiles: you can find tons of
-[dotfiles
-repositories](https://github.com/search?o=desc&q=dotfiles&s=stars&type=Repositories)
-on GitHub --- see the most popular one
-[here](https://github.com/mathiasbynens/dotfiles) (we advise you not to blindly
-copy configurations though).
+ツールの設定については、オンラインのドキュメントや[manページ](https://en.wikipedia.org/wiki/Man_page)を読んで学べます。もうひとつの優れた方法は、特定のプログラムについてのブログ記事をインターネットで検索することです。著者が自分のお気に入りのカスタマイズを紹介してくれています。さらに別の方法として、他の人のドットファイルを覗いてみるという手もあります。GitHubには膨大な数の[dotfilesリポジトリ](https://github.com/search?o=desc&q=dotfiles&s=stars&type=Repositories)があります --- もっとも人気のあるものは[こちら](https://github.com/mathiasbynens/dotfiles)です(ただし、設定をやみくもにコピーするのはおすすめしません)。
 
-# Organization
+# 整理の仕方
 
-How should you organize your dotfiles? They should be in their own folder,
-under version control, and **symlinked** into place using a script. This has
-the benefits of:
+ドットファイルはどのように整理すべきでしょうか?専用のフォルダにまとめてバージョン管理下に置き、スクリプトを使って所定の場所に**シンボリックリンク**を張るのがよいでしょう。これには次のような利点があります。
 
-- **Easy installation**: if you log in to a new machine, applying your
-customizations will only take a minute
-- **Portability**: your tools will work the same way everywhere
-- **Synchronization**: you can update your dotfiles anywhere and keep them all
-in sync
-- **Change tracking**: you're probably going to be maintaining your dotfiles
-for your entire programming career, and version history is nice to have for
-long-lived projects
+- **簡単なインストール**: 新しいマシンにログインしたとき、自分のカスタマイズの適用が1分で済みます
+- **ポータビリティ**: どこでもツールが同じように動作します
+- **同期**: どこにいてもドットファイルを更新でき、すべてを同期した状態に保てます
+- **変更の追跡**: ドットファイルはおそらくプログラマー人生を通してメンテナンスし続けることになるので、長寿命のプロジェクトにはバージョン履歴があると心強いものです
 
 ```shell
 cd ~/src
@@ -80,24 +59,19 @@ git add bashrc install
 git commit -m 'Initial commit'
 ```
 
-# Advanced topics
+# 発展的なトピック
 
-## Machine-specific customizations
+## マシン固有のカスタマイズ
 
-Most of the time, you'll want the same configuration across machines, but
-sometimes, you'll want a small delta on a particular machine. Here are a couple
-ways you can handle this situation:
+たいていの場合、どのマシンでも同じ設定を使いたいものですが、特定のマシンでだけ少し違う設定にしたいこともあります。この状況に対処する方法をいくつか紹介します。
 
-### Branch per machine
+### マシンごとのブランチ
 
-Use version control to maintain a branch per machine. This approach is
-logically straightforward but can be pretty heavyweight.
+バージョン管理を使って、マシンごとにブランチを維持します。このやり方は論理的にはわかりやすいのですが、かなり手間がかかることがあります。
 
-### If statements
+### if文
 
-If the configuration file supports it, use the equivalent of if-statements to
-apply machine specific customizations. For example, your shell could have something
-like:
+設定ファイルがサポートしていれば、if文に相当するものを使ってマシン固有のカスタマイズを適用します。たとえば、シェルでは次のように書けます。
 
 ```shell
 if [[ "$(uname)" == "Linux" ]]; then {do_something else}; fi
@@ -109,21 +83,18 @@ if [[ "$(uname)" == "Darwin" ]]; then {do_something}; fi
 if [[ "$(hostname)" == "myServer" ]]; then {do_something}; fi
 ```
 
-### Includes
+### インクルード
 
-If the configuration file supports it, make use of includes. For example,
-a `~/.gitconfig` can have a setting:
+設定ファイルがサポートしていれば、インクルードを活用します。たとえば、`~/.gitconfig` には次のような設定を書けます。
 
 ```
 [include]
     path = ~/.gitconfig_local
 ```
 
-And then on each machine, `~/.gitconfig_local` can contain machine-specific
-settings. You could even track these in a separate repository for
-machine-specific settings.
+そして、各マシンの `~/.gitconfig_local` にマシン固有の設定を書いておけます。これらをマシン固有の設定用の別のリポジトリで管理することもできます。
 
-This idea is also useful if you want different programs to share some configurations. For instance if you want both `bash` and `zsh` to share the same set of aliases you can write them under `.aliases` and have the following block in both.
+この考え方は、異なるプログラムのあいだで設定の一部を共有したい場合にも便利です。たとえば、`bash` と `zsh` の両方で同じエイリアスを共有したければ、エイリアスを `.aliases` に書いておき、両方に次のブロックを入れておけばよいのです。
 
 ```bash
 # Test if ~/.aliases exists and source it
@@ -132,34 +103,22 @@ if [ -f ~/.aliases ]; then
 fi
 ```
 
-# Resources
+# 参考資料
 
-- Your instructors' dotfiles:
-  [Anish](https://github.com/anishathalye/dotfiles),
-  [Jon](https://github.com/jonhoo/configs),
-  [Jose](https://github.com/jjgo/dotfiles)
-- [GitHub does dotfiles](https://dotfiles.github.io/): dotfile frameworks,
-utilities, examples, and tutorials
-- [Shell startup
-  scripts](https://web.archive.org/web/20260329133158/https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html): an
-  explanation of the different configuration files used for your shell
+- 講師たちのドットファイル: [Anish](https://github.com/anishathalye/dotfiles)、[Jon](https://github.com/jonhoo/configs)、[Jose](https://github.com/jjgo/dotfiles)
+- [GitHub does dotfiles](https://dotfiles.github.io/): ドットファイルのフレームワーク、ユーティリティ、例、チュートリアル
+- [シェルの起動スクリプト](https://web.archive.org/web/20260329133158/https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html): シェルで使われるさまざまな設定ファイルの解説
 
-# Exercises
+# 演習
 
-1. Create a folder for your dotfiles and set up [version
-   control](/2019/version-control/).
+1. ドットファイル用のフォルダを作り、[バージョン管理](/2019/version-control/)をセットアップしてください。
 
-1. Add a configuration for at least one program, e.g. your shell, with some
-   customization (to start off, it can be something as simple as customizing
-   your shell prompt by setting `$PS1`).
+1. 少なくとも1つのプログラム(たとえばシェル)の設定を、何らかのカスタマイズ付きで追加してください(手始めとしては、`$PS1` を設定してシェルのプロンプトをカスタマイズするような簡単なものでかまいません)。
 
-1. Set up a method to install your dotfiles quickly (and without manual effort)
-   on a new machine. This can be as simple as a shell script that calls `ln -s`
-   for each file, or you could use a [specialized
-   utility](https://dotfiles.github.io/utilities/).
+1. 新しいマシンにドットファイルをすばやく(かつ手作業なしで)インストールする方法をセットアップしてください。各ファイルに対して `ln -s` を呼ぶだけの単純なシェルスクリプトでもよいですし、[専用のユーティリティ](https://dotfiles.github.io/utilities/)を使ってもかまいません。
 
-1. Test your installation script on a fresh virtual machine.
+1. まっさらな仮想マシンで、インストールスクリプトをテストしてください。
 
-1. Migrate all of your current tool configurations to your dotfiles repository.
+1. 現在使っているすべてのツールの設定を、ドットファイルのリポジトリに移行してください。
 
-1. Publish your dotfiles on GitHub.
+1. 自分のドットファイルをGitHubで公開してください。

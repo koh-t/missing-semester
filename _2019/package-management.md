@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Package Management and Dependency Management"
+title: "パッケージ管理と依存関係管理"
 presenter: Anish
 date: 2019-01-29
 order: 2
@@ -9,30 +9,19 @@ video:
   id: tgvt473T8xA
 ---
 
-Software usually builds on (a collection of) other software, which necessitates
-dependency management.
+ソフトウェアはたいてい、他のソフトウェア(の集まり)の上に構築されるので、依存関係の管理が必要になります。
 
-Package/dependency management programs are language-specific, but many share
-common ideas.
+パッケージ/依存関係の管理プログラムは言語ごとに異なりますが、多くは共通の考え方を持っています。
 
-# Package repositories
+# パッケージリポジトリ
 
-Packages are hosted in _package repositories_. There are different repositories
-for different languages (and sometimes multiple for a particular language),
-such as [PyPI](https://pypi.org/) for Python, [RubyGems](https://rubygems.org/)
-for Ruby, and [crates.io](https://crates.io/) for Rust. They generally store
-software (source code and sometimes pre-compiled binaries for specific
-platforms) for all versions of a package.
+パッケージは _パッケージリポジトリ_ でホストされています。言語ごとに異なるリポジトリがあり(ひとつの言語に複数あることもあります)、たとえばPythonには[PyPI](https://pypi.org/)、Rubyには[RubyGems](https://rubygems.org/)、Rustには[crates.io](https://crates.io/)があります。これらは一般に、パッケージのすべてのバージョンについてソフトウェア(ソースコードと、場合によっては特定のプラットフォーム向けにコンパイル済みのバイナリ)を保存しています。
 
-# Semantic versioning
+# セマンティックバージョニング
 
-Software evolves over time, and we need a way to refer to software versions.
-Some simple ways could be to refer to software by a sequence number or a commit
-hash, but we can do better in terms of communicating more information: using
-version numbers.
+ソフトウェアは時間とともに進化するので、ソフトウェアのバージョンを指し示す方法が必要です。単純な方法としては、連番やコミットハッシュでソフトウェアを指し示すこともできますが、より多くの情報を伝えるという点では、もっと良い方法があります。バージョン番号を使うことです。
 
-There are many approaches; one popular one is [Semantic
-Versioning](https://semver.org/):
+やり方はたくさんありますが、よく使われているもののひとつが[セマンティックバージョニング](https://semver.org/)です。
 
 ```
 x.y.z
@@ -42,69 +31,38 @@ x.y.z
 +----- major
 ```
 
-Increment **major** version when you make incompatible API changes.
+互換性のないAPIの変更を行ったときは、**メジャー**バージョンを上げます。
 
-Increment **minor** version when you add functionality in a backward-compatible manner.
+後方互換性を保ったまま機能を追加したときは、**マイナー**バージョンを上げます。
 
-Increment **patch** when you make backward-compatible bug fixes.
+後方互換性を保ったバグ修正を行ったときは、**パッチ**を上げます。
 
-For example, if you depend on a feature introduced in `v1.2.0` of some
-software, then you can install `v1.x.y` for any minor version `x >= 2` and any
-patch version `y`. You need to install major version `1` (because `2` can
-introduce backward-incompatible changes), and you need to install a minor
-version `>= 2` (because you depend on a feature introduced in that minor
-version). You can use any newer minor version or patch version because
-they should not introduce any backward-incompatible changes.
+たとえば、あるソフトウェアの `v1.2.0` で導入された機能に依存している場合、任意のマイナーバージョン `x >= 2` と任意のパッチバージョン `y` について、`v1.x.y` をインストールできます。メジャーバージョンは `1` をインストールする必要があり(`2` では後方互換性のない変更が導入されうるため)、マイナーバージョンは `>= 2` のものをインストールする必要があります(そのマイナーバージョンで導入された機能に依存しているため)。それより新しいマイナーバージョンやパッチバージョンであれば、どれを使ってもかまいません。それらは後方互換性のない変更を導入しないはずだからです。
 
-# Lock files
+# ロックファイル
 
-In addition to specifying versions, it can be nice to enforce that the
-_contents_ of the dependency have not changed to prevent tampering. Some tools
-use _lock files_ to specify cryptographic hashes of dependencies (along with
-versions) that are checked on package install.
+バージョンを指定することに加えて、改ざんを防ぐために、依存関係の _中身_ が変わっていないことを強制できると便利です。一部のツールは _ロックファイル_ を使って、依存関係の暗号学的ハッシュを(バージョンとともに)指定し、パッケージのインストール時にそれを検査します。
 
-# Specifying versions
+# バージョンの指定
 
-Tools often let you specify versions in multiple ways, such as:
+ツールでは多くの場合、次のように複数の方法でバージョンを指定できます。
 
-- exact version, e.g. `2.3.12`
-- minimum major version, e.g. `>= 2`
-- specific major version and minimum patch version, e.g. `>= 2.3, <3.0`
+- 正確なバージョン。例: `2.3.12`
+- 最小のメジャーバージョン。例: `>= 2`
+- 特定のメジャーバージョンと最小のパッチバージョン。例: `>= 2.3, <3.0`
 
-Specifying an exact version can be advantageous to avoid different behaviors
-based on installed dependencies (this shouldn't happen if all dependencies
-faithfully follow semver, but sometimes people make mistakes). Specifying a
-minimum requirement has the advantage of allowing bug fixes to be installed
-(e.g. patch upgrades).
+正確なバージョンを指定することには、インストールされた依存関係によって挙動が変わるのを避けられるという利点があります(すべての依存関係がsemverに忠実に従っていれば起こらないはずのことですが、人は間違えることもあります)。最小要件を指定することには、バグ修正(たとえばパッチのアップグレード)をインストールできるという利点があります。
 
-# Dependency resolution
+# 依存関係の解決
 
-Package managers use various dependency resolution algorithms to satisfy
-dependency requirements. This often gets challenging with complex dependencies
-(e.g. a package can be indirectly depended on by multiple top-level
-dependencies, and different versions could be required). Different package
-managers have different levels of sophistication in their dependency
-resolution, but it's something to be aware of: you may need to understand this
-if you are debugging dependencies.
+パッケージマネージャは、依存関係の要件を満たすために、さまざまな依存関係解決アルゴリズムを使います。依存関係が複雑になると、これはしばしば難しくなります(たとえば、あるパッケージが複数のトップレベルの依存関係から間接的に依存されていて、それぞれ異なるバージョンが要求されることがあります)。依存関係解決の洗練度はパッケージマネージャによって異なりますが、これは知っておくべきことです。依存関係をデバッグするときに、これを理解する必要が出てくるかもしれません。
 
-# Virtual environments
+# 仮想環境
 
-If you're developing multiple software projects, they may depend on different
-versions of a particular piece of software. Sometimes, your build tool will
-handle this naturally (e.g. by building a static binary).
+複数のソフトウェアプロジェクトを開発している場合、それらが特定のソフトウェアの異なるバージョンに依存していることがあります。ビルドツールがこれを自然に処理してくれることもあります(たとえば、静的バイナリをビルドすることによって)。
 
-For other build tools and programming languages, one approach is handling this
-with virtual environments (e.g. with the
-[virtualenv](https://docs.python-guide.org/dev/virtualenvs/) tool for Python).
-Instead of installing dependencies system-wide, you can install dependencies
-per-project in a virtual environment, and _activate_ the virtual environment
-that you want to use when you're working on a specific project.
+それ以外のビルドツールやプログラミング言語では、仮想環境を使って対処するのがひとつのやり方です(たとえばPythonでは[virtualenv](https://docs.python-guide.org/dev/virtualenvs/)ツールを使います)。依存関係をシステム全体にインストールする代わりに、プロジェクトごとに仮想環境へ依存関係をインストールし、特定のプロジェクトで作業するときに、使いたい仮想環境を _有効化(activate)_ できます。
 
-# Vendoring
+# ベンダリング
 
-Another very different approach to dependency management is _vendoring_.
-Instead of using a dependency manager or build tool to fetch software, you copy
-the entire source code for a dependency into your software's repository. This
-has the advantage that you're always building against the same version of the
-dependency and you don't need to rely on a package repository, but it is more
-effort to upgrade dependencies.
+依存関係管理へのまったく別のアプローチが _ベンダリング_ です。依存関係マネージャやビルドツールを使ってソフトウェアを取得する代わりに、依存関係のソースコード全体を自分のソフトウェアのリポジトリにコピーします。これには、常に同じバージョンの依存関係に対してビルドでき、パッケージリポジトリに頼る必要がないという利点がありますが、依存関係をアップグレードする手間は大きくなります。

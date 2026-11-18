@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Course Overview + The Shell"
+title: "コース概要 + シェル"
 description: >
-  Learn about the motivation for this class, and get started with the shell.
+  この授業が生まれた背景を知り、シェルを使い始めましょう。
 thumbnail: /static/assets/thumbnails/2020/lec1.png
 date: 2020-01-13
 ready: true
@@ -11,92 +11,41 @@ video:
   id: Z56Jmr9Z34Q
 ---
 
-# Motivation
+# モチベーション
 
-As computer scientists, we know that computers are great at aiding in
-repetitive tasks. However, far too often, we forget that this applies
-just as much to our _use_ of the computer as it does to the computations
-we want our programs to perform. We have a vast range of tools
-available at our fingertips that enable us to be more productive and
-solve more complex problems when working on any computer-related
-problem. Yet many of us utilize only a small fraction of those tools; we
-only know enough magical incantations by rote to get by, and blindly
-copy-paste commands from the internet when we get stuck.
+コンピュータ科学者である私たちは、コンピュータが反復的な作業の手助けを得意としていることを知っています。しかし、それがプログラムに実行させたい計算だけでなく、私たち自身のコンピュータの _使い方_ にも同じように当てはまることを、あまりにも頻繁に忘れてしまいます。コンピュータに関わるあらゆる問題に取り組むとき、生産性を高め、より複雑な問題を解決できるようにしてくれる膨大なツール群が、私たちの手の届くところにあります。それにもかかわらず、多くの人はそのツールのほんの一部しか活用していません。なんとかやり過ごせる程度の魔法の呪文を丸暗記しているだけで、行き詰まるとインターネットからコマンドを盲目的にコピペしてしまうのです。
 
-This class is an attempt to address this.
+この授業は、この問題に取り組む試みです。
 
-We want to teach you how to make the most of the tools you know, show
-you new tools to add to your toolbox, and hopefully instill in you some
-excitement for exploring (and perhaps building) more tools on your own.
-This is what we believe to be the missing semester from most Computer
-Science curricula.
+私たちは、すでに知っているツールを最大限に活用する方法を教え、ツールボックスに加えるべき新しいツールを紹介し、そして願わくは、自分自身でさらに多くのツールを探求する(そしておそらくは作る)ことへのワクワク感を植え付けたいと思っています。これこそが、ほとんどのコンピュータサイエンスのカリキュラムから欠けている学期(missing semester)だと私たちは考えています。
 
-# Class structure
+# 授業の構成
 
-The class consists of 11 1-hour lectures, each one centering on a
-[particular topic](/2020/). The lectures are largely independent,
-though as the semester goes on we will presume that you are familiar
-with the content from the earlier lectures. We have lecture notes
-online, but there will be a lot of content covered in class (e.g. in the
-form of demos) that may not be in the notes. We will be recording
-lectures and posting the recordings online.
+この授業は、それぞれが[特定のトピック](/2020/)を中心とする11回の1時間の講義で構成されています。各講義はおおむね独立していますが、学期が進むにつれて、それ以前の講義の内容には慣れているものとして進めていきます。講義ノートはオンラインで公開していますが、授業中に扱う内容(たとえばデモなど)の中には、ノートに載っていないものもたくさんあるでしょう。講義は録画し、その録画をオンラインに公開する予定です。
 
-We are trying to cover a lot of ground over the course of just 11 1-hour
-lectures, so the lectures are fairly dense. To allow you some time to
-get familiar with the content at your own pace, each lecture includes a
-set of exercises that guide you through the lecture's key points. After
-each lecture, we are hosting office hours where we will be present to
-help answer any questions you might have. If you are attending the class
-online, you can send us questions at
-[missing-semester@mit.edu](mailto:missing-semester@mit.edu).
+わずか11回の1時間講義で多くの内容をカバーしようとしているため、講義はかなり密度が高くなっています。自分のペースで内容に慣れる時間を取れるよう、各講義には、その講義の要点をたどれる演習を用意しています。各講義のあとにはオフィスアワーを設け、私たちがその場にいて、どんな質問にもお答えします。オンラインで受講している場合は、[missing-semester@mit.edu](mailto:missing-semester@mit.edu)宛に質問を送ってください。
 
-Due to the limited time we have, we won't be able to cover all the tools
-in the same level of detail a full-scale class might. Where possible, we
-will try to point you towards resources for digging further into a tool
-or topic, but if something particularly strikes your fancy, don't
-hesitate to reach out to us and ask for pointers!
+時間が限られているため、本格的な授業のようにすべてのツールを同じ詳しさで扱うことはできません。可能な限り、ツールやトピックをさらに深掘りするためのリソースを紹介するようにしますが、特に興味を惹かれるものがあれば、遠慮なく私たちに連絡して手がかりを尋ねてください!
 
-# Topic 1: The Shell
+# トピック1: シェル
 
-## What is the shell?
+## シェルとは何か?
 
-Computers these days have a variety of interfaces for giving them
-commands; fanciful graphical user interfaces, voice interfaces, and
-even AR/VR are everywhere. These are great for 80% of use-cases, but
-they are often fundamentally restricted in what they allow you to do —
-you cannot press a button that isn't there or give a voice command that
-hasn't been programmed. To take full advantage of the tools your
-computer provides, we have to go old-school and drop down to a textual
-interface: The Shell.
+最近のコンピュータには、命令を与えるためのさまざまなインターフェースがあります。華やかなグラフィカルユーザーインターフェース、音声インターフェース、さらにはAR/VRまで、至るところにあります。これらはユースケースの80%には最適ですが、できることが根本的に制限されていることがよくあります。存在しないボタンを押すことはできませんし、プログラムされていない音声コマンドを与えることもできません。コンピュータが提供するツールを最大限に活用するには、昔ながらの方法に立ち返り、テキストベースのインターフェースまで降りていく必要があります。それがシェルです。
 
-Nearly all platforms you can get your hands on have a shell in one form or
-another, and many of them have several shells for you to choose from.
-While they may vary in the details, at their core they are all roughly
-the same: they allow you to run programs, give them input, and inspect
-their output in a semi-structured way.
+手に入るほぼすべてのプラットフォームには、何らかの形でシェルが搭載されており、その多くでは複数のシェルから選ぶことができます。細部は異なるかもしれませんが、その核心はどれもほぼ同じです。プログラムを実行し、入力を与え、その出力を半構造化された形で調べられるようにしてくれるのです。
 
-In this lecture, we will focus on the Bourne Again SHell, or "bash" for
-short. This is one of the most widely used shells, and its syntax is
-similar to what you will see in many other shells. To open a shell
-_prompt_ (where you can type commands), you first need a _terminal_.
-Your device probably shipped with one installed, or you can install one
-fairly easily.
+この講義では、Bourne Again SHell、略して「bash」に焦点を当てます。これは最も広く使われているシェルのひとつで、その構文は他の多くのシェルで見かけるものとよく似ています。シェルの _プロンプト_(コマンドを入力する場所)を開くには、まず _ターミナル_ が必要です。お使いのデバイスにはおそらく最初からインストールされているか、かなり簡単にインストールできます。
 
-## Using the shell
+## シェルを使う
 
-When you launch your terminal, you will see a _prompt_ that often looks
-a little like this:
+ターミナルを起動すると、多くの場合こんな感じの _プロンプト_ が表示されます。
 
 ```console
 missing:~$
 ```
 
-This is the main textual interface to the shell. It tells you that you
-are on the machine `missing` and that your "current working directory",
-or where you currently are, is `~` (short for "home"). The `$` tells you
-that you are not the root user (more on that later). At this prompt you
-can type a _command_, which will then be interpreted by the shell. The
-most basic command is to execute a program:
+これがシェルへの主要なテキストインターフェースです。これは、あなたが `missing` というマシン上にいること、そして「カレントワーキングディレクトリ」、つまり現在いる場所が `~`(「ホーム」の略)であることを示しています。`$` は、あなたがrootユーザーではないことを示しています(これについては後で詳しく説明します)。このプロンプトで _コマンド_ を入力すると、それがシェルによって解釈されます。最も基本的なコマンドは、プログラムを実行することです。
 
 ```console
 missing:~$ date
@@ -104,34 +53,16 @@ Fri 10 Jan 2020 11:49:31 AM EST
 missing:~$
 ```
 
-Here, we executed the `date` program, which (perhaps unsurprisingly)
-prints the current date and time. The shell then asks us for another
-command to execute. We can also execute a command with _arguments_:
+ここでは `date` プログラムを実行しました。これは(おそらく驚くことではありませんが)現在の日付と時刻を表示します。その後、シェルは次に実行するコマンドを尋ねてきます。コマンドは _引数_ とともに実行することもできます。
 
 ```console
 missing:~$ echo hello
 hello
 ```
 
-In this case, we told the shell to execute the program `echo` with the
-argument `hello`. The `echo` program simply prints out its arguments.
-The shell parses the command by splitting it by whitespace, and then
-runs the program indicated by the first word, supplying each subsequent
-word as an argument that the program can access. If you want to provide
-an argument that contains spaces or other special characters (e.g., a
-directory named "My Photos"), you can either quote the argument with `'`
-or `"` (`"My Photos"`), or escape just the relevant characters with `\`
-(`My\ Photos`).
+この場合、シェルに `echo` プログラムを引数 `hello` とともに実行するよう指示しました。`echo` プログラムは単に自分の引数を表示します。シェルはコマンドを空白で区切って解析し、最初の単語が示すプログラムを実行して、続く各単語をそのプログラムがアクセスできる引数として渡します。空白やその他の特殊文字を含む引数(たとえば "My Photos" という名前のディレクトリ)を渡したい場合は、引数を `'` または `"` でクォートする(`"My Photos"`)か、該当する文字だけを `\` でエスケープします(`My\ Photos`)。
 
-But how does the shell know how to find the `date` or `echo` programs?
-Well, the shell is a programming environment, just like Python or Ruby,
-and so it has variables, conditionals, loops, and functions (next
-lecture!). When you run commands in your shell, you are really writing a
-small bit of code that your shell interprets. If the shell is asked to
-execute a command that doesn't match one of its programming keywords, it
-consults an _environment variable_ called `$PATH` that lists which
-directories the shell should search for programs when it is given a
-command:
+しかし、シェルはどうやって `date` や `echo` のようなプログラムの場所を知るのでしょうか? 実は、シェルはPythonやRubyと同じようなプログラミング環境であり、変数、条件分岐、ループ、関数を備えています(次の講義で扱います!)。シェルでコマンドを実行するとき、あなたは実はシェルが解釈する小さなコードを書いているのです。シェルは、自身のプログラミング上のキーワードのどれにも一致しないコマンドの実行を求められると、`$PATH` という _環境変数_ を参照します。これは、コマンドが与えられたときにシェルがプログラムを探すべきディレクトリの一覧です。
 
 
 ```console
@@ -143,26 +74,11 @@ missing:~$ /bin/echo $PATH
 /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ```
 
-When we run the `echo` command, the shell sees that it should execute
-the program `echo`, and then searches through the `:`-separated list of
-directories in `$PATH` for a file by that name. When it finds it, it
-runs it (assuming the file is _executable_; more on that later). We can
-find out which file is executed for a given program name using the
-`which` program. We can also bypass `$PATH` entirely by giving the
-_path_ to the file we want to execute.
+`echo` コマンドを実行すると、シェルは `echo` というプログラムを実行すべきだと判断し、`$PATH` に列挙された `:` 区切りのディレクトリ一覧の中から、その名前のファイルを探します。見つかると、それを実行します(そのファイルが _実行可能_ であればですが。これについては後述します)。あるプログラム名に対してどのファイルが実行されるのかは、`which` プログラムで調べられます。また、実行したいファイルへの _パス_ を直接指定することで、`$PATH` を完全に迂回することもできます。
 
-## Navigating in the shell
+## シェルの中を移動する
 
-A path on the shell is a delimited list of directories; separated by `/`
-on Linux and macOS and `\` on Windows. On Linux and macOS, the path `/`
-is the "root" of the file system, under which all directories and files
-lie, whereas on Windows there is one root for each disk partition (e.g.,
-`C:\`). We will generally assume that you are using a Linux filesystem
-in this class. A path that starts with `/` is called an _absolute_ path.
-Any other path is a _relative_ path. Relative paths are relative to the
-current working directory, which we can see with the `pwd` command and
-change with the `cd` command. In a path, `.` refers to the current
-directory, and `..` to its parent directory:
+シェルにおけるパスとは、区切り文字で区切られたディレクトリの並びです。LinuxとmacOSでは `/` で、Windowsでは `\` で区切られます。LinuxとmacOSでは、パス `/` はファイルシステムの「ルート」であり、すべてのディレクトリとファイルがその下にあります。一方Windowsでは、ディスクのパーティションごとにルートがひとつずつあります(たとえば `C:\`)。この授業では基本的に、Linuxのファイルシステムを使っているものとして話を進めます。`/` で始まるパスは _絶対_ パスと呼ばれます。それ以外のパスはすべて _相対_ パスです。相対パスはカレントワーキングディレクトリからの相対で解釈されます。カレントワーキングディレクトリは `pwd` コマンドで確認でき、`cd` コマンドで変更できます。パスの中では、`.` はカレントディレクトリを、`..` はその親ディレクトリを指します。
 
 ```console
 missing:~$ pwd
@@ -183,15 +99,11 @@ missing:~$ ../../bin/echo hello
 hello
 ```
 
-Notice that our shell prompt kept us informed about what our current
-working directory was. You can configure your prompt to show you all
-sorts of useful information, which we will cover in a later lecture.
+シェルのプロンプトが、カレントワーキングディレクトリがどこなのかを常に知らせてくれていたことに注目してください。プロンプトは、あらゆる種類の便利な情報を表示するように設定できます。これについては後の講義で扱います。
 
-In general, when we run a program, it will operate in the current
-directory unless we tell it otherwise. For example, it will usually
-search for files there, and create new files there if it needs to.
+一般に、プログラムを実行すると、特に指定しない限りそのプログラムはカレントディレクトリを対象に動作します。たとえば、通常はそこでファイルを探し、必要であればそこに新しいファイルを作成します。
 
-To see what lives in a given directory, we use the `ls` command:
+あるディレクトリの中に何があるのかを見るには、`ls` コマンドを使います。
 
 ```console
 missing:~$ ls
@@ -208,12 +120,7 @@ home
 ...
 ```
 
-Unless a directory is given as its first argument, `ls` will print the
-contents of the current directory. Most commands accept flags and
-options (flags with values) that start with `-` to modify their
-behavior. Usually, running a program with the `-h` or `--help` flag
-will print some help text that tells you what flags
-and options are available. For example, `ls --help` tells us:
+最初の引数としてディレクトリが与えられない限り、`ls` はカレントディレクトリの内容を表示します。ほとんどのコマンドは、挙動を変更するための、`-` で始まるフラグやオプション(値を伴うフラグ)を受け付けます。通常、プログラムを `-h` または `--help` フラグ付きで実行すると、どんなフラグやオプションが使えるのかを教えてくれるヘルプテキストが表示されます。たとえば、`ls --help` は次のように教えてくれます。
 
 ```
   -l                         use a long listing format
@@ -224,45 +131,21 @@ missing:~$ ls -l /home
 drwxr-xr-x 1 missing  users  4096 Jun 15  2019 missing
 ```
 
-This gives us a bunch more information about each file or directory
-present. First, the `d` at the beginning of the line tells us that
-`missing` is a directory. Then follow three groups of three characters
-(`rwx`). These indicate what permissions the owner of the file
-(`missing`), the owning group (`users`), and everyone else respectively
-have on the relevant item. A `-` indicates that the given principal does
-not have the given permission. Above, only the owner is allowed to
-modify (`w`) the `missing` directory (i.e., add/remove files in it). To
-enter a directory, a user must have "search" (represented by "execute":
-`x`) permissions on that directory (and its parents). To list its
-contents, a user must have read (`r`) permissions on that directory. For
-files, the permissions are as you would expect. Notice that nearly all
-the files in `/bin` have the `x` permission set for the last group,
-"everyone else", so that anyone can execute those programs.
+これにより、そこにある各ファイルやディレクトリについて、さらに多くの情報が得られます。まず、行の先頭の `d` は、`missing` がディレクトリであることを示しています。その後に、3文字のグループ(`rwx`)が3つ続きます。これらは、ファイルの所有者(`missing`)、所有グループ(`users`)、それ以外の全員が、その対象に対してそれぞれどのようなパーミッションを持っているかを示しています。`-` は、その主体が該当するパーミッションを持っていないことを示します。上の例では、所有者だけが `missing` ディレクトリを変更する(`w`)こと(つまり、その中のファイルを追加・削除すること)を許可されています。ディレクトリに入るには、ユーザーはそのディレクトリ(およびその親ディレクトリ)に対する「検索」パーミッション(「実行」を表す `x` で示されます)を持っていなければなりません。ディレクトリの内容を一覧表示するには、ユーザーはそのディレクトリに対する読み取り(`r`)パーミッションを持っていなければなりません。ファイルについては、パーミッションは想像どおりの意味です。`/bin` にあるほぼすべてのファイルでは、最後のグループである「それ以外の全員」に `x` パーミッションが設定されており、誰でもそれらのプログラムを実行できるようになっていることに注目してください。
 
-Some other handy programs to know about at this point are `mv` (to
-rename/move a file), `cp` (to copy a file), and `mkdir` (to make a new
-directory).
+この時点で知っておくと便利なプログラムとしては、ほかに `mv`(ファイルの名前変更・移動)、`cp`(ファイルのコピー)、`mkdir`(新しいディレクトリの作成)があります。
 
-If you ever want _more_ information about a program's arguments, inputs,
-outputs, or how it works in general, give the `man` program a try. It
-takes as an argument the name of a program, and shows you its _manual
-page_. Press `q` to exit.
+プログラムの引数、入力、出力、あるいは全般的な動作について _もっと_ 情報がほしくなったら、`man` プログラムを試してみてください。これはプログラムの名前を引数として受け取り、その _マニュアルページ_ を表示します。終了するには `q` を押します。
 
 ```console
 missing:~$ man ls
 ```
 
-## Connecting programs
+## プログラム同士をつなげる
 
-In the shell, programs have two primary "streams" associated with them:
-their input stream and their output stream. When the program tries to
-read input, it reads from the input stream, and when it prints
-something, it prints to its output stream. Normally, a program's input
-and output are both your terminal. That is, your keyboard as input and
-your screen as output. However, we can also rewire those streams!
+シェルでは、プログラムには主に2つの「ストリーム」が関連づけられています。入力ストリームと出力ストリームです。プログラムが入力を読み込もうとするときは入力ストリームから読み込み、何かを表示するときは出力ストリームに表示します。通常、プログラムの入力と出力はどちらもターミナルです。つまり、キーボードが入力で、画面が出力です。しかし、これらのストリームをつなぎ替えることもできるのです!
 
-The simplest form of redirection is `< file` and `> file`. These let you
-rewire the input and output streams of a program to a file respectively:
+もっとも単純な形のリダイレクトは、`< file` と `> file` です。これらを使うと、プログラムの入力ストリームと出力ストリームを、それぞれファイルにつなぎ替えられます。
 
 ```console
 missing:~$ echo hello > hello.txt
@@ -275,16 +158,9 @@ missing:~$ cat hello2.txt
 hello
 ```
 
-Demonstrated in the example above, `cat` is a program that con`cat`enates
-files. When given file names as arguments, it prints the contents of each of
-the files in sequence to its output stream. But when `cat` is not given any
-arguments, it prints contents from its input stream to its output stream (like
-in the third example above).
+上の例で示したように、`cat` はファイルを連結(con`cat`enate)するプログラムです。ファイル名が引数として与えられると、それぞれのファイルの内容を順番に出力ストリームへ表示します。しかし、引数が何も与えられなければ、`cat` は入力ストリームの内容を出力ストリームへ表示します(上の3番目の例のように)。
 
-You can also use `>>` to append to a file. Where this kind of
-input/output redirection really shines is in the use of _pipes_. The `|`
-operator lets you "chain" programs such that the output of one is the
-input of another:
+`>>` を使えば、ファイルに追記することもできます。この種の入出力リダイレクトが真価を発揮するのは、_パイプ_ を使うときです。`|` 演算子を使うと、あるプログラムの出力が別のプログラムの入力になるように、プログラムを「連鎖」させることができます。
 
 ```console
 missing:~$ ls -l / | tail -n1
@@ -293,36 +169,21 @@ missing:~$ curl --head --silent google.com | grep --ignore-case content-length |
 219
 ```
 
-We will go into a lot more detail about how to take advantage of pipes
-in the lecture on data wrangling.
+パイプを活用する方法については、データラングリングの講義でずっと詳しく説明します。
 
-## A versatile and powerful tool
+## 多用途で強力なツール
 
-On most Unix-like systems, one user is special: the "root" user. You may
-have seen it in the file listings above. The root user is above (almost)
-all access restrictions, and can create, read, update, and delete any
-file in the system. You will not usually log into your system as the
-root user though, since it's too easy to accidentally break something.
-Instead, you will be using the `sudo` command. As its name implies, it
-lets you "do" something "as su" (short for "super user", or "root").
-When you get permission denied errors, it is usually because you need to
-do something as root. Though make sure you first double-check that you
-really wanted to do it that way!
+ほとんどのUnix系システムでは、ひとりだけ特別なユーザーがいます。「root」ユーザーです。上のファイル一覧で見かけたかもしれません。rootユーザーは(ほぼ)すべてのアクセス制限を超越しており、システム上のどんなファイルでも作成、読み取り、更新、削除できます。とはいえ、うっかり何かを壊してしまいやすいので、普段はrootユーザーとしてシステムにログインすることはありません。代わりに `sudo` コマンドを使うことになります。その名前が示すとおり、これは何かを「su(「super user」、つまり「root」の略)として」「実行する(do)」ためのものです。permission denied(アクセス拒否)のエラーが出るときは、たいてい、その操作をrootとして行う必要があるからです。ただし、本当にそのやり方でやりたかったのかどうかを、まずもう一度確認するようにしてください!
 
-One thing you need to be root in order to do is writing to the `sysfs` file
-system mounted under `/sys`. `sysfs` exposes a number of kernel parameters as
-files, so that you can easily reconfigure the kernel on the fly without
-specialized tools. **Note that sysfs does not exist on Windows or macOS.**
+rootでなければできないことのひとつに、`/sys` 以下にマウントされている `sysfs` ファイルシステムへの書き込みがあります。`sysfs` は多数のカーネルパラメータをファイルとして公開しているので、専用のツールを使わなくても、その場で簡単にカーネルの設定を変更できます。**sysfsはWindowsやmacOSには存在しないことに注意してください。**
 
-For example, the brightness of your laptop's screen is exposed through a file
-called `brightness` under
+たとえば、ノートパソコンの画面の明るさは、次の場所の下にある `brightness` というファイルを通じて公開されています。
 
 ```
 /sys/class/backlight
 ```
 
-By writing a value into that file, we can change the screen brightness.
-Your first instinct might be to do something like:
+このファイルに値を書き込むことで、画面の明るさを変更できます。最初に思いつくのは、次のようなやり方かもしれません。
 
 ```console
 $ sudo find -L /sys/class/backlight -maxdepth 2 -name '*brightness*'
@@ -333,87 +194,41 @@ An error occurred while redirecting file 'brightness'
 open: Permission denied
 ```
 
-This error may come as a surprise. After all, we ran the command with
-`sudo`! This is an important thing to know about the shell. Operations
-like `|`, `>`, and `<` are done _by the shell_, not by the individual
-program. `echo` and friends do not "know" about `|`. They just read from
-their input and write to their output, whatever it may be. In the case
-above, the _shell_ (which is authenticated just as your user) tries to
-open the brightness file for writing, before setting that as `sudo
-echo`'s output, but is prevented from doing so since the shell does not
-run as root. Using this knowledge, we can work around this:
+このエラーには驚くかもしれません。なにしろ、コマンドは `sudo` を付けて実行したのですから! これは、シェルについて知っておくべき重要な点です。`|`、`>`、`<` のような操作は、個々のプログラムではなく _シェルによって_ 行われます。`echo` やその仲間は、`|` のことを「知り」ません。それが何であれ、自分の入力から読み込み、自分の出力に書き込むだけです。上の例では、_シェル_(あなたのユーザーとして認証されているにすぎません)が、brightnessファイルを書き込み用に開いてから、それを `sudo echo` の出力に設定しようとしますが、シェルはrootとして動いていないので、ファイルを開くことを拒否されます。この知識を使えば、この問題を回避できます。
 
 ```console
 $ echo 3 | sudo tee brightness
 ```
 
-Since the `tee` program is the one to open the `/sys` file for writing,
-and _it_ is running as `root`, the permissions all work out. You can
-control all sorts of fun and useful things through `/sys`, such as the
-state of various system LEDs (your path might be different):
+`/sys` のファイルを書き込み用に開くのは `tee` プログラムであり、_そのプログラム_ は `root` として動いているので、パーミッションの問題はすべて解決します。`/sys` を通じて、楽しくて便利なあらゆる種類のものを制御できます。たとえば、システムのさまざまなLEDの状態です(パスはお使いの環境によって異なるかもしれません)。
 
 ```console
 $ echo 1 | sudo tee /sys/class/leds/input6::scrolllock/brightness
 ```
 
-# Next steps
+# 次のステップ
 
-At this point you know your way around a shell enough to accomplish
-basic tasks. You should be able to navigate around to find files of
-interest and use the basic functionality of most programs. In the next
-lecture, we will talk about how to perform and automate more complex
-tasks using the shell and the many handy command-line programs out
-there.
+ここまでで、基本的な作業をこなせる程度にはシェルを使いこなせるようになりました。目的のファイルを探して移動したり、ほとんどのプログラムの基本機能を使ったりできるはずです。次の講義では、シェルと、世の中にある数多くの便利なコマンドラインプログラムを使って、より複雑な作業を実行・自動化する方法について話します。
 
-# Exercises
+# 演習
 
-All classes in this course are accompanied by a series of exercises. Some give
-you a specific task to do, while others are open-ended, like "try using X and Y
-programs". We highly encourage you to try them out.
+このコースのすべての授業には、一連の演習が付いています。具体的な課題を与えるものもあれば、「XとYのプログラムを使ってみよう」のような自由回答式のものもあります。ぜひ試してみることを強くおすすめします。
 
-We have not written solutions for the exercises. If you are stuck on anything
-in particular, feel free to send us an email describing what you've tried so
-far, and we will try to help you out.
+演習の解答は用意していません。特定の箇所で行き詰まったら、これまでに試したことを書いたメールを遠慮なく私たちに送ってください。できる限りお手伝いします。
 
- 1. For this course, you need to be using a Unix shell like Bash or ZSH. If you
-    are on Linux or macOS, you don't have to do anything special. If you are on
-    Windows, you need to make sure you are not running cmd.exe or PowerShell;
-    you can use [Windows Subsystem for
-    Linux](https://docs.microsoft.com/en-us/windows/wsl/) or a Linux virtual
-    machine to use Unix-style command-line tools. To make sure you're running
-    an appropriate shell, you can try the command `echo $SHELL`. If it says
-    something like `/bin/bash` or `/usr/bin/zsh`, that means you're running the
-    right program.
- 1. Create a new directory called `missing` under `/tmp`.
- 1. Look up the `touch` program. The `man` program is your friend.
- 1. Use `touch` to create a new file called `semester` in `missing`.
- 1. Write the following into that file, one line at a time:
+ 1. このコースでは、BashやZSHのようなUnixシェルを使う必要があります。LinuxまたはmacOSを使っているなら、特別なことをする必要はありません。Windowsを使っている場合は、cmd.exeやPowerShellを実行していないことを確認する必要があります。Unixスタイルのコマンドラインツールを使うには、[Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/)かLinuxの仮想マシンが使えます。適切なシェルを実行していることを確認するには、`echo $SHELL` コマンドを試してください。`/bin/bash` や `/usr/bin/zsh` のような表示が出れば、正しいプログラムを実行できています。
+ 1. `/tmp` の下に `missing` という新しいディレクトリを作成してください。
+ 1. `touch` プログラムについて調べてください。`man` プログラムが頼りになります。
+ 1. `touch` を使って、`missing` の中に `semester` という新しいファイルを作成してください。
+ 1. そのファイルに、次の内容を1行ずつ書き込んでください。
     ```
     #!/bin/sh
     curl --head --silent https://missing.csail.mit.edu
     ```
-    The first line might be tricky to get working. It's helpful to know that
-    `#` starts a comment in Bash, and `!` has a special meaning even within
-    double-quoted (`"`) strings. Bash treats single-quoted strings (`'`)
-    differently: they will do the trick in this case. See the Bash
-    [quoting](https://www.gnu.org/software/bash/manual/html_node/Quoting.html)
-    manual page for more information.
- 1. Try to execute the file, i.e. type the path to the script (`./semester`)
-    into your shell and press enter. Understand why it doesn't work by
-    consulting the output of `ls` (hint: look at the permission bits of the
-    file).
- 1. Run the command by explicitly starting the `sh` interpreter, and giving it
-    the file `semester` as the first argument, i.e. `sh semester`. Why does
-    this work, while `./semester` didn't?
- 1. Look up the `chmod` program (e.g. use `man chmod`).
- 1. Use `chmod` to make it possible to run the command `./semester` rather than
-    having to type `sh semester`. How does your shell know that the file is
-    supposed to be interpreted using `sh`? See this page on the
-    [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) line for more
-    information.
- 1. Use `|` and `>` to write the "last modified" date output by
-    `semester` into a file called `last-modified.txt` in your home
-    directory.
- 1. Write a command that reads out your laptop battery's power level or your
-    desktop machine's CPU temperature from `/sys`. Note: if you're a macOS
-    user, your OS doesn't have sysfs, so you can skip this exercise.
+    最初の行をうまく書き込むのは、少し厄介かもしれません。Bashでは `#` がコメントの始まりを表すこと、そして `!` がダブルクォート(`"`)で囲んだ文字列の中でも特別な意味を持つことを知っておくと役に立ちます。Bashはシングルクォート(`'`)で囲んだ文字列を別の方法で扱うので、この場合はそちらを使えばうまくいきます。詳しくは、Bashマニュアルの[quoting](https://www.gnu.org/software/bash/manual/html_node/Quoting.html)のページを参照してください。
+ 1. そのファイルを実行してみてください。つまり、スクリプトへのパス(`./semester`)をシェルに入力してEnterを押します。`ls` の出力を調べて、なぜうまくいかないのかを理解してください(ヒント: ファイルのパーミッションビットを見てください)。
+ 1. `sh` インタプリタを明示的に起動し、最初の引数として `semester` ファイルを与えることで、このコマンドを実行してください。つまり `sh semester` です。`./semester` はうまくいかなかったのに、なぜこれはうまくいくのでしょうか?
+ 1. `chmod` プログラムについて調べてください(たとえば `man chmod` を使います)。
+ 1. `chmod` を使って、`sh semester` と入力しなくても `./semester` というコマンドで実行できるようにしてください。シェルは、そのファイルを `sh` で解釈すべきだということをどうやって知るのでしょうか? 詳しくは、[シェバン(shebang)](https://en.wikipedia.org/wiki/Shebang_(Unix))行についてのこちらのページを参照してください。
+ 1. `|` と `>` を使って、`semester` が出力する「last modified」(最終更新)の日付を、ホームディレクトリの `last-modified.txt` というファイルに書き込んでください。
+ 1. `/sys` から、ノートパソコンのバッテリー残量、またはデスクトップマシンのCPU温度を読み出すコマンドを書いてください。注: macOSユーザーの場合、OSにsysfsがないので、この演習は飛ばしてかまいません。

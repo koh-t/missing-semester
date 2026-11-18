@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Course Overview"
+title: "コース概要"
 presenter: Anish
 date: 2019-01-15
 order: 1
@@ -9,30 +9,18 @@ video:
   id: qw2c6ffSVOM
 ---
 
-# Motivation
+# 動機
 
-This class is about [hacker](https://en.wikipedia.org/wiki/Hacker_culture)
-tools, not [hacker](https://en.wikipedia.org/wiki/Security_hacker) tools.
+この授業は[ハッカー](https://en.wikipedia.org/wiki/Hacker_culture)のツールについてのものであって、[ハッカー](https://en.wikipedia.org/wiki/Security_hacker)のツールについてのものではありません。
 
-MIT classes do not cover any of this content in detail. It's hugely beneficial
-to be proficient with your tools: it'll save you a lot of time (and the payoff
-time is very short).
+MITの授業では、こうした内容は一切詳しく扱われません。自分のツールに習熟することは非常に有益です。多くの時間を節約できます(しかも、元が取れるまでの時間はとても短いです)。
 
-We want to teach you about new tools, how to make the most of your tools, how
-to customize your tools, and how to extend your tools.
+私たちは、新しいツール、ツールを最大限に活用する方法、ツールをカスタマイズする方法、そしてツールを拡張する方法を教えたいと考えています。
 
-# Class structure
+# 授業の構成
 
-We have 6 lectures covering a [variety of topics](/2019/). We have lecture
-notes online, but there will be a lot of content covered in class (e.g. in the
-form of demos) that may not be in the notes. We will be recording lectures.
+[さまざまなトピック](/2019/)を扱う6回の講義があります。講義ノートはオンラインで公開していますが、授業の中ではノートに載っていない内容も(たとえばデモの形で)たくさん扱います。講義は録画する予定です。
 
-Each class is split into two 50-minute lectures with a 10-minute break in
-between. Lectures are mostly live demonstrations followed by hands-on
-exercises. We might have a short amount of time at the end of each class to get
-started on the exercises in an office-hours-style setting.
+各回の授業は50分の講義2つに分かれており、あいだに10分の休憩があります。講義は主にライブのデモで、その後に実際に手を動かす演習が続きます。各回の終わりに、オフィスアワー形式で演習に取りかかるための時間を少し取れるかもしれません。
 
-To make the most of the class, you should go through all the exercises on your
-own. We'll inspire you to learn more about your tools, and we'll show you
-what's possible and cover some of the basics in detail, but we can't teach you
-everything in the time we have.
+この授業を最大限に活用するには、すべての演習に自分で取り組むべきです。私たちは、みなさんが自分のツールについてもっと学びたくなるよう後押しし、何が可能なのかを示し、基本のいくつかを詳しく扱いますが、限られた時間の中ですべてを教えることはできません。
