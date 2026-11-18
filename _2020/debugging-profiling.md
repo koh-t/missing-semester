@@ -27,7 +27,7 @@ video:
 - ロギングは深刻度レベル(INFO、DEBUG、WARN、ERRORなど)をサポートしており、それに応じて出力をフィルタリングできます。
 - 新たに発生した問題であっても、何がおかしいのかを突き止めるのに十分な情報がログに含まれている可能性がかなりあります。
 
-メッセージをログに出力するコードの例は[こちら](/static/files/logger.py)です。
+メッセージをログに出力するコードの例は[こちら]({{ site.baseurl }}/static/files/logger.py)です。
 
 ```bash
 $ python logger.py
@@ -432,7 +432,7 @@ Summary
 1. (上級)[リバースデバッグ](https://undo.io/resources/reverse-debugging-whitepaper/)について読み、[`rr`](https://rr-project.org/) または [`RevPDB`](https://morepypy.blogspot.com/2016/07/reverse-debugging-for-python.html) を使って簡単な例を動かしてください。
 ## プロファイリング
 
-1. [こちら](/static/files/sorts.py)に、いくつかのソートアルゴリズムの実装があります。[`cProfile`](https://docs.python.org/3/library/profile.html) と [`line_profiler`](https://github.com/pyutils/line_profiler) を使って、挿入ソートとクイックソートの実行時間を比較してください。それぞれのアルゴリズムのボトルネックは何でしょうか? 次に `memory_profiler` を使ってメモリ消費量を確認してください。なぜ挿入ソートのほうが優れているのでしょうか? 今度はインプレース版のクイックソートを確認してください。チャレンジ: `perf` を使って、各アルゴリズムのサイクル数とキャッシュのヒット・ミスを見てください。
+1. [こちら]({{ site.baseurl }}/static/files/sorts.py)に、いくつかのソートアルゴリズムの実装があります。[`cProfile`](https://docs.python.org/3/library/profile.html) と [`line_profiler`](https://github.com/pyutils/line_profiler) を使って、挿入ソートとクイックソートの実行時間を比較してください。それぞれのアルゴリズムのボトルネックは何でしょうか? 次に `memory_profiler` を使ってメモリ消費量を確認してください。なぜ挿入ソートのほうが優れているのでしょうか? 今度はインプレース版のクイックソートを確認してください。チャレンジ: `perf` を使って、各アルゴリズムのサイクル数とキャッシュのヒット・ミスを見てください。
 
 1. 以下は、数ごとにひとつの関数を使ってフィボナッチ数を計算する(回りくどいと言えなくもない)Pythonコードです。
 

@@ -22,7 +22,7 @@ title: "なぜ私たちはこの授業を教えるのか"
 たとえば、履歴をすばやく検索できると大幅な時間の節約になります。以下の例では、`convert` コマンドを対象にシェル履歴を操作するいくつかのテクニックを紹介しています。
 
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
-  <source src="/static/media/demos/history.mp4" type="video/mp4">
+  <source src="{{ site.baseurl }}/static/media/demos/history.mp4" type="video/mp4">
 </video>
 
 ## バージョン管理
@@ -31,7 +31,7 @@ title: "なぜ私たちはこの授業を教えるのか"
 
 以下の例では、`git bisect` を使ってどのコミットがユニットテストを壊したかを特定し、`git revert` で修正しています。
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
-  <source src="/static/media/demos/git.mp4" type="video/mp4">
+  <source src="{{ site.baseurl }}/static/media/demos/git.mp4" type="video/mp4">
 </video>
 
 ## テキスト編集
@@ -40,7 +40,7 @@ title: "なぜ私たちはこの授業を教えるのか"
 
 Vimのマクロは最高の機能のひとつです。以下の例では、ネストしたVimマクロを使ってHTMLのテーブルをCSV形式にすばやく変換しています。
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
-  <source src="/static/media/demos/vim.mp4" type="video/mp4">
+  <source src="{{ site.baseurl }}/static/media/demos/vim.mp4" type="video/mp4">
 </video>
 
 ## リモートマシン
@@ -50,7 +50,7 @@ SSH鍵とターミナルマルチプレクサを使って、リモートマシ�
 以下の例では、`tmux` を使ってリモートサーバー上のセッションを維持し、`mosh` でネットワークのローミングや切断に対応しています。
 
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
-  <source src="/static/media/demos/ssh.mp4" type="video/mp4">
+  <source src="{{ site.baseurl }}/static/media/demos/ssh.mp4" type="video/mp4">
 </video>
 
 ## ファイル検索
@@ -60,7 +60,7 @@ SSH鍵とターミナルマルチプレクサを使って、リモートマシ�
 以下の例では、`fd` でファイルを、`rg` でコード片をすばやく探しています。また、`fasd` を使って最近使った/よく使うファイルやフォルダにすばやく `cd` したり `vim` で開いたりしています。
 
 <video autoplay="autoplay" loop="loop" controls muted playsinline  oncontextmenu="return false;"  preload="auto"  class="demo">
-  <source src="/static/media/demos/find.mp4" type="video/mp4">
+  <source src="{{ site.baseurl }}/static/media/demos/find.mp4" type="video/mp4">
 </video>
 
 ## データラングリング
@@ -77,7 +77,7 @@ SSH鍵とターミナルマルチプレクサを使って、リモートマシ�
 
 # おわりに
 
-以上のような内容(そしてそれ以上)を9回の講義で扱い、各講義には自分でツールに慣れるための演習が付いています。2026年1月まで待てないという方は、同じトピックの多くを扱っている[過去の開講](/2020/)の講義を見ることもできます。
+以上のような内容(そしてそれ以上)を9回の講義で扱い、各講義には自分でツールに慣れるための演習が付いています。2026年1月まで待てないという方は、同じトピックの多くを扱っている[過去の開講]({{ site.baseurl }}/2020/)の講義を見ることもできます。
 
 オンラインでも対面でも、1月にお会いできることを楽しみにしています!
 

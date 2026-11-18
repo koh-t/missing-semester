@@ -207,7 +207,7 @@ def main():
 
 Vimは、`~/.vimrc` にあるプレーンテキストの設定ファイル(Vimscriptのコマンドを含みます)でカスタマイズします。有効にしておきたい基本的な設定が、おそらくたくさんあるでしょう。
 
-出発点として使える、丁寧な説明付きの基本的な設定を用意しています。Vimの風変わりなデフォルトの挙動をいくつか直してくれるので、これを使うことをおすすめします。**私たちの設定を[こちら](/2020/files/vimrc)からダウンロードして、`~/.vimrc` に保存してください。**
+出発点として使える、丁寧な説明付きの基本的な設定を用意しています。Vimの風変わりなデフォルトの挙動をいくつか直してくれるので、これを使うことをおすすめします。**私たちの設定を[こちら]({{ site.baseurl }}/2020/files/vimrc)からダウンロードして、`~/.vimrc` に保存してください。**
 
 Vimは高度にカスタマイズ可能であり、カスタマイズの選択肢を探ることに時間を使う価値があります。参考として、GitHubにあるいろいろな人のドットファイルを見てみるとよいでしょう。たとえば、講師たちのVimの設定があります([Anish](https://github.com/anishathalye/dotfiles/blob/master/vimrc)、[Jon](https://github.com/jonhoo/configs/blob/master/editor/.config/nvim/init.lua)([neovim](https://neovim.io/)を使用)、[Jose](https://github.com/JJGO/dotfiles/blob/master/vim/.vimrc))。このトピックについては、良いブログ記事もたくさんあります。他人の設定を丸ごとコピー&ペーストするのではなく、読んで、理解して、必要なものだけを取り入れるようにしましょう。
 
@@ -274,7 +274,7 @@ Web[ブラウザ](https://vim.fandom.com/wiki/Vim_key_bindings_for_web_browsers)
 - マクロは再帰的にできます
     - まず `q{character}q` でマクロをクリアします
     - マクロを記録し、その中で `@{character}` を使ってマクロを再帰的に呼び出します(記録が完了するまでは何もしません)
-- 例: xmlをjsonに変換する([ファイル](/2020/files/example-data.xml))
+- 例: xmlをjsonに変換する([ファイル]({{ site.baseurl }}/2020/files/example-data.xml))
     - "name" / "email" というキーを持つオブジェクトの配列
     - Pythonのプログラムを使う?
     - sed / 正規表現を使う
@@ -311,7 +311,7 @@ Web[ブラウザ](https://vim.fandom.com/wiki/Vim_key_bindings_for_web_browsers)
 # 演習
 
 1. `vimtutor` を最後までやってください。注: [80x24](https://en.wikipedia.org/wiki/VT100)(80桁×24行)のターミナルウィンドウで見るのが最適です。
-1. 私たちの[基本的なvimrc](/2020/files/vimrc)をダウンロードして、`~/.vimrc` に保存してください。丁寧にコメントが付けられたこのファイルを(Vimを使って!)読み通し、新しい設定によってVimの見た目や挙動が少し変わることを観察してください。
+1. 私たちの[基本的なvimrc]({{ site.baseurl }}/2020/files/vimrc)をダウンロードして、`~/.vimrc` に保存してください。丁寧にコメントが付けられたこのファイルを(Vimを使って!)読み通し、新しい設定によってVimの見た目や挙動が少し変わることを観察してください。
 1. プラグイン[ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim)をインストールして設定してください。
    1. `mkdir -p ~/.vim/pack/vendor/start` でプラグイン用のディレクトリを作成します
    1. プラグインをダウンロードします: `cd ~/.vim/pack/vendor/start; git clone https://github.com/ctrlpvim/ctrlp.vim`
@@ -321,4 +321,4 @@ Web[ブラウザ](https://vim.fandom.com/wiki/Vim_key_bindings_for_web_browsers)
 1. 今後1か月間、テキスト編集の _すべて_ にVimを使ってください。何かが非効率に思えたり、「もっと良いやり方があるはずだ」と思ったりしたら、Googleで検索してみましょう。おそらくあります。行き詰まったら、オフィスアワーに来るか、私たちにメールを送ってください。
 1. 他のツールもVimのキーバインドを使うように設定してください(上の説明を参照)。
 1. `~/.vimrc` をさらにカスタマイズし、プラグインをさらにインストールしてください。
-1. (上級)Vimのマクロを使ってXMLをJSONに変換してください([サンプルファイル](/2020/files/example-data.xml))。自力でやってみてほしいのですが、行き詰まったら上の[マクロ](#macros)の節を見てもかまいません。
+1. (上級)Vimのマクロを使ってXMLをJSONに変換してください([サンプルファイル]({{ site.baseurl }}/2020/files/example-data.xml))。自力でやってみてほしいのですが、行き詰まったら上の[マクロ](#macros)の節を見てもかまいません。

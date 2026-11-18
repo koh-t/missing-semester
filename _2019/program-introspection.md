@@ -24,7 +24,7 @@ printfデバッグでは不十分なとき: デバッガを使いましょう。
 
 [GDB](https://www.gnu.org/software/gdb/)と[LLDB](https://lldb.llvm.org/)。多くのC系言語をサポートしています。
 
-[example.c](/2019/files/example.c)を見てみましょう。デバッグフラグを付けてコンパイルします: `gcc -g -o example example.c`。
+[example.c]({{ site.baseurl }}/2019/files/example.c)を見てみましょう。デバッグフラグを付けてコンパイルします: `gcc -g -o example example.c`。
 
 GDBを開きます:
 

@@ -169,7 +169,7 @@ Vimを学ぶ最良の方法は、基本(ここまでで扱った内容)を学ん
 
 ### 追加リソース
 
-- この講座の以前の年度の[Vimの講義](/2020/editors/) --- そこではVimをより深く扱っています
+- この講座の以前の年度の[Vimの講義]({{ site.baseurl }}/2020/editors/) --- そこではVimをより深く扱っています
 - `vimtutor` はVimに付属するチュートリアルです --- Vimがインストールされていれば、シェルから `vimtutor` を実行できるはずです
 - [Vim Adventures](https://vim-adventures.com/)はVimを学ぶためのゲームです
 - [Vim Tips Wiki](https://vim.fandom.com/wiki/Vim_Tips_Wiki)
@@ -190,11 +190,11 @@ IDEは一般に、コードの意味的な理解を必要とする言語固有�
 - **定義へのジャンプ。** 使用箇所から定義へジャンプします。たとえばフィールド参照 `object.field` からそのフィールドの定義へ移動できます。
 - **参照の検索。** 上記の逆で、特定のフィールドや型などの項目が参照されているすべての箇所を見つけます。
 - **インポートの支援。** インポートの整理、未使用のインポートの削除、不足しているインポートの指摘。
-- **コード品質。** これらのツールは単体でも使えますが、この機能も言語サーバーによって提供されることがよくあります。コードフォーマットは入力中に自動インデントと自動整形を行い、型チェッカーとリンタは入力中にコードのエラーを見つけます。この種の機能については[コード品質の講義](/2026/code-quality/)でより深く扱います。
+- **コード品質。** これらのツールは単体でも使えますが、この機能も言語サーバーによって提供されることがよくあります。コードフォーマットは入力中に自動インデントと自動整形を行い、型チェッカーとリンタは入力中にコードのエラーを見つけます。この種の機能については[コード品質の講義]({{ site.baseurl }}/2026/code-quality/)でより深く扱います。
 
 ## 言語サーバーの設定
 
-言語によっては、拡張機能と言語サーバーをインストールするだけで準備完了です。他の言語では、言語サーバーの恩恵を最大限に受けるために、IDEにあなたの環境を教える必要があります。たとえば、VS Codeに[Python環境](https://code.visualstudio.com/docs/python/environments)の場所を指定すると、言語サーバーがインストール済みのパッケージを認識できるようになります。環境については[コードのパッケージングと配布の講義](/2026/shipping-code/)でより深く扱います。
+言語によっては、拡張機能と言語サーバーをインストールするだけで準備完了です。他の言語では、言語サーバーの恩恵を最大限に受けるために、IDEにあなたの環境を教える必要があります。たとえば、VS Codeに[Python環境](https://code.visualstudio.com/docs/python/environments)の場所を指定すると、言語サーバーがインストール済みのパッケージを認識できるようになります。環境については[コードのパッケージングと配布の講義]({{ site.baseurl }}/2026/shipping-code/)でより深く扱います。
 
 言語によっては、言語サーバーに設定できる項目があるかもしれません。たとえば、VS CodeのPythonサポートでは、Pythonのオプションの型アノテーションを使っていないプロジェクトに対して、静的型チェックを無効にできます。
 
@@ -283,7 +283,7 @@ def download_contents(url: str) -> str:
 
 ## コーディングエージェント
 
-コーディングエージェントについては、[エージェンティックコーディング](/2026/agentic-coding/)の講義で詳しく扱います。
+コーディングエージェントについては、[エージェンティックコーディング]({{ site.baseurl }}/2026/agentic-coding/)の講義で詳しく扱います。
 
 ## おすすめのソフトウェア
 
@@ -293,7 +293,7 @@ def download_contents(url: str) -> str:
 
 IDEは強力なツールですが、_拡張機能_ によってさらに強力になります。1回の講義でこれらの機能をすべて扱うことはできませんが、ここではいくつかの人気の拡張機能へのポインタを紹介します。この領域はぜひ自分で探索してみてください。人気のIDE拡張機能のリストはオンラインに数多くあります。たとえば、Vimプラグインなら[Vim Awesome](https://vimawesome.com/)、VS Codeなら[人気順に並べたVS Code拡張機能](https://marketplace.visualstudio.com/search?target=VSCode&category=All%20categories&sortBy=Installs)があります。
 
-- [開発コンテナ(Development containers)](https://containers.dev/): 人気のIDEでサポートされており(例: [VS Codeでのサポート](https://code.visualstudio.com/docs/devcontainers/containers))、dev containerを使うとコンテナ内で開発ツールを実行できます。ポータビリティや分離のために役立ちます。[コードのパッケージングと配布の講義](/2026/shipping-code/)でコンテナをより深く扱います。
+- [開発コンテナ(Development containers)](https://containers.dev/): 人気のIDEでサポートされており(例: [VS Codeでのサポート](https://code.visualstudio.com/docs/devcontainers/containers))、dev containerを使うとコンテナ内で開発ツールを実行できます。ポータビリティや分離のために役立ちます。[コードのパッケージングと配布の講義]({{ site.baseurl }}/2026/shipping-code/)でコンテナをより深く扱います。
 - リモート開発: SSHを使ってリモートマシン上で開発します(例: [VS CodeのRemote SSHプラグイン](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh))。たとえば、クラウド上の強力なGPUマシンでコードを開発・実行したい場合に便利です。
 - 共同編集: Google Docsのように同じファイルを同時に編集します(例: [VS CodeのLive Shareプラグイン](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare))。
 

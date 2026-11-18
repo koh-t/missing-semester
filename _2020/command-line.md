@@ -348,10 +348,10 @@ ssh経由でファイルをコピーする方法はたくさんあります。
 これは _ポートフォワーディング_ と呼ばれ、ローカルポートフォワーディングとリモートポートフォワーディングの2種類があります(詳しくは図を参照してください。図の出典は[このStackOverflowの投稿](https://unix.stackexchange.com/questions/115897/whats-ssh-port-forwarding-and-whats-the-difference-between-ssh-local-and-remot)です)。
 
 **ローカルポートフォワーディング**
-![ローカルポートフォワーディング](/static/media/images/local-port-forwarding.png)
+![ローカルポートフォワーディング]({{ site.baseurl }}/static/media/images/local-port-forwarding.png)
 
 **リモートポートフォワーディング**
-![リモートポートフォワーディング](/static/media/images/remote-port-forwarding.png)
+![リモートポートフォワーディング]({{ site.baseurl }}/static/media/images/remote-port-forwarding.png)
 
 もっともよくあるのはローカルポートフォワーディングで、リモートマシンのサービスがあるポートで待ち受けており、手元のマシンのポートをそのリモートのポートへ転送するようにつなぎたい、という場面です。たとえば、リモートサーバーで `jupyter notebook` を実行し、それがポート `8888` で待ち受けているとします。これをローカルのポート `9999` に転送するには、`ssh -L 9999:localhost:8888 foobar@remote_server` を実行し、手元のマシンで `localhost:9999` にアクセスします。
 

@@ -71,7 +71,7 @@ VMほど安全でも隔離されてもいませんが、かなり近く、改善
 
 性能が向上するのは、オペレーティングシステムの完全なコピーを実行するVMとは異なり、コンテナがLinuxカーネルをホストと共有するためです。ただし、Windows/macOS上でLinuxコンテナを実行する場合は、両者の間の中間層としてLinuxのVMを動かしておく必要があることに注意してください。
 
-![Docker vs VM](/2019/files/containers-vs-vms.png)
+![Docker vs VM]({{ site.baseurl }}/2019/files/containers-vs-vms.png)
 _Dockerコンテナと仮想マシンの比較。出典: blog.docker.com_
 
 コンテナは、標準化された構成の中で自動化されたタスクを実行したいときに便利です。

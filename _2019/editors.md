@@ -19,7 +19,7 @@ video:
 
 強力なエディタの使い方を50分で教えることはできないので、基本を教え、より高度な機能をいくつか紹介し、このツールを習得するための参考資料を提供することに焦点を当てます。Vimを題材にして教えますが、ほとんどの考え方は、あなたが使う他のどんな強力なエディタにも応用できます(もし応用できないなら、おそらくそのエディタは使うべきではありません!)。
 
-![エディタの学習曲線](/2019/files/editor-learning-curves.jpg)
+![エディタの学習曲線]({{ site.baseurl }}/2019/files/editor-learning-curves.jpg)
 
 <!-- 出典: https://blogs.msdn.microsoft.com/steverowe/2004/11/17/code-editor-learning-curves/ -->
 
@@ -186,7 +186,7 @@ GitHubにある他の人のドットファイルを見てヒントを得ると�
 - マクロは再帰的にできる
     - まず `q{character}q` でマクロをクリアする
     - マクロを記録し、その中で `@{character}` を使ってマクロを再帰的に呼び出す(記録が完了するまでは何もしない)
-- 例: XMLをJSONに変換する([ファイル](/2019/files/example-data.xml))
+- 例: XMLをJSONに変換する([ファイル]({{ site.baseurl }}/2019/files/example-data.xml))
     - キー「name」/「email」を持つオブジェクトの配列
     - Pythonプログラムを使う?
     - sed / 正規表現を使う

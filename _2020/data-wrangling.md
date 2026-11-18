@@ -54,7 +54,7 @@ ssh myserver journalctl
 
 いま書いたのは、単純な _正規表現_ です。正規表現は、テキストをパターンと照合できる強力な仕組みです。`s` コマンドは `s/REGEX/SUBSTITUTION/` という形式で書きます。ここで `REGEX` は検索したい正規表現、`SUBSTITUTION` はマッチしたテキストを置き換えるテキストです。
 
-(この構文は、Vimの[講義ノート](/2020/editors/#advanced-vim)の「検索と置換」のセクションで見覚えがあるかもしれません! 実際、Vimは `sed` の置換コマンドによく似た検索・置換の構文を使っています。ひとつのツールを学ぶと、他のツールにも習熟しやすくなることがよくあります。)
+(この構文は、Vimの[講義ノート]({{ site.baseurl }}/2020/editors/#advanced-vim)の「検索と置換」のセクションで見覚えがあるかもしれません! 実際、Vimは `sed` の置換コマンドによく似た検索・置換の構文を使っています。ひとつのツールを学ぶと、他のツールにも習熟しやすくなることがよくあります。)
 
 ## 正規表現
 
@@ -160,7 +160,7 @@ ssh myserver journalctl
  | awk '{print $2}' | paste -sd,
 ```
 
-macOSを使っている場合: ここに示したコマンドは、macOSに付属するBSD版の `paste` では動作しないことに注意してください。BSDとGNUのcoreutilsの違いや、macOSにGNU coreutilsをインストールする手順については、[シェルツールの講義の演習4](/2020/shell-tools/#exercises)を参照してください。
+macOSを使っている場合: ここに示したコマンドは、macOSに付属するBSD版の `paste` では動作しないことに注意してください。BSDとGNUのcoreutilsの違いや、macOSにGNU coreutilsをインストールする手順については、[シェルツールの講義の演習4]({{ site.baseurl }}/2020/shell-tools/#exercises)を参照してください。
 
 まず `paste` から見ていきましょう。これは、指定した1文字の区切り文字(`-d`。この場合は `,`)で行を結合(`-s`)できます。では、この `awk` というのは何でしょうか?
 

@@ -14,7 +14,7 @@ nositetitle: true
 
 近年では、AIを活用・強化したツールやワークフローの登場によって、ソフトウェアエンジニアリングの多くの側面も変化の途上にあります。その欠点を理解したうえで適切に使えば、これらはCSの実務者に大きな恩恵をもたらすことが多く、実用的な知識を身につけておく価値があります。AIは分野横断的な基盤技術であるため、独立したAIの講義は設けず、最新の応用可能なAIツールとテクニックの使い方を各講義の中に直接組み込んでいます。
 
-[この授業を開講する理由](/about/)もあわせてお読みください。
+[この授業を開講する理由]({{ site.baseurl }}/about/)もあわせてお読みください。
 
 {% comment %}
 # 受講登録
@@ -36,7 +36,7 @@ IAP 2026の授業に参加するには、こちらの[登録フォーム](https:
         <li>
         <strong>{{ lecture.date | date: '%-m/%-d/%y' }}</strong>:
         {% if lecture.ready %}
-            <a href="{{ lecture.url }}">{{ lecture.title }}</a>
+            <a href="{{ lecture.url | relative_url }}">{{ lecture.title }}</a>
         {% else %}
             {{ lecture.title }} {% if lecture.noclass %}[休講]{% endif %}
         {% endif %}
@@ -60,7 +60,7 @@ IAP 2026の授業に参加するには、こちらの[登録フォーム](https:
             {% if lecture.special == true %}
                 <li>
                     <strong>{{ lecture.date | date: '%-m/%-d/%y' }}</strong>:
-                    <a href="{{ lecture.url }}">{{ lecture.title }}</a>
+                    <a href="{{ lecture.url | relative_url }}">{{ lecture.title }}</a>
                 </li>
             {% endif %}
         {% endfor %}
@@ -71,7 +71,7 @@ IAP 2026の授業に参加するには、こちらの[登録フォーム](https:
 {% comment %}
 講義動画は、講義の直後からMITの学生向けに(Panopto経由で)視聴できるようになります。システムの制約により、未編集の講義動画にアクセスできるのはMIT Kerberosを持つ人に限られます。現在、講義動画を編集してYouTubeにアップロードする作業を進めています。すでに数本はアップロード済みで、残りも2月中旬までにはアップロードできる見込みです。
 
-2026年1月まで待てないという方は、同じトピックの多くを扱っている[前回開講時](/2020/)の講義もご覧いただけます。
+2026年1月まで待てないという方は、同じトピックの多くを扱っている[前回開講時]({{ site.baseurl }}/2020/)の講義もご覧いただけます。
 {% endcomment %}
 
 # 一般情報
@@ -135,5 +135,5 @@ IAP 2026の授業に参加するには、こちらの[登録フォーム](https:
 <div class="small center">
 <p><a href="https://github.com/missing-semester/missing-semester">ソースコード</a>.</p>
 <p>CC BY-NC-SAでライセンスされています。</p>
-<p>コントリビューションと翻訳のガイドラインは<a href="/license/">こちら</a>をご覧ください。</p>
+<p>コントリビューションと翻訳のガイドラインは<a href="{{ site.baseurl }}/license/">こちら</a>をご覧ください。</p>
 </div>

@@ -20,7 +20,7 @@ Dockerコンテナ内でサイトを開発したい場合(たとえば、ホス�
 docker compose up --build
 ```
 
-その後、ホストマシンで <http://localhost:4000> にアクセスすると、Webサイトを表示できます。ファイルに変更を加えると、JekyllがWebサイトを再ビルドします。
+その後、ホストマシンで <http://localhost:4000/missing-semester/> にアクセスすると、Webサイトを表示できます。ファイルに変更を加えると、JekyllがWebサイトを再ビルドします。
 
 ## ライセンス
 

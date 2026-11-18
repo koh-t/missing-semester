@@ -12,7 +12,7 @@ This is the website for **The Missing Semester of Your CS Education** (https://m
 ```bash
 bundle exec jekyll serve -w
 ```
-Then visit http://localhost:4000
+Then visit http://localhost:4000/missing-semester/
 
 **Docker alternative:**
 ```bash
@@ -31,7 +31,7 @@ When making visual changes (CSS, layouts, includes), use `browser.sh` for headle
 **Quick reference:**
 ```bash
 ./browser.sh chromedriver           # Start ChromeDriver (run once per session)
-./browser.sh start http://localhost:4000/  # Open browser session
+./browser.sh start http://localhost:4000/missing-semester/  # Open browser session
 ./browser.sh screenshot /tmp/preview.png   # Capture screenshot
 ./browser.sh dark                   # Enable dark mode
 ./browser.sh light                  # Enable light mode

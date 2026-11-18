@@ -8,12 +8,12 @@ layout: null
     <title>
       {{ site.title }} -- {{ page.title }}
     </title>
-    <meta http-equiv="refresh" content="0; url={{ page.redirect }}">
+    <meta http-equiv="refresh" content="0; url={{ page.redirect | relative_url }}">
   </head>
   <body>
     <script>
-      window.location = '{{ page.redirect }}';
+      window.location = '{{ page.redirect | relative_url }}';
     </script>
-    <p>Redirecting you to <a href="{{ page.redirect }}">{{ page.redirect }}</a></p>
+    <p>Redirecting you to <a href="{{ page.redirect | relative_url }}">{{ page.redirect | relative_url }}</a></p>
   </body>
 </html>

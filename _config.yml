@@ -1,6 +1,7 @@
 # Setup
 title: 'Missing Semester'
-url: https://missing.csail.mit.edu
+url: https://koh-t.github.io
+baseurl: /missing-semester
 thumbnail: "/static/assets/thumbnails/default.png"
 
 # Settings
@@ -13,8 +14,6 @@ permalink: /:title/
 future: true
 # safe: true # breaks local rendering if enabled
 timezone: America/New_York
-analytics:
-  tracking_id: G-P7WVHD84D1
 
 collections:
   '2019':
@@ -27,7 +26,6 @@ collections:
 # Excludes
 exclude:
   - AGENTS.md
-  - CNAME
   - Dockerfile
   - Gemfile
   - Gemfile.lock
