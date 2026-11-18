@@ -57,4 +57,5 @@ jobs:
             ^https:\/\/openai\.com\/
           swap_urls: |
             {"^https:\\/\\/missing\\.csail\\.mit\\.edu/": "/",
+             "^https:\\/\\/koh-t\\.github\\.io/": "/",
              "^(https:\\/\\/github\\.com/.*)#.*$": "\\1"}
