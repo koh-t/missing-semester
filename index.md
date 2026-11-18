@@ -8,6 +8,8 @@ subtitle: "2026"
 nositetitle: true
 ---
 
+> **このサイトは非公式の日本語訳です。** 原文(英語)は、MITの公式サイト[missing.csail.mit.edu](https://missing.csail.mit.edu/)にあります。
+
 大学の授業では、オペレーティングシステムから機械学習まで、CSの高度なトピックについて幅広く学びます。しかし、非常に重要でありながらほとんど扱われず、学生が独学で身につけるしかないテーマがひとつあります。それは「ツールを使いこなす力」です。この授業では、コマンドラインの使いこなし方、強力なテキストエディタの使い方、バージョン管理システムの高度な機能など、さまざまなことを教えます!
 
 学生は在学中に何百時間も(そしてキャリアを通じて何千時間も)これらのツールを使うことになります。だからこそ、その体験をできるだけ滑らかで摩擦のないものにする価値があります。これらのツールをマスターすれば、ツールを思いどおりに動かす方法を調べる時間が減るだけでなく、以前は途方もなく複雑に思えた問題も解決できるようになります。
@@ -133,7 +135,7 @@ IAP 2026の授業に参加するには、こちらの[登録フォーム](https:
 ---
 
 <div class="small center">
-<p><a href="https://github.com/missing-semester/missing-semester">ソースコード</a>.</p>
+<p><a href="https://github.com/koh-t/missing-semester">ソースコード</a>(<a href="https://github.com/missing-semester/missing-semester">原文</a>).</p>
 <p>CC BY-NC-SAでライセンスされています。</p>
 <p>コントリビューションと翻訳のガイドラインは<a href="{{ site.baseurl }}/license/">こちら</a>をご覧ください。</p>
 </div>

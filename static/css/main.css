@@ -292,6 +292,10 @@ blockquote.epigraph footer {
   margin-bottom: 0;
 }
 
+#translation-notice {
+  margin-top: 1rem;
+}
+
 .center {
   text-align: center;
 }
