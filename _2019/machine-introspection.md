@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Machine Introspection"
+title: "マシンの内部調査"
 presenter: Jon
 date: 2019-01-24
 order: 4
@@ -10,112 +10,47 @@ video:
 special: true
 ---
 
-Sometimes, computers misbehave. And very often, you want to know why.
-Let's look at some tools that help you do that!
+コンピュータは、ときどきおかしな振る舞いをします。そして多くの場合、その理由を知りたくなります。
+それを手助けしてくれるツールをいくつか見ていきましょう!
 
-But first, let's make sure you're able to do introspection. Often,
-system introspection requires that you have certain privileges, like
-being the member of a group (like `power` for shutdown). The `root` user
-has the ultimate privilege; they can do pretty much anything. You can run
-a command as `root` (but be careful!) using `sudo`.
+しかしその前に、まず内部調査(イントロスペクション)ができる状態になっていることを確認しましょう。システムの内部調査には、あるグループのメンバーであること(シャットダウンのための `power` など)のような、特定の権限が必要になることがよくあります。`root` ユーザーは究極の権限を持っており、ほとんど何でもできます。`sudo` を使うと、コマンドを `root` として実行できます(ただし注意してください!)。
 
-## What happened?
+## 何が起きたのか?
 
-If something goes wrong, the first place to start is to look at what
-happened around the time when things went wrong. For this, we need to
-look at logs.
+何かがうまくいかなかったとき、最初に取りかかるべきなのは、問題が起きた時刻のあたりで何が起きていたかを見ることです。そのためには、ログを見る必要があります。
 
-Traditionally, logs were all stored in `/var/log`, and many still are.
-Usually there's a file or folder per program. Use `grep` or `less` to
-find your way through them.
+伝統的に、ログはすべて `/var/log` に保存されており、今でも多くがそうなっています。たいていはプログラムごとにファイルまたはフォルダがあります。`grep` や `less` を使って、その中を探っていきましょう。
 
-There's also a kernel log that you can see using the `dmesg` command.
-This used to be available as a plain-text file, but nowadays you often
-have to go through `dmesg` to get at it.
+カーネルログもあり、これは `dmesg` コマンドで見ることができます。以前はプレーンテキストのファイルとして参照できましたが、最近では `dmesg` を経由しなければ見られないことが多くなっています。
 
-Finally, there is the "system log", which is increasingly where all of
-your log messages go. On _most_, though not all, Linux systems, that log
-is managed by `systemd`, the "system daemon", which controls all the
-services that run in the background (and much much more at this point).
-That log is accessible through the somewhat inconvenient `journalctl`
-tool if you are root, or part of the `admin` or `wheel` groups.
+最後に「システムログ」があります。ログメッセージはますます、すべてここに集まるようになってきています。すべてではないものの _ほとんど_ のLinuxシステムでは、このログは `systemd` によって管理されています。`systemd` は「システムデーモン」で、バックグラウンドで動くすべてのサービスを制御しています(そして今では、それ以外にもはるかに多くのことをしています)。このログには、rootであるか、`admin` または `wheel` グループに所属していれば、やや使い勝手の悪い `journalctl` ツールを通じてアクセスできます。
 
-For `journalctl`, you should be aware of these flags in particular:
+`journalctl` については、特に次のフラグを知っておくとよいでしょう。
 
- - `-u UNIT`: show only messages related to the given systemd service
- - `--full`: don't truncate long lines (the stupidest feature)
- - `-b`: only show messages from the latest boot (see also `-b -2`)
- - `-n100`: only show last 100 entries
+ - `-u UNIT`: 指定したsystemdサービスに関連するメッセージだけを表示する
+ - `--full`: 長い行を切り詰めない(切り詰めはもっとも馬鹿げた機能です)
+ - `-b`: 直近の起動以降のメッセージだけを表示する(`-b -2` も参照)
+ - `-n100`: 最後の100エントリだけを表示する
 
-## What is happening?
+## 何が起きているのか?
 
-If something _is_ wrong, or you just want to get a feel for what's going
-on in your system, you have a number of tools at your disposal for
-inspecting the currently running system:
+何かが _現に_ おかしいとき、あるいは単にシステムで何が起きているのかを把握したいときには、現在動作中のシステムを調べるためのツールがいくつも用意されています。
 
-First, there's `top`, and the improved version `htop`, which show you
-various statistics for the currently running processes on the system.
-CPU use, memory use, process trees, etc. There are lots of shortcuts,
-but `t` is particularly useful for enabling the tree view. You can also
-see the process tree with `pstree` (+ `-p` to include PIDs). If you want
-to know what those programs are doing, you'll often want to tail their
-log files. `journalctl -f`, `dmesg -w`, and `tail -f` are you friends
-here.
+まず `top` と、その改良版である `htop` があります。これらは、システム上で現在実行中のプロセスについてのさまざまな統計情報を表示します。CPU使用率、メモリ使用量、プロセスツリーなどです。ショートカットはたくさんありますが、ツリー表示を有効にする `t` は特に便利です。プロセスツリーは `pstree` でも見られます(PIDも含めるには `-p` を付けます)。それらのプログラムが何をしているのかを知りたければ、多くの場合、ログファイルをtailしたくなるでしょう。ここでは `journalctl -f`、`dmesg -w`、`tail -f` が頼りになります。
 
-Sometimes, you want to know more about the resources being used overall
-on your system. [`dool`](https://github.com/scottchiefbaker/dool) is
-excellent for that. It gives you real-time resource metrics for lots of
-different subsystems like I/O, networking, CPU utilization, context
-switches, and the like. `man dool` is the place to start.
+システム全体で使われているリソースについて、もっと詳しく知りたいこともあります。それには[`dool`](https://github.com/scottchiefbaker/dool) が優れています。I/O、ネットワーク、CPU使用率、コンテキストスイッチなど、数多くのサブシステムについて、リアルタイムのリソースメトリクスを表示してくれます。まずは `man dool` から始めましょう。
 
-If you're running out of disk space, there are two primary utilities
-you'll want to know about: `df` and `du`. The former shows you the
-status of all the partitions on your system (try it with `-h`), whereas
-the latter measures the size of all the folders you give it, including
-their contents (see also `-h` and `-s`).
+ディスク容量が足りなくなってきたときに知っておきたい主要なユーティリティが2つあります。`df` と `du` です。前者はシステム上のすべてのパーティションの状態を表示します(`-h` を付けて試してみてください)。一方、後者は指定したすべてのフォルダのサイズを、その中身も含めて計測します(`-h` と `-s` も参照)。
 
-To figure out what network connections you have open, `ss` is the way to
-go. `ss -t` will show all open TCP connections. `ss -tl` will show all
-listening (i.e., server) ports on your system. `-p` will also include
-which process is using that connection, and `-n` will give you the raw
-port numbers.
+どんなネットワーク接続が開いているかを調べるには、`ss` を使うのがよいでしょう。`ss -t` は開いているすべてのTCP接続を表示します。`ss -tl` は、システム上で待ち受けている(つまりサーバーの)すべてのポートを表示します。`-p` を付けるとその接続を使っているプロセスも表示され、`-n` を付けると生のポート番号が表示されます。
 
 
-## System configuration
+## システムの設定
 
-There are _many_ ways to configure your system, but we'll go through
-two very common ones: networking and services. Most applications on your
-system tell you how to configure them in their manpage, and usually it
-will involve editing files in `/etc`; the system configuration
-directory.
+システムを設定する方法は _たくさん_ ありますが、ここではごく一般的な2つ、ネットワークとサービスを取り上げます。システム上のほとんどのアプリケーションは、設定方法をmanページで説明しており、たいていはシステムの設定用ディレクトリである `/etc` にあるファイルを編集することになります。
 
-If you want to configure your network, the `ip` command lets you do
-that. Its arguments take on a slightly weird form, but `ip help command`
-will get you pretty far. `ip addr` shows you information about your
-network interfaces and how they're configured (IP addresses and such),
-and `ip route` shows you how network traffic is routed to different
-network hosts. Network problems can often be resolved purely through the
-`ip` tool. There's also `iw` for managing wireless network interfaces.
-`ping` is a handy tool for checking how deeply things are broken. Try
-pinging a hostname (google.com), an external IP address (1.1.1.1), and
-an internal IP address (192.168.1.1 or default gw). You may also want to
-fiddle with `/etc/resolv.conf` to check your DNS settings (how hostnames
-are resolved to IP addresses).
+ネットワークを設定したい場合は、`ip` コマンドでそれが行えます。引数の形式は少し変わっていますが、`ip help command` でかなりのことが分かります。`ip addr` はネットワークインターフェースとその設定(IPアドレスなど)についての情報を表示し、`ip route` はネットワークトラフィックが各ネットワークホストへどのようにルーティングされるかを表示します。ネットワークの問題は、多くの場合 `ip` ツールだけで解決できます。無線ネットワークインターフェースを管理するための `iw` もあります。`ping` は、どのくらい深いところで壊れているのかを確認するのに便利なツールです。ホスト名(google.com)、外部のIPアドレス(1.1.1.1)、内部のIPアドレス(192.168.1.1またはデフォルトゲートウェイ)にpingしてみてください。DNSの設定(ホスト名がどのようにIPアドレスに解決されるか)を確認するために、`/etc/resolv.conf` をいじってみるのもよいでしょう。
 
-To configure services, you pretty much have to interact with `systemd`
-these days, for better or for worse. Most services on your system will
-have a systemd service file that defines a systemd _unit_. These files
-define what command to run when that services is started, how to stop
-it, where to log things, etc. They're usually not too bad to read, and
-you can find most of them in `/usr/lib/systemd/system/`. You can also
-define your own in `/etc/systemd/system` .
+サービスを設定するには、良くも悪くも、最近ではほぼ必ず `systemd` とやり取りすることになります。システム上のほとんどのサービスには、systemdの _ユニット_ を定義するsystemdサービスファイルがあります。これらのファイルは、そのサービスの起動時にどのコマンドを実行するか、どうやって停止するか、どこにログを出力するか、などを定義しています。たいていは読むのがそれほど難しくなく、ほとんどは `/usr/lib/systemd/system/` で見つけられます。`/etc/systemd/system` に自分で定義することもできます。
 
-Once you have a systemd service in mind, you use the `systemctl` command
-to interact with it. `systemctl enable UNIT` will set the service to
-start on boot (`disable` removes it again), and `start`, `stop`, and
-`restart` will do what you expect. If something goes wrong, systemd will
-let you know, and you can use `journalctl -u UNIT` to see the
-application's log. You can also use `systemctl status` to see how all
-your system services are doing. If your boot feels slow, it's probably
-due to a couple of slow services, and you can use `systemd-analyze` (try
-it with `blame`) to figure out which ones.
+対象のsystemdサービスが決まったら、`systemctl` コマンドを使ってそれを操作します。`systemctl enable UNIT` はそのサービスを起動時に開始するよう設定し(`disable` でそれを解除します)、`start`、`stop`、`restart` は期待どおりの動作をします。何か問題が起きればsystemdが知らせてくれますし、`journalctl -u UNIT` でそのアプリケーションのログを見ることができます。`systemctl status` を使えば、システムのすべてのサービスの状態を確認することもできます。起動が遅いと感じるなら、おそらくいくつかの遅いサービスが原因で、`systemd-analyze` を使えば(`blame` を付けて試してみてください)どれが原因かを突き止められます。

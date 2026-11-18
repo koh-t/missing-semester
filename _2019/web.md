@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Web and Browsers"
+title: "Webとブラウザ"
 presenter: Jose
 date: 2019-01-31
 order: 1
@@ -10,65 +10,65 @@ video:
 special: true
 ---
 
-Apart from the terminal, the web browser is a tool you will find yourself spending significant amounts of time into. Thus it is worth learning how to use it efficiently and productively.
+ターミナルを別にすれば、Webブラウザはかなりの時間を費やすことになるツールです。したがって、効率的かつ生産的に使う方法を学んでおく価値があります。
 
-## Shortcuts
+## ショートカット
 
-Clicking around in your browser is often not the fastest option, getting familiar with common shortcuts can really pay off in the long run.
+ブラウザの中をクリックして回るのは、多くの場合もっとも速い方法ではありません。よく使うショートカットに慣れておくと、長い目で見て大いに元が取れます。
 
-- `Middle Button Click` in a link opens it in a new tab
-- `Ctrl+T` Opens a new tab
-- `Ctrl+Shift+T` Reopens a recently closed tab
-- `Ctrl+L` selects the contents of the search bar
-- `Ctrl+F` to search within a webpage. If you do this often, you may benefit from an extension that supports regular expressions in searches.
-
-
-## Search operators
-
-Web search engines like Google or DuckDuckGo provide search operators to enable more elaborate web searches:
-
-- `"bar foo"` enforces an exact match of bar foo
-- `foo site:bar.com` searches for foo within bar.com
-- `foo -bar ` excludes the terms containing bar from the search
-- `foobar filetype:pdf` Searches for files of that extension
-- `(foo|bar)` searches for matches that have foo OR bar
-
-More through lists are available for popular engines like [Google](https://ahrefs.com/blog/google-advanced-search-operators/) and [DuckDuckGo](https://duck.co/help/results/syntax)
+- リンクを `Middle Button Click` すると、新しいタブで開きます
+- `Ctrl+T` 新しいタブを開きます
+- `Ctrl+Shift+T` 最近閉じたタブを開き直します
+- `Ctrl+L` 検索バーの内容を選択します
+- `Ctrl+F` Webページ内を検索します。これをよく使うなら、検索で正規表現をサポートする拡張機能が役に立つかもしれません。
 
 
-## Searchbar
+## 検索演算子
 
-The searchbar is a powerful tool too. Most browsers can infer search engines from websites and will store them. By editing the keyword argument
+GoogleやDuckDuckGoのようなWeb検索エンジンは、より凝ったWeb検索を可能にする検索演算子を提供しています。
 
-- In Google Chrome they are in [chrome://settings/searchEngines](chrome://settings/searchEngines)
-- In Firefox they are in [about:preferences#search](about:preferences#search)
+- `"bar foo"` bar fooに完全一致するものだけに絞ります
+- `foo site:bar.com` bar.comの中でfooを検索します
+- `foo -bar ` barを含む語を検索から除外します
+- `foobar filetype:pdf` その拡張子のファイルを検索します
+- `(foo|bar)` fooまたはbarを含むものを検索します
 
-For example you can make so that `y SOME SEARCH TERMS` to directly search in youtube.
-
-Moreover, if you own a domain you can setup subdomain forwards using your registrar. For instance I have mapped `https://ht.josejg.com` to this course website. That way I can just type `ht.` and the searchbar will autocomplete. Another good feature of this setup is that unlike bookmarks they will work in every browser.
-
-## Privacy extensions
-
-Nowadays surfing the web can get quite annoying due to ads and invasive due to trackers. Moreover a good adblocker not only blocks most ad content but it will also block sketchy and malicious websites since they will be included in the common blacklists. They will also reduce page load times sometimes by reducing the amount of requests performed. A couple of recommendations are:
-
-- **uBlock origin** ([Chrome](https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm), [Firefox](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)): block ads and trackers based on predefined rules. You should also consider taking a look at the enabled blacklists in settings since you can enable more based on your region or browsing habits. You can even install filters from [around the web](https://github.com/gorhill/uBlock/wiki/Filter-lists-from-around-the-web)
-
-- **[Privacy Badger](https://privacybadger.org/)**: detects and blocks trackers automatically. For example when you go from website to website ad companies track which sites you visit and build a profile of you
-
-- **[HTTPS everywhere](https://www.eff.org/https-everywhere)** is a wonderful extension that redirects to HTTPS version of a website automatically, if available.
-
-You can find about more addons of this kind [here](https://www.privacytools.io/privacy-browser-addons/)
-
-## Style customization
-
-Web browsers are just another piece of software running in _your machine_ and thus you usually have the last say about what they should display or how they should behave. An example of this are custom styles. Browsers determine how to render the style of a  webpage using Cascading Style Sheets often abbreviated as CSS.
-
-You can access the source code of a website by inspecting it and changing its contents and styles temporarily (this is also a reason why you should never trust webpage screenshots).
-
-If you want to permanently tell your browser to override the style settings for a webpage you will need to use an extension. Our recommendation is **[Stylus](https://github.com/openstyles/stylus)** ([Firefox](https://addons.mozilla.org/en-US/firefox/addon/styl-us/), [Chrome](https://chrome.google.com/webstore/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne?hl=en)).
+主要な検索エンジンについては、より網羅的なリストが公開されています。[Google](https://ahrefs.com/blog/google-advanced-search-operators/)と[DuckDuckGo](https://duck.co/help/results/syntax)のものを参照してください
 
 
-For example, we can write the following style for the class website
+## 検索バー
+
+検索バーも強力なツールです。ほとんどのブラウザは、Webサイトから検索エンジンを推測して保存してくれます。キーワードの引数は編集できます
+
+- Google Chromeでは、[chrome://settings/searchEngines](chrome://settings/searchEngines)にあります
+- Firefoxでは、[about:preferences#search](about:preferences#search)にあります
+
+たとえば、`y SOME SEARCH TERMS` と入力するとYouTubeを直接検索するように設定できます。
+
+さらに、ドメインを所有しているなら、レジストラを使ってサブドメインの転送を設定できます。たとえば私は、`https://ht.josejg.com` をこの授業のWebサイトに割り当てています。こうしておけば、`ht.` と入力するだけで検索バーが自動補完してくれます。この設定のもうひとつの良い点は、ブックマークと違って、どのブラウザでも機能することです。
+
+## プライバシー拡張機能
+
+最近では、Webの閲覧は広告のせいでかなり煩わしく、トラッカーのせいでプライバシーを侵害するものになりがちです。さらに、優れた広告ブロッカーは、ほとんどの広告コンテンツをブロックするだけでなく、怪しいWebサイトや悪意のあるWebサイトもブロックしてくれます。そうしたサイトは一般的なブラックリストに含まれているからです。また、実行されるリクエストの数が減ることで、ページの読み込み時間が短くなることもあります。いくつかおすすめを挙げます。
+
+- **uBlock origin**([Chrome](https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm)、[Firefox](https://addons.mozilla.org/en-US/firefox/addon/ublock-origin/)): あらかじめ定義されたルールに基づいて広告とトラッカーをブロックします。設定で有効になっているブラックリストも確認してみるとよいでしょう。地域や閲覧の習慣に応じて、さらに多くのリストを有効にできるからです。[Web上のあちこち](https://github.com/gorhill/uBlock/wiki/Filter-lists-from-around-the-web)で公開されているフィルタをインストールすることもできます
+
+- **[Privacy Badger](https://privacybadger.org/)**: トラッカーを自動的に検出してブロックします。たとえば、あなたがWebサイトからWebサイトへと移動するとき、広告会社はあなたがどのサイトを訪れたかを追跡し、あなたのプロファイルを作り上げています
+
+- **[HTTPS everywhere](https://www.eff.org/https-everywhere)** は、HTTPS版が利用できる場合にWebサイトのHTTPS版へ自動的にリダイレクトしてくれる素晴らしい拡張機能です。
+
+この種のアドオンは、[こちら](https://www.privacytools.io/privacy-browser-addons/)でさらに見つけられます
+
+## スタイルのカスタマイズ
+
+Webブラウザは、_あなたのマシン_ で動いているソフトウェアのひとつにすぎません。したがって、何を表示すべきか、どう振る舞うべきかについて最終的な決定権を持つのは、たいていあなたです。その一例がカスタムスタイルです。ブラウザは、Cascading Style Sheets(しばしばCSSと略されます)を使って、Webページのスタイルをどう描画するかを決定します。
+
+Webサイトを検証(inspect)すればそのソースコードにアクセスでき、内容やスタイルを一時的に変更できます(これは、Webページのスクリーンショットを決して信用してはならない理由でもあります)。
+
+あるWebページのスタイル設定を上書きするようブラウザに恒久的に指示したい場合は、拡張機能を使う必要があります。私たちのおすすめは **[Stylus](https://github.com/openstyles/stylus)**([Firefox](https://addons.mozilla.org/en-US/firefox/addon/styl-us/)、[Chrome](https://chrome.google.com/webstore/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne?hl=en))です。
+
+
+たとえば、この授業のWebサイト向けに次のようなスタイルを書けます
 
 
 ```css
@@ -86,14 +86,14 @@ a:link {
 }
 ```
 
-Moreover, Stylus can find styles written by other users and published in [userstyles.org](https://userstyles.org/). Most common websites have one or several dark theme stylesheets for instance. FYI, you should not use Stylish since it was shown to leak user data, more [here](https://arstechnica.com/information-technology/2018/07/stylish-extension-with-2m-downloads-banished-for-tracking-every-site-visit/)
+さらにStylusは、他のユーザーが書いて[userstyles.org](https://userstyles.org/)で公開しているスタイルを探すこともできます。たとえば、よく使われるWebサイトのほとんどには、ダークテーマのスタイルシートがひとつ以上あります。ちなみに、Stylishは使うべきではありません。ユーザーのデータを漏洩させていたことが明らかになったからです。詳しくは[こちら](https://arstechnica.com/information-technology/2018/07/stylish-extension-with-2m-downloads-banished-for-tracking-every-site-visit/)
 
 
-## Functionality Customization
+## 機能のカスタマイズ
 
-In the same way that you can modify the style, you can also modify the behaviour of a website by writing custom javascript and them sourcing it using a web browser extension such as [Tampermonkey](https://tampermonkey.net/)
+スタイルを変更できるのと同じように、独自のJavaScriptを書き、[Tampermonkey](https://tampermonkey.net/)のようなWebブラウザ拡張機能を使ってそれを読み込ませることで、Webサイトの挙動を変更することもできます
 
-For example the following script enables vim-like navigation using the J and K keys.
+たとえば次のスクリプトは、JキーとKキーを使ったvim風のナビゲーションを可能にします。
 
 ```js
 // ==UserScript==
@@ -122,14 +122,14 @@ For example the following script enables vim-like navigation using the J and K k
 })();
 ```
 
-There are also script repositories such as [OpenUserJS](https://openuserjs.org/) and [Greasy Fork](https://greasyfork.org/en). However, be warned, installing user scripts from others can be very dangerous since they can pretty much do anything such as steal your credit card numbers. Never install a script unless you read the whole thing yourself, understand what it does, and are absolutely sure that you know it isn't doing anything suspicious. Never install a script that contains minified or obfuscated code that you can't read!
+[OpenUserJS](https://openuserjs.org/)や[Greasy Fork](https://greasyfork.org/en)のようなスクリプトのリポジトリもあります。ただし注意してください。他人のユーザースクリプトをインストールするのは非常に危険な場合があります。クレジットカード番号を盗むなど、ほとんど何でもできてしまうからです。自分で全体を読み、何をするものかを理解し、怪しいことを何もしていないと絶対に確信できる場合を除いて、スクリプトは決してインストールしないでください。自分で読めない、ミニファイまたは難読化されたコードを含むスクリプトは、決してインストールしてはいけません!
 
-## Web APIs
+## Web API
 
-It has become more and more common for webservices to offer an application interface aka web API so you can interact with the services making web requests.
-A more in depth introduction to the topic can be found [here](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Introduction). There are [many public APIs](https://github.com/toddmotto/public-apis). Web APIs can be useful for very many reasons:
+Webサービスがアプリケーションインターフェース、いわゆるWeb APIを提供することがますます一般的になっており、Webリクエストを送ることでサービスとやり取りできます。
+このトピックのより詳しい入門は[こちら](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Client-side_web_APIs/Introduction)にあります。[公開されているAPIは数多くあります](https://github.com/toddmotto/public-apis)。Web APIは、実にさまざまな理由で役に立ちます。
 
-- **Retrieval**. Web APIs can quite easily provide you information such as maps, weather or what your public ip address. For instance `curl ipinfo.io` will return a JSON object with some details about your public ip, region, location, &c. With proper parsing these tools can be integrated even with command line tools. The following bash functions talks to Googles autocompletion API and returns the first ten matches.
+- **情報の取得**。Web APIを使うと、地図、天気、自分のパブリックIPアドレスといった情報をかなり簡単に取得できます。たとえば `curl ipinfo.io` は、あなたのパブリックIP、地域、位置などの詳細を含むJSONオブジェクトを返します。適切にパースすれば、これらのツールはコマンドラインツールとも統合できます。次のbash関数は、Googleの自動補完APIと通信して、最初の10件のマッチを返します。
 
 ```bash
 function c() {
@@ -141,17 +141,17 @@ function c() {
 }
 ```
 
-- **Interaction**. Web API endpoints can also be used to trigger actions. These usually require some sort of authentication token that you can obtain through the service. For example performing the following
-`curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' "https://hooks.slack.com/services/$SLACK_TOKEN"` will send a `Hello, World!` message in a channel.
+- **操作の実行**。Web APIのエンドポイントは、アクションを起動するためにも使えます。これらには通常、サービスを通じて取得できる何らかの認証トークンが必要です。たとえば
+`curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello, World!"}' "https://hooks.slack.com/services/$SLACK_TOKEN"` を実行すると、チャンネルに `Hello, World!` というメッセージが送信されます。
 
-- **Piping**. Since some services with web APIs are rather popular, common web API "gluing" has already been implemented and is provided with server included. This is the case for services like [If This Then That](https://ifttt.com/) and [Zapier](https://zapier.com/)
+- **パイプ処理**。Web APIを持つサービスの中にはかなり人気のあるものがあるため、よくあるWeb API同士の「つなぎ合わせ」はすでに実装されており、サーバー込みで提供されています。[If This Then That](https://ifttt.com/)や[Zapier](https://zapier.com/)のようなサービスがこれにあたります
 
 
-## Web Automation
+## Webの自動化
 
-Sometimes web APIs are not enough. If only reading is needed you can use a html parser like `pup` or use a library, for example python has BeautifulSoup. However if interactivity or javascript execution is required those solutions fall short. 
+Web APIだけでは足りないこともあります。読み取りだけで済むなら、`pup` のようなHTMLパーサを使うか、ライブラリを使えます。たとえばPythonにはBeautifulSoupがあります。しかし、対話的な操作やJavaScriptの実行が必要な場合、これらの方法では力不足です。
 
-- **WebDriver**. For example, the following script will save the specified url using the wayback machine simulating the interaction of typing the website.
+- **WebDriver**。たとえば次のスクリプトは、WebサイトのURLを入力する操作をシミュレートすることで、指定したURLをWayback Machineに保存します。
 
 ```python
 from selenium.webdriver import Firefox
@@ -174,12 +174,12 @@ snapshot_wayback(driver, url)
 ```
 
 
-## Exercises
+## 演習
 
-1. Edit a keyword search engine that you use often in your web browser
-1. Install the mentioned extensions. Look into how uBlock Origin/Privacy Badger can be disabled for a website. What differences do you see? Try doing it in a website with plenty of ads like YouTube.
-1. Install Stylus and write a custom style for the class website using the CSS provided. Here are some common programming characters `=   ==   ===   >=   =>   ++   /=   ~=`. What happens to them when changing the font to Fira Code? If you want to know more search for programming font ligatures.
-1. Find a web api to get the weather in your city/area.
-1. Use a WebDriver software like [Selenium](https://www.selenium.dev/documentation/) to automate some repetitive manual task that you perform often with your browser.
+1. Webブラウザでよく使う検索エンジンのキーワードを編集してください
+1. 上で挙げた拡張機能をインストールしてください。uBlock OriginやPrivacy Badgerを特定のWebサイトで無効にする方法を調べてみましょう。どのような違いが見られますか?YouTubeのように広告の多いWebサイトで試してみてください。
+1. Stylusをインストールし、掲載したCSSを使って授業のWebサイト用のカスタムスタイルを書いてください。プログラミングでよく使われる文字をいくつか挙げます: `=   ==   ===   >=   =>   ++   /=   ~=`。フォントをFira Codeに変更すると、これらはどうなるでしょうか?もっと知りたい場合は、プログラミングフォントの合字(リガチャ)について検索してみてください。
+1. 自分の住む都市・地域の天気を取得できるWeb APIを見つけてください。
+1. [Selenium](https://www.selenium.dev/documentation/)のようなWebDriverソフトウェアを使って、ブラウザでよく行っている繰り返しの手作業を自動化してください。
 
 

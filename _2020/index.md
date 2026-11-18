@@ -1,8 +1,8 @@
 ---
 layout: page
-title: "2020 Lectures"
+title: "2020年 講義一覧"
 description: >
-  Lecture notes and videos for Missing Semester, MIT IAP 2020.
+  Missing Semester(MIT IAP 2020)の講義ノートと動画。
 permalink: /2020/
 phony: true
 ---
@@ -16,9 +16,9 @@ phony: true
         {% if lecture.ready %}
           <a href="{{ lecture.url }}">{{ lecture.title }}</a>
         {% elsif lecture.noclass %}
-          {{ lecture.title }} [no class]
+          {{ lecture.title }} [休講]
         {% else %}
-          {{ lecture.title }} [coming soon]
+          {{ lecture.title }} [近日公開]
         {% endif %}
         {% if lecture.details %}
           <br>
@@ -29,11 +29,11 @@ phony: true
   {% endfor %}
 </ul>
 
-Video recordings of the lectures are available [on YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J).
+講義の録画は[YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J)で公開されています。
 
-# Beyond MIT
+# MITの外へ
 
-We've also shared this class beyond MIT in the hopes that others may benefit from these resources. You can find posts and discussion on
+この授業がMITの外の人々にも役立つことを願って、私たちはこの授業をMITの外にも公開しています。投稿や議論は以下で見ることができます。
 
  - [Hacker News](https://news.ycombinator.com/item?id=22226380)
  - [Lobsters](https://lobste.rs/s/ti1k98/missing_semester_your_cs_education_mit)
@@ -43,7 +43,7 @@ We've also shared this class beyond MIT in the hopes that others may benefit fro
  - [YouTube](https://www.youtube.com/playlist?list=PLyzOVJj3bHQuloKGG59rS43e29ro7I57J)
 
 {% comment %}
-Some more URLs:
+その他のURL:
 
 - https://news.ycombinator.com/item?id=27154577
 - https://news.ycombinator.com/item?id=34934216
@@ -55,6 +55,6 @@ Some more URLs:
 - https://twitter.com/MIT_CSAIL/status/1581313961093484545
 {% endcomment %}
 
-# Acknowledgments
+# 謝辞
 
-We thank Elaine Mello, Jim Cain, and [MIT Open Learning](https://openlearning.mit.edu/) for making it possible for us to record lecture videos; Anthony Zolnik and [MIT AeroAstro](https://aeroastro.mit.edu/) for A/V equipment; and Brandi Adams and [MIT EECS](https://www.eecs.mit.edu/) for supporting this class.
+講義動画の収録を可能にしてくださったElaine Melloさん、Jim Cainさん、[MIT Open Learning](https://openlearning.mit.edu/)に感謝します。A/V機材を提供してくださったAnthony Zolnikさんと[MIT AeroAstro](https://aeroastro.mit.edu/)に感謝します。この授業を支援してくださったBrandi Adamsさんと[MIT EECS](https://www.eecs.mit.edu/)に感謝します。

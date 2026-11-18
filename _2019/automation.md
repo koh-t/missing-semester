@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Automation"
+title: "自動化"
 presenter: Jose
 date: 2019-01-24
 order: 3
@@ -10,29 +10,23 @@ video:
 special: true
 ---
 
-Sometimes you write a script that does something but you want for it to run periodically, say a backup task. You can always write an *ad hoc* solution that runs in the background and comes online periodically. However, most UNIX systems come with the cron daemon which can run task with a frequency up to a minute based on simple rules.
+何かを行うスクリプトを書いたものの、それを定期的に実行したい、ということがあります。たとえばバックアップのタスクです。バックグラウンドで動き続けて定期的に処理を行う *その場しのぎ* の仕組みを自分で書くこともできます。しかし、ほとんどのUNIXシステムにはcronデーモンが付属しており、簡単なルールにもとづいて、最短で1分ごとの頻度でタスクを実行できます。
 
-On most UNIX systems the cron daemon, `crond` will be running by default but you can always check using `ps aux | grep crond`.
+ほとんどのUNIXシステムでは、cronデーモンである `crond` がデフォルトで動いていますが、`ps aux | grep crond` でいつでも確認できます。
 
-## The crontab
+## crontab
 
-The configuration file for cron can be displayed running `crontab -l` edited running `crontab -e` The time format that cron uses are five space separated fields along with the user and command
+cronの設定ファイルは、`crontab -l` を実行すると表示でき、`crontab -e` を実行すると編集できます。cronが使う時刻の書式は、空白で区切られた5つのフィールドで、それにユーザーとコマンドが続きます。
 
-- **minute** -  What minute of the hour the command will run on,
-     and is between '0' and '59'
-- **hour** -    This controls what hour the command will run on, and is specified in
-         the 24 hour clock, values must be between 0 and 23 (0 is midnight)
-- **dom** - This is the Day of Month, that you want the command run on, e.g. to
-     run a command on the 19th of each month, the dom would be 19.
-- **month** -   This is the month a specified command will run on, it may be specified
-     numerically (0-12), or as the name of the month (e.g. May)
-- **dow** - This is the Day of Week that you want a command to be run on, it can
-     also be numeric (0-7) or as the name of the day (e.g. sun).
-- **user** -    This is the user who runs the command.
-- **command** - This is the command that you want run. This field may contain
-     multiple words or spaces.
+- **minute** - コマンドを実行する「分」で、'0' から '59' の間の値です。
+- **hour** - コマンドを実行する「時」を制御します。24時間制で指定し、値は0から23の間でなければなりません(0は深夜0時)。
+- **dom** - コマンドを実行したい日(Day of Month)です。たとえば毎月19日にコマンドを実行するには、domを19にします。
+- **month** - 指定したコマンドを実行する月です。数値(0-12)でも、月の名前(例: May)でも指定できます。
+- **dow** - コマンドを実行したい曜日(Day of Week)です。これも数値(0-7)でも、曜日の名前(例: sun)でも指定できます。
+- **user** - コマンドを実行するユーザーです。
+- **command** - 実行したいコマンドです。このフィールドには複数の単語や空白を含めることができます。
 
-Note that using an asterisk `*` means all and using an asterisk followed by a slash and number means every nth value. So `*/5` means every five. Some examples are
+アスタリスク `*` は「すべて」を意味し、アスタリスクにスラッシュと数字を続けると「n個ごとの値」を意味することに注意してください。つまり `*/5` は「5つごと」という意味です。いくつか例を挙げます。
 
 ```shell
 */5   *    *   *   *       # Every five minutes
@@ -42,38 +36,38 @@ Note that using an asterisk `*` means all and using an asterisk followed by a sl
   0   0    *   *   5       # Every Friday at 12:00 am
   0   0    1   */2 *       # Every other month, the first day, 12:00am
 ```
-You can find many more examples of common crontab schedules in [crontab.guru](https://crontab.guru/examples.html)
+よく使われるcrontabのスケジュールの例は、[crontab.guru](https://crontab.guru/examples.html)でさらにたくさん見つけられます。
 
-## Shell environment and logging
+## シェル環境とログ
 
-A common pitfall when using cron is that it does not load the same environment scripts that common shells do such as `.bashrc`, `.zshrc`, &c and it does not log the output anywhere by default. Combined with the maximum frequency being one minute, it can become quite painful to debug cronscripts initially.
+cronを使うときによくある落とし穴は、`.bashrc` や `.zshrc` など、一般的なシェルが読み込む環境用のスクリプトをcronは読み込まないこと、そしてデフォルトでは出力をどこにも記録しないことです。最大の頻度が1分であることも相まって、cronスクリプトのデバッグは最初のうちかなり苦痛になりがちです。
 
-To deal with the environment, make sure that you use absolute paths in all your scripts and modify your environment variables such as `PATH` so the script can run successfully. To simplify logging, a good recommendation is to write your crontab in a format like this
+環境の問題に対処するには、すべてのスクリプトで必ず絶対パスを使い、スクリプトが正常に実行できるように `PATH` などの環境変数を変更しておきましょう。ログを簡単に取るには、crontabを次のような形式で書くのがおすすめです。
 
 
 ```shell
 * * * * *   user  /path/to/cronscripts/every_minute.sh >> /tmp/cron_every_minute.log 2>&1
 ```
 
-And write the script in a separate file. Remember that `>>` appends to the file and that `2>&1` redirects `stderr` to `stdout` (you might to want keep them separate though).
+そして、スクリプト本体は別のファイルに書きます。`>>` はファイルへの追記であり、`2>&1` は `stderr` を `stdout` にリダイレクトすることを覚えておいてください(ただし、両者を分けておきたい場合もあるでしょう)。
 
 ## Anacron
 
-One caveat of using cron is that if the computer is powered off or asleep when the cron script should run then it is not executed. For frequent tasks this might be fine, but if a task runs less often, you may want to ensure that it is executed. [anacron](https://linux.die.net/man/8/anacron) works similar to `cron` except that the frequency is specified in days. Unlike cron, it does not assume that the machine is running continuously. Hence, it can be used on machines that aren't running 24 hours a day, to control regular jobs as daily, weekly, and monthly jobs.
+cronを使ううえでの注意点のひとつは、cronスクリプトが実行されるべきタイミングでコンピュータの電源が切れていたりスリープしていたりすると、そのスクリプトは実行されないということです。頻繁に実行されるタスクなら問題にならないかもしれませんが、実行頻度の低いタスクの場合は、確実に実行されるようにしたいこともあるでしょう。[anacron](https://linux.die.net/man/8/anacron)は `cron` と同じように動作しますが、頻度を日単位で指定する点が異なります。cronとは違って、マシンが連続稼働していることを前提としません。そのため、24時間動いているわけではないマシンでも、日次・週次・月次のジョブといった定期的なジョブを制御するために使えます。
 
 
-## Exercises
+## 演習
 
-1. Make a script that looks every minute in your downloads folder for any file that is a picture (you can look into [MIME types](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types) or use a regular expression to match common extensions) and moves them into your Pictures folder.
+1. ダウンロードフォルダを1分ごとに調べて、画像ファイルがあれば(判定には[MIMEタイプ](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types)を調べてもよいですし、正規表現で一般的な拡張子にマッチさせてもかまいません)、それらをピクチャフォルダに移動するスクリプトを作ってください。
 
-1. Write a cron script to weekly check for outdated packages in your system and prompts you to update them or updates them automatically.
+1. システム内の古くなったパッケージを週に一度チェックし、更新するよう促すか、または自動的に更新するcronスクリプトを書いてください。
 
 
 
 {% comment %}
 
 - [fswatch](https://github.com/emcrisostomo/fswatch)
-- GUI automation (pyautogui) [Automating the boring stuff Chapter 18](https://automatetheboringstuff.com/chapter18/)
+- GUIの自動化(pyautogui)[Automating the boring stuff 第18章](https://automatetheboringstuff.com/chapter18/)
 - Ansible/puppet/chef
 
 - https://xkcd.com/1205/

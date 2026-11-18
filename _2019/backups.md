@@ -1,6 +1,6 @@
 ---
 layout: lecture
-title: "Backups"
+title: "バックアップ"
 presenter: Jose
 date: 2019-01-24
 order: 2
@@ -10,94 +10,94 @@ video:
 special: true
 ---
 
-There are two types of people:
+世の中には2種類の人がいます。
 
-- Those who do backups
-- Those who will do backups
+- バックアップを取っている人
+- これからバックアップを取ることになる人
 
-Any data you own that you haven't backed up is data that could be gone at any moment, forever. Here we will cover some good backup basics and the pitfalls of some approaches.
+あなたが持っているデータのうち、バックアップしていないものは、いつ永久に失われてもおかしくないデータです。ここでは、バックアップの基本と、いくつかのやり方に潜む落とし穴を扱います。
 
-## 3-2-1 Rule
+## 3-2-1ルール
 
-The [3-2-1 rule](https://www.us-cert.gov/sites/default/files/publications/data_backup_options.pdf) is a general recommended strategy for backing up your data. It state that you should have:
+[3-2-1ルール](https://www.us-cert.gov/sites/default/files/publications/data_backup_options.pdf)は、データをバックアップするための一般的な推奨戦略です。このルールでは、次のようにすべきだとされています。
 
-- at least **3 copies** of your data
-- **2** copies in **different mediums**
-- **1** of the copies being **offsite**
+- データの **コピーを少なくとも3つ** 持つ
+- そのうち **2つ** は **異なる媒体** に置く
+- コピーの **1つ** は **オフサイト** に置く
 
-The main idea behind this recommendation is not to put all your eggs in one basket. Having 2 different devices/disks ensures that a single hardware failure doesn't take away all your data. Similarly, if you store your only backup at home and the house burns down or gets robbed you'll lose everything! That's what the offsite copy is there for. Onsite backups give you availability and speed, offsite give you the resiliency should a disaster happen.
+この推奨の背後にある主な考え方は、すべての卵をひとつのかごに入れない、ということです。2つの異なるデバイス/ディスクを持っておけば、ハードウェアが1つ故障しただけですべてのデータを失うことはありません。同様に、唯一のバックアップを自宅に保管していて、家が火事になったり泥棒に入られたりしたら、すべてを失ってしまいます! オフサイトのコピーはそのためにあるのです。オンサイトのバックアップは可用性と速度をもたらし、オフサイトのバックアップは災害が起きたときの耐性をもたらします。
 
-## Testing your backups
+## バックアップをテストする
 
-A common pitfall when performing backups is blindly trusting whatever the system says it's doing and not verifying that the data can be properly recovered. Toy Story 2 was almost lost and their backups were not working, [luck](https://www.youtube.com/watch?v=8dhp_20j0Ys) ended up saving them.
+バックアップを行う際によくある落とし穴は、システムが「やっている」と言っていることを盲目的に信じ、データが正しく復元できるかを検証しないことです。『トイ・ストーリー2』は危うく失われかけ、しかもバックアップは機能していませんでした。結局は[運](https://www.youtube.com/watch?v=8dhp_20j0Ys)に救われたのです。
 
-## Versioning
+## バージョニング
 
-You should understand that [RAID](https://en.wikipedia.org/wiki/RAID) is not a backup, and in general **mirroring is not a backup solution**. Simply syncing your files somewhere will not help in several scenarios, such as:
+[RAID](https://en.wikipedia.org/wiki/RAID)はバックアップではなく、一般に **ミラーリングはバックアップの解決策ではない** ということを理解しておくべきです。ファイルをどこかに同期しておくだけでは、次のようないくつかの状況で役に立ちません。
 
-- Data corruption
-- Malicious software
-- Deleting files by mistake
+- データの破損
+- 悪意のあるソフトウェア
+- ファイルの誤削除
 
-If the changes on your data propagate to the backup then you won't be able to recover in these scenarios. Note that this is the case for a lot of cloud storage solutions like Dropbox, Google Drive, One Drive, &c. Some of them do keep deleted data around for short amounts of time but usually the interface to recover is not something you want to be using to recover large amounts of files.
+データへの変更がバックアップにも伝播してしまうなら、これらの状況では復元できません。Dropbox、Google Drive、One Driveなど、多くのクラウドストレージサービスがこれに当てはまることに注意してください。削除されたデータを短期間だけ保持してくれるものもありますが、たいていの場合、その復元用のインターフェースは、大量のファイルを復元するのに使いたいと思えるようなものではありません。
 
-A proper backup system should be versioned in order to prevent this failure mode. By providing different snapshots in time one can easily navigate them to restore whatever was lost. The most widely known software of this kind is macOS Time Machine.
+このような失敗のしかたを防ぐために、まともなバックアップシステムはバージョン管理されているべきです。異なる時点のスナップショットが提供されていれば、それらを簡単にたどって、失われたものを復元できます。この種のソフトウェアでもっとも広く知られているのは、macOSのTime Machineです。
 
-## Deduplication
+## 重複排除
 
-However, making several copies of your data might be extremely costly in terms of disk space. Nevertheless, from one version to the next, most data will be identical and needs not be transferred again. This is where [data deduplication](https://en.wikipedia.org/wiki/Data_deduplication) comes into play, by keeping track of what has already been stored one can do **incremental backups** where only the changes from one version to the next need to be stored. This significantly reduces the amount of space needed for backups beyond the first copy.
+しかし、データのコピーをいくつも作ると、ディスク容量の面で非常に高くつく可能性があります。とはいえ、あるバージョンから次のバージョンにかけて、ほとんどのデータは同一であり、再度転送する必要はありません。ここで登場するのが[データ重複排除](https://en.wikipedia.org/wiki/Data_deduplication)です。すでに保存済みのものを記録しておくことで、あるバージョンから次のバージョンへの変更分だけを保存すればよい **増分バックアップ** が可能になります。これにより、最初のコピー以降のバックアップに必要な容量が大幅に削減されます。
 
-## Encryption
+## 暗号化
 
-Since we might be backing up to untrusted third parties like cloud providers it is worth considering that if you backup your data is copied *as is* then it could potentially be looked by unwanted agents. Documents like your taxes are sensitive information that should not be backed up in plain format. To prevent this, many backup solutions offer **client side encryption** where data is encrypted before being sent to the server. That way the server cannot read the data it is storing but you can decrypt it with your secret key.
+クラウドプロバイダーのような信頼できない第三者にバックアップすることもあるので、データが *そのまま* コピーされる形でバックアップすると、望ましくない相手に見られる可能性があることを考慮しておく価値があります。税金の書類のような文書は機微な情報であり、平文の形式でバックアップすべきではありません。これを防ぐために、多くのバックアップソリューションは、データをサーバーに送る前に暗号化する **クライアントサイド暗号化** を提供しています。こうすれば、サーバーは保存しているデータを読めませんが、あなたは自分の秘密鍵でそれを復号できます。
 
-As a side note, if your disk (or home partition) is not encrypted, then anyone that get hold of your computer can manage to override the user access controls and read your data. Modern hardware supports fast and efficient read and writes of encrypted data so you might want to consider enabling **full disk encryption**.
-
-
-## Append only
-
-The properties reviewed so far focus on hardware failure or user mistakes but fail to address what happens if a malicious agent wanted to delete your data. Namely, say someone hacks into your system, are they able to wipe all your copies of the data you care about? If you worry about that scenario then you need some sort of append only backup solution. In general, this means having a server that will allow you to send new data but will refuse to delete existing data. Usually users have two keys, an append only key that supports  creating new backups and a full access key that also allows for deleting old backups that are no longer needed. The latter one is stored offline.
-
-Note that this is a quite challenging scenario since you need the ability to make changes whilst still preventing a malicious user from deleting your data. Existing commercial solutions include [Tarsnap](https://www.tarsnap.com/) and [Borgbase](https://www.borgbase.com/).
+余談ですが、ディスク(またはhomeパーティション)が暗号化されていない場合、あなたのコンピュータを手に入れた人は誰でも、ユーザーのアクセス制御を迂回してデータを読むことができてしまいます。最近のハードウェアは暗号化されたデータの高速で効率的な読み書きをサポートしているので、**フルディスク暗号化** を有効にすることを検討するとよいでしょう。
 
 
-## Additional considerations
+## 追記専用
 
-Some other things you may want to look into are:
+ここまでに見てきた性質は、ハードウェアの故障やユーザーのミスに焦点を当てたもので、悪意のある者があなたのデータを削除しようとした場合にどうなるかには対処できていません。つまり、誰かがあなたのシステムに侵入したとして、その人はあなたが大切にしているデータのコピーをすべて消去できてしまうでしょうか? そのシナリオが心配なら、何らかの追記専用(append only)のバックアップソリューションが必要です。一般に、これは、新しいデータの送信は許可するが、既存のデータの削除は拒否するサーバーを用意することを意味します。通常、ユーザーは2つの鍵を持ちます。新しいバックアップの作成に対応した追記専用の鍵と、不要になった古いバックアップの削除もできるフルアクセスの鍵です。後者はオフラインで保管します。
 
-- **Periodic backups**: outdated backups can become pretty useless. Making backups regularly should be a consideration for your system
-- **Bootable backups**: some programs allow you to clone your entire disk. That way you have an image that contains an entire copy of your system you can boot directly from.
-- **Differential backup strategies**, you may not necessarily care the same about all your data. You can define different backup policies for different types of data.
-- **Append only backups** an additional consideration is to enforce append only operations to your backup repositories in order to prevent malicious agents to delete them if they get hold of your machine.
+これはかなり難しいシナリオであることに注意してください。悪意のあるユーザーによるデータの削除を防ぎつつ、変更を加える能力も必要だからです。既存の商用ソリューションとしては、[Tarsnap](https://www.tarsnap.com/)や[Borgbase](https://www.borgbase.com/)があります。
 
 
-## Webservices
+## その他の考慮事項
 
-Not all the data that you use lives on your hard disk. If you use **webservices**, then it might be the case that some data you care about, such as Google Docs presentations or Spotify playlists, is stored online. Another easy example that is easy to forget is email accounts with web access, such as Gmail. Figuring out a backup solution in these cases is somewhat trickier. However, there are many services that allow you to download your data, either directly or via an API. Tools such as [gmvault](https://github.com/gaubert/gmvault) for Gmail are available to download the email files to your computer.
+ほかにも調べておくとよいことがいくつかあります。
+
+- **定期的なバックアップ**: 古くなったバックアップは、ほとんど役に立たなくなることがあります。バックアップを定期的に取ることを、システムの検討事項に入れておくべきです。
+- **起動可能なバックアップ**: プログラムによっては、ディスク全体を複製できるものがあります。そうすれば、システムの完全なコピーを含み、そこから直接起動できるイメージが手に入ります。
+- **データに応じたバックアップ戦略**: すべてのデータを同じように大切に思っているとは限りません。データの種類ごとに異なるバックアップポリシーを定義できます。
+- **追記専用バックアップ**: 追加の検討事項として、マシンを乗っ取られた場合に悪意のある者にバックアップを削除されないよう、バックアップリポジトリに対して追記専用の操作を強制することが挙げられます。
 
 
-## Webpages
+## Webサービス
 
-Similarly, some high quality content can be found online in the form of webpages. If said content is static one can easily back it up by just saving the website and all of its attachments. Another alternative is the [Wayback Machine](https://archive.org/web/), a massive digital archive of the World Wide Web managed by the [Internet Archive](https://archive.org/), a non profit organization focused on the preservation of all sorts of media. The Wayback Machine allows you to capture and archive webpages being able to later retrieve all the snapshots that have been archived for that website. If you find it useful, consider [donating](https://archive.org/donate/) to the project.
+あなたが使うデータのすべてがハードディスク上にあるわけではありません。**Webサービス** を使っている場合、Google Docsのプレゼンテーションや、Spotifyのプレイリストなど、大切なデータの一部がオンラインに保存されているかもしれません。もうひとつの、つい忘れがちな分かりやすい例は、GmailのようなWebアクセスのできるメールアカウントです。こうした場合のバックアップ方法を見つけるのは、やや厄介です。しかし、直接またはAPI経由でデータをダウンロードできるサービスも数多くあります。Gmail用の[gmvault](https://github.com/gaubert/gmvault)のように、メールのファイルを自分のコンピュータにダウンロードするためのツールも利用できます。
 
 
-## Resources
+## Webページ
 
-Some good backup programs and services we have used and can honestly recommend:
+同様に、質の高いコンテンツがWebページの形でオンラインに存在することもあります。そのコンテンツが静的であれば、Webサイトとその添付ファイルすべてを保存するだけで簡単にバックアップできます。もうひとつの選択肢が[Wayback Machine](https://archive.org/web/)です。これはWorld Wide Webの巨大なデジタルアーカイブで、あらゆる種類のメディアの保存に取り組む非営利団体である[Internet Archive](https://archive.org/)が運営しています。Wayback Machineを使うとWebページを取り込んでアーカイブでき、あとからそのWebサイトについてアーカイブされたすべてのスナップショットを取り出せます。役に立つと感じたら、このプロジェクトへの[寄付](https://archive.org/donate/)を検討してください。
 
-- [Tarsnap](https://www.tarsnap.com/) - deduplicated, encrypted online backup service for the truly paranoid.
-- [Borg Backup](https://borgbackup.readthedocs.io) - deduplicated backup program that supports compression and authenticated encryption. If you need a cloud provider [BorgBase](https://www.borgbase.com/) is one popular option.
-- [rsync](https://rsync.samba.org/) is a utility that provides fast incremental file transfer. It is not a full backup solution.
-- [rclone](https://rclone.org/) like rsync but for cloud storage providers such as Amazon S3, Dropbox, Google Drive, rsync.net, &c. Supports client side encryption of remote folders.
 
-## Exercises
+## 参考資料
 
-1. Consider how you are (not) backing up your data and look into fixing/improving that.
+私たちが実際に使ったことがあり、自信を持っておすすめできるバックアッププログラムとサービスをいくつか挙げます。
 
-1. Figure out how to backup your email accounts
+- [Tarsnap](https://www.tarsnap.com/) - 真に用心深い人のための、重複排除と暗号化に対応したオンラインバックアップサービス。
+- [Borg Backup](https://borgbackup.readthedocs.io) - 圧縮と認証付き暗号に対応した、重複排除バックアッププログラム。クラウドプロバイダーが必要なら、[BorgBase](https://www.borgbase.com/)が人気のある選択肢のひとつです。
+- [rsync](https://rsync.samba.org/)は、高速な増分ファイル転送を提供するユーティリティです。完全なバックアップソリューションではありません。
+- [rclone](https://rclone.org/)は、rsyncに似ていますが、Amazon S3、Dropbox、Google Drive、rsync.netなどのクラウドストレージプロバイダー向けです。リモートフォルダのクライアントサイド暗号化に対応しています。
 
-1. Choose a webservice you use often (Spotify, Google Music, etc.) and figure out what options for backing up your data are. Often people have already made tools (such as [youtube-dl](https://ytdl-org.github.io/youtube-dl/)) solutions based on available APIs.
+## 演習
 
-1. Think of a website you have visited repeatedly over the years and look it up in [archive.org](https://archive.org/web/), how many versions does it have?
+1. 自分がどのようにデータをバックアップしているか(あるいは、していないか)を考え、その修正・改善に取り組んでください。
 
-1. One way to efficiently implement deduplication is to use hardlinks. Whereas symbolic link (also called a soft link or a symlink) is a file that points to another file or folder, a hardlink is a exact copy of the pointer (it uses the same inode and points to the same place in the disk). Thus if the original file is removed a symlink stops working whereas a hard link doesn't. However, hardlinks only work for files. Try using the command `ln` to create hard links and compare them to symlinks created with `ln -s`. (In macOS you will need to install the gnu coreutils or the hln package).
+1. 自分のメールアカウントをバックアップする方法を調べてください。
+
+1. よく使うWebサービス(Spotify、Google Musicなど)をひとつ選び、自分のデータをバックアップするにはどんな選択肢があるかを調べてください。利用可能なAPIをもとにしたツール([youtube-dl](https://ytdl-org.github.io/youtube-dl/)など)を、すでに誰かが作っていることもよくあります。
+
+1. 何年にもわたって繰り返し訪れているWebサイトを思い浮かべ、[archive.org](https://archive.org/web/)で調べてみてください。いくつのバージョンがあるでしょうか?
+
+1. 重複排除を効率的に実装する方法のひとつは、ハードリンクを使うことです。シンボリックリンク(ソフトリンクやsymlinkとも呼ばれます)が別のファイルやフォルダを指すファイルであるのに対し、ハードリンクはポインタの正確なコピーです(同じinodeを使い、ディスク上の同じ場所を指します)。したがって、元のファイルが削除されるとシンボリックリンクは機能しなくなりますが、ハードリンクは機能し続けます。ただし、ハードリンクはファイルに対してしか使えません。`ln` コマンドを使ってハードリンクを作成し、`ln -s` で作成したシンボリックリンクと比べてみてください。(macOSでは、gnu coreutilsまたはhlnパッケージをインストールする必要があります)。

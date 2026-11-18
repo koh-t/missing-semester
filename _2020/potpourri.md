@@ -1,8 +1,8 @@
 ---
 layout: lecture
-title: "Potpourri"
+title: "雑多なトピック"
 description: >
-  Learn about a variety of useful topics including keyboard remapping, daemons, backups, APIs, and more.
+  キーボードのリマッピング、デーモン、バックアップ、APIなど、さまざまな便利なトピックについて学びます。
 thumbnail: /static/assets/thumbnails/2020/lec10.png
 date: 2020-01-29
 ready: true
@@ -12,63 +12,63 @@ video:
 special: true
 ---
 
-## Table of Contents
+## 目次
 
-- [Keyboard remapping](#keyboard-remapping)
-- [Daemons](#daemons)
+- [キーボードのリマッピング](#keyboard-remapping)
+- [デーモン](#daemons)
 - [FUSE](#fuse)
-- [Backups](#backups)
-- [APIs](#apis)
-- [Common command-line flags/patterns](#common-command-line-flagspatterns)
-- [Window managers](#window-managers)
-- [VPNs](#vpns)
+- [バックアップ](#backups)
+- [API](#apis)
+- [コマンドラインでよく使われるフラグ/パターン](#common-command-line-flagspatterns)
+- [ウィンドウマネージャ](#window-managers)
+- [VPN](#vpns)
 - [Markdown](#markdown)
-- [Hammerspoon (desktop automation on macOS)](#hammerspoon-desktop-automation-on-macos)
-- [Booting + Live USBs](#booting--live-usbs)
-- [Docker, Vagrant, VMs, Cloud, OpenStack](#docker-vagrant-vms-cloud-openstack)
-- [Notebook programming](#notebook-programming)
+- [Hammerspoon(macOSでのデスクトップ自動化)](#hammerspoon-desktop-automation-on-macos)
+- [ブートとライブUSB](#booting--live-usbs)
+- [Docker、Vagrant、VM、クラウド、OpenStack](#docker-vagrant-vms-cloud-openstack)
+- [ノートブックプログラミング](#notebook-programming)
 - [GitHub](#github)
 
-## Keyboard remapping
+## キーボードのリマッピング {#keyboard-remapping}
 
-As a programmer, your keyboard is your main input method. As with pretty much anything in your computer, it is configurable (and worth configuring).
+プログラマーにとって、キーボードは主要な入力手段です。コンピュータのほぼあらゆるものと同じように、キーボードも設定を変更できます(そして、設定する価値があります)。
 
-The most basic change is to remap keys.
-This usually involves some software that is listening and, whenever a certain key is pressed, it intercepts that event and replaces it with another event corresponding to a different key. Some examples:
-- Remap Caps Lock to Ctrl or Escape. We (the instructors) highly encourage this setting since Caps Lock has a very convenient location but is rarely used.
-- Remapping PrtSc to Play/Pause music. Most OSes have a play/pause key.
-- Swapping Ctrl and the Meta (Windows or Command) key.
+もっとも基本的な変更は、キーのリマッピングです。
+これには通常、キー入力を監視しているソフトウェアが関わります。特定のキーが押されるたびに、そのイベントを横取りして、別のキーに対応する別のイベントに置き換えるのです。いくつか例を挙げます。
+- Caps LockをCtrlまたはEscapeにリマップする。Caps Lockはとても押しやすい位置にあるのにめったに使われないので、私たち(講師)はこの設定を強くおすすめします。
+- PrtScを音楽の再生/一時停止にリマップする。ほとんどのOSには再生/一時停止キーがあります。
+- CtrlキーとMeta(WindowsまたはCommand)キーを入れ替える。
 
-You can also map keys to arbitrary commands of your choosing. This is useful for common tasks that you perform. Here, some software listens for a specific key combination and executes some script whenever that event is detected.
-- Open a new terminal or browser window.
-- Inserting some specific text, e.g. your long email address or your MIT ID number.
-- Sleeping the computer or the displays.
+キーを、自分で選んだ任意のコマンドに割り当てることもできます。これは、よく行う作業に便利です。この場合は、何らかのソフトウェアが特定のキーの組み合わせを監視し、そのイベントを検出するたびに何らかのスクリプトを実行します。
+- 新しいターミナルやブラウザのウィンドウを開く。
+- 特定のテキストを挿入する。たとえば、長いメールアドレスやMITのID番号など。
+- コンピュータやディスプレイをスリープさせる。
 
-There are even more complex modifications you can configure:
-- Remapping sequences of keys, e.g. pressing shift five times toggles Caps Lock.
-- Remapping on tap vs on hold, e.g. Caps Lock key is remapped to Esc if you quickly tap it, but is remapped to Ctrl if you hold it and use it as a modifier.
-- Having remaps being keyboard or software specific.
+さらに複雑な変更を設定することもできます。
+- キーのシーケンスをリマップする。たとえば、Shiftを5回押すとCaps Lockが切り替わるようにする。
+- タップしたときと押し続けたときでリマップを分ける。たとえば、Caps Lockキーを、すばやくタップしたときはEscにリマップし、押したまま修飾キーとして使うときはCtrlにリマップする。
+- リマップをキーボードごと、あるいはソフトウェアごとに設定する。
 
-Some software resources to get started on the topic:
-- macOS - [karabiner-elements](https://karabiner-elements.pqrs.org/), [skhd](https://github.com/koekeishiya/skhd) or [BetterTouchTool](https://folivora.ai/)
-- Linux - [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap) or [Autokey](https://github.com/autokey/autokey)
-- Windows - Builtin in Control Panel, [AutoHotkey](https://www.autohotkey.com/) or [SharpKeys](https://www.randyrants.com/category/sharpkeys/)
-- QMK - If your keyboard supports custom firmware you can use [QMK](https://docs.qmk.fm/) to configure the hardware device itself so the remaps works for any machine you use the keyboard with.
+このトピックに取り組み始めるためのソフトウェアをいくつか紹介します。
+- macOS - [karabiner-elements](https://karabiner-elements.pqrs.org/)、[skhd](https://github.com/koekeishiya/skhd)、または[BetterTouchTool](https://folivora.ai/)
+- Linux - [xmodmap](https://wiki.archlinux.org/index.php/Xmodmap)または[Autokey](https://github.com/autokey/autokey)
+- Windows - コントロールパネルの組み込み機能、[AutoHotkey](https://www.autohotkey.com/)、または[SharpKeys](https://www.randyrants.com/category/sharpkeys/)
+- QMK - キーボードがカスタムファームウェアに対応していれば、[QMK](https://docs.qmk.fm/)を使ってハードウェアデバイスそのものを設定できます。そうすれば、そのキーボードをどのマシンで使ってもリマップが機能します。
 
-## Daemons
+## デーモン {#daemons}
 
-You are probably already familiar with the notion of daemons, even if the word seems new.
-Most computers have a series of processes that are always running in the background rather than waiting for a user to launch them and interact with them.
-These processes are called daemons and the programs that run as daemons often end with a `d` to indicate so.
-For example `sshd`, the SSH daemon, is the program responsible for listening to incoming SSH requests and checking that the remote user has the necessary credentials to log in.
+デーモンという言葉は初めて聞くように思えても、その概念にはおそらくすでに馴染みがあるでしょう。
+ほとんどのコンピュータには、ユーザーが起動して操作するのを待つのではなく、常にバックグラウンドで動いている一連のプロセスがあります。
+こうしたプロセスはデーモンと呼ばれ、デーモンとして動くプログラムは、それを示すために名前が `d` で終わることがよくあります。
+たとえば、SSHデーモンである `sshd` は、やってくるSSHリクエストを待ち受け、リモートユーザーがログインに必要な認証情報を持っているかを確認する役割を担うプログラムです。
 
-In Linux, `systemd` (the system daemon) is the most common solution for running and setting up daemon processes.
-You can run `systemctl status` to list the current running daemons. Most of them might sound unfamiliar but are responsible for core parts of the system such as managing the network, solving DNS queries or displaying the graphical interface for the system.
-Systemd can be interacted with the `systemctl` command in order to `enable`, `disable`, `start`, `stop`, `restart` or check the `status` of services (those are the `systemctl` commands).
+Linuxでは、`systemd`(システムデーモン)が、デーモンプロセスを実行・設定するためのもっとも一般的な手段です。
+`systemctl status` を実行すると、現在実行中のデーモンを一覧表示できます。そのほとんどは聞き慣れないものかもしれませんが、ネットワークの管理、DNSクエリの解決、システムのグラフィカルインターフェースの表示といった、システムの中核部分を担っています。
+systemdは `systemctl` コマンドで操作でき、サービスを `enable`、`disable`、`start`、`stop`、`restart` したり、その `status` を確認したりできます(これらが `systemctl` のコマンドです)。
 
-More interestingly, `systemd` has a fairly accessible interface for configuring and enabling new daemons (or services).
-Below is an example of a daemon for running a simple Python app.
-We won't go in the details but as you can see most of the fields are pretty self explanatory.
+さらに興味深いことに、`systemd` には、新しいデーモン(またはサービス)を設定して有効化するための、かなり扱いやすいインターフェースがあります。
+以下は、シンプルなPythonアプリを実行するデーモンの例です。
+詳細には立ち入りませんが、見てのとおり、ほとんどのフィールドは説明がなくても意味がわかります。
 
 ```ini
 # /etc/systemd/system/myapp.service
@@ -87,330 +87,158 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-Also, if you just want to run some program with a given frequency there is no need to build a custom daemon, you can use [`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html), a daemon your system already runs to perform scheduled tasks.
+また、あるプログラムを一定の頻度で実行したいだけなら、独自のデーモンを作る必要はありません。[`cron`](https://www.man7.org/linux/man-pages/man8/cron.8.html) を使えばよいのです。これは、スケジュールされたタスクを実行するために、システムがすでに動かしているデーモンです。
 
-## FUSE
+## FUSE {#fuse}
 
-Modern software systems are usually composed of smaller building blocks that are composed together.
-Your operating system supports using different filesystem backends because there is a common language of what operations a filesystem supports.
-For instance, when you run `touch` to create a file, `touch` performs a system call to the kernel to create the file and the kernel performs the appropriate filesystem call to create the given file.
-A caveat is that UNIX filesystems are traditionally implemented as kernel modules and only the kernel is allowed to perform filesystem calls.
+現代のソフトウェアシステムは通常、小さな構成要素を組み合わせて作られています。
+オペレーティングシステムがさまざまなファイルシステムのバックエンドを使えるのは、ファイルシステムがどのような操作をサポートするかについての共通言語があるからです。
+たとえば、`touch` を実行してファイルを作成すると、`touch` はファイルを作成するためにカーネルへのシステムコールを行い、カーネルはそのファイルを作成するために適切なファイルシステムコールを行います。
+ただし注意点として、UNIXのファイルシステムは伝統的にカーネルモジュールとして実装されており、ファイルシステムコールを行えるのはカーネルだけです。
 
-[FUSE](https://en.wikipedia.org/wiki/Filesystem_in_Userspace) (Filesystem in User Space) allows filesystems to be implemented by a user program. FUSE lets users run user space code for filesystem calls and then bridges the necessary calls to the kernel interfaces.
-In practice, this means that users can implement arbitrary functionality for filesystem calls.
+[FUSE](https://en.wikipedia.org/wiki/Filesystem_in_Userspace)(Filesystem in User Space)を使うと、ファイルシステムをユーザープログラムで実装できます。FUSEは、ファイルシステムコールに対してユーザーがユーザー空間のコードを実行できるようにし、必要な呼び出しをカーネルのインターフェースへ橋渡しします。
+実際には、これはユーザーがファイルシステムコールに対して任意の機能を実装できることを意味します。
 
-For example, FUSE can be used so whenever you perform an operation in a virtual filesystem, that operation is forwarded through SSH to a remote machine, performed there, and the output is returned back to you.
-This way, local programs can see the file as if it was in your computer while in reality it's in a remote server.
-This is effectively what `sshfs` does.
+たとえばFUSEを使えば、仮想ファイルシステム上で操作を行うたびに、その操作がSSH経由でリモートマシンに転送され、そこで実行されて、出力が手元に返ってくるようにできます。
+こうすると、ローカルのプログラムからは、実際にはリモートサーバーにあるファイルが、あたかも自分のコンピュータにあるかのように見えます。
+これは事実上、`sshfs` が行っていることです。
 
-Some interesting examples of FUSE filesystems are:
-- [sshfs](https://github.com/libfuse/sshfs) - Open locally remote files/folder through an SSH connection.
-- [rclone](https://rclone.org/commands/rclone_mount/) - Mount cloud storage services like Dropbox, GDrive, Amazon S3 or Google Cloud Storage and open data locally.
-- [gocryptfs](https://nuetzlich.net/gocryptfs/) - Encrypted overlay system. Files are stored encrypted but once the FS is mounted they appear as plaintext in the mountpoint.
-- [kbfs](https://keybase.io/docs/kbfs) - Distributed filesystem with end-to-end encryption. You can have private, shared and public folders.
-- [borgbackup](https://borgbackup.readthedocs.io/en/stable/usage/mount.html) - Mount your deduplicated, compressed and encrypted backups for ease of browsing.
+FUSEファイルシステムの興味深い例をいくつか挙げます。
+- [sshfs](https://github.com/libfuse/sshfs) - SSH接続を通じて、リモートのファイル/フォルダをローカルで開く。
+- [rclone](https://rclone.org/commands/rclone_mount/) - Dropbox、GDrive、Amazon S3、Google Cloud Storageといったクラウドストレージサービスをマウントし、データをローカルで開く。
+- [gocryptfs](https://nuetzlich.net/gocryptfs/) - 暗号化オーバーレイシステム。ファイルは暗号化して保存されますが、FSをマウントすると、マウントポイントでは平文として見えます。
+- [kbfs](https://keybase.io/docs/kbfs) - エンドツーエンド暗号化を備えた分散ファイルシステム。プライベートフォルダ、共有フォルダ、公開フォルダを持てます。
+- [borgbackup](https://borgbackup.readthedocs.io/en/stable/usage/mount.html) - 重複排除・圧縮・暗号化されたバックアップをマウントして、手軽に閲覧できるようにする。
 
-## Backups
+## バックアップ {#backups}
 
-Any data that you haven’t backed up is data that could be gone at any moment, forever.
-It's easy to copy data around, it's hard to reliably backup data.
-Here are some good backup basics and the pitfalls of some approaches.
+バックアップしていないデータは、いつ永遠に失われてもおかしくないデータです。
+データをあちこちにコピーするのは簡単ですが、データを確実にバックアップするのは難しいものです。
+ここでは、バックアップの基本として押さえておきたいことと、いくつかのアプローチの落とし穴を紹介します。
 
-First, a copy of the data in the same disk is not a backup, because the disk is the single point of failure for all the data. Similarly, an external drive in your home is also a weak backup solution since it could be lost in a fire/robbery/&c. Instead, having an off-site backup is a recommended practice.
+まず、同じディスク内にあるデータのコピーはバックアップではありません。そのディスクが、すべてのデータにとっての単一障害点になるからです。同様に、自宅に置いた外付けドライブも、火災や盗難などで失われる可能性があるので、バックアップ手段としては弱いものです。その代わりに、オフサイトのバックアップを持つことが推奨されます。
 
-Synchronization solutions are not backups. For instance, Dropbox/GDrive are convenient solutions, but when data is erased or corrupted they propagate the change. For the same reason, disk mirroring solutions like RAID are not backups. They don't help if data gets deleted, corrupted or encrypted by ransomware.
+同期ソリューションはバックアップではありません。たとえばDropboxやGDriveは便利なソリューションですが、データが消去されたり破損したりすると、その変更を伝播させてしまいます。同じ理由で、RAIDのようなディスクミラーリングのソリューションもバックアップではありません。データが削除されたり、破損したり、ランサムウェアに暗号化されたりした場合には役に立ちません。
 
-Some core features of good backups solutions are versioning, deduplication and security.
-Versioning backups ensure that you can access your history of changes and efficiently recover files.
-Efficient backup solutions use data deduplication to only store incremental changes and reduce the storage overhead.
-Regarding security, you should ask yourself what someone would need to know/have in order to read your data and, more importantly, to delete all your data and associated backups.
-Lastly, blindly trusting backups is a terrible idea and you should verify regularly that you can use them to recover data.
+優れたバックアップソリューションの中核となる機能は、バージョニング、重複排除、セキュリティです。
+バックアップをバージョニングしておけば、変更履歴にアクセスでき、ファイルを効率よく復元できます。
+効率的なバックアップソリューションは、データの重複排除を使って差分の変更だけを保存し、ストレージのオーバーヘッドを減らします。
+セキュリティについては、誰かがあなたのデータを読むために、そしてさらに重要なことに、あなたのすべてのデータと関連するバックアップを削除するために、何を知っている/持っている必要があるのかを自問すべきです。
+最後に、バックアップを盲目的に信頼するのは最悪の考えです。バックアップを使ってデータを復元できることを、定期的に検証すべきです。
 
-Backups go beyond local files in your computer.
-Given the significant growth of web applications, large amounts of your data are only stored in the cloud.
-For instance, your webmail, social media photos, music playlists in streaming services or online docs are gone if you lose access to the corresponding accounts.
-Having an offline copy of this information is the way to go, and you can find online tools that people have built to fetch the data and save it.
+バックアップの対象は、コンピュータ上のローカルファイルにとどまりません。
+Webアプリケーションが大きく成長した結果、あなたのデータの多くはクラウドにしか保存されていません。
+たとえば、Webメール、ソーシャルメディアの写真、ストリーミングサービスの音楽プレイリスト、オンラインドキュメントは、対応するアカウントにアクセスできなくなれば失われてしまいます。
+こうした情報のオフラインコピーを持っておくのがよいやり方で、データを取得して保存するために人々が作ったツールをオンラインで見つけられます。
 
-For a more detailed explanation, see 2019's lecture notes on [Backups](/2019/backups).
-
-
-## APIs
-
-We've talked a lot in this class about using your computer more
-efficiently to accomplish _local_ tasks, but you will find that many of
-these lessons also extend to the wider internet. Most services online
-will have "APIs" that let you programmatically access their data. For
-example, the US government has an API that lets you get weather
-forecasts, which you could use to easily get a weather forecast in your
-shell.
-
-Most of these APIs have a similar format. They are structured URLs,
-often rooted at `api.service.com`, where the path and query parameters
-indicate what data you want to read or what action you want to perform.
-For the US weather data for example, to get the forecast for a
-particular location, you issue GET request (with `curl` for example) to
-https://api.weather.gov/points/42.3604,-71.094. The response itself
-contains a bunch of other URLs that let you get specific forecasts for
-that region. Usually, the responses are formatted as JSON, which you can
-then pipe through a tool like [`jq`](https://stedolan.github.io/jq/) to
-massage into what you care about.
-
-Some APIs require authentication, and this usually takes the form of
-some sort of secret _token_ that you need to include with the request.
-You should read the documentation for the API to see what the particular
-service you are looking for uses, but "[OAuth](https://www.oauth.com/)"
-is a protocol you will often see used. At its heart, OAuth is a way to
-give you tokens that can "act as you" on a given service, and can only
-be used for particular purposes. Keep in mind that these tokens are
-_secret_, and anyone who gains access to your token can do whatever the
-token allows under _your_ account!
-
-[IFTTT](https://ifttt.com/) is a website and service centered around the
-idea of APIs — it provides integrations with tons of services, and lets
-you chain events from them in nearly arbitrary ways. Give it a look!
-
-## Common command-line flags/patterns
-
-Command-line tools vary a lot, and you will often want to check out
-their `man` pages before using them. They often share some common
-features though that can be good to be aware of:
-
- - Most tools support some kind of `--help` flag to display brief usage
-   instructions for the tool.
- - Many tools that can cause irrevocable change support the notion of a
-   "dry run" in which they only print what they _would have done_, but
-   do not actually perform the change. Similarly, they often have an
-   "interactive" flag that will prompt you for each destructive action.
- - You can usually use `--version` or `-V` to have the program print its
-   own version (handy for reporting bugs!).
- - Almost all tools have a `--verbose` or `-v` flag to produce more
-   verbose output. You can usually include the flag multiple times
-   (`-vvv`) to get _more_ verbose output, which can be handy for
-   debugging. Similarly, many tools have a `--quiet` flag for making it
-   only print something on error.
- - In many tools, `-` in place of a file name means "standard input" or
-   "standard output", depending on the argument.
- - Possibly destructive tools are generally not recursive by default,
-   but support a "recursive" flag (often `-r`) to make them recurse.
- - Sometimes, you want to pass something that _looks_ like a flag as a
-   normal argument. For example, imagine you wanted to remove a file
-   called `-r`. Or you want to run one program "through" another, like
-   `ssh machine foo`, and you want to pass a flag to the "inner" program
-   (`foo`). The special argument `--` makes a program _stop_ processing
-   flags and options (things starting with `-`) in what follows, letting
-   you pass things that look like flags without them being interpreted
-   as such: `rm -- -r` or `ssh machine --for-ssh -- foo --for-foo`.
-
-## Window managers
-
-Most of you are used to using a "drag and drop" window manager, like
-what comes with Windows, macOS, and Ubuntu by default. There are windows
-that just sort of hang there on screen, and you can drag them around,
-resize them, and have them overlap one another. But these are only one
-_type_ of window manager, often referred to as a "floating" window
-manager. There are many others, especially on Linux. A particularly
-common alternative is a "tiling" window manager. In a tiling window
-manager, windows never overlap, and are instead arranged as tiles on
-your screen, sort of like panes in tmux. With a tiling window manager,
-the screen is always filled by whatever windows are open, arranged
-according to some _layout_. If you have just one window, it takes up the
-full screen. If you then open another, the original window shrinks to
-make room for it (often something like 2/3 and 1/3). If you open a
-third, the other windows will again shrink to accommodate the new
-window. Just like with tmux panes, you can navigate around these tiled
-windows with your keyboard, and you can resize them and move them
-around, all without touching the mouse. They are worth looking into!
+より詳しい説明は、2019年の講義ノートの[バックアップ](/2019/backups)を参照してください。
 
 
-## VPNs
+## API {#apis}
 
-VPNs are all the rage these days, but it's not clear that's for [any
-good reason](https://web.archive.org/web/20230710155258/https://gist.github.com/joepie91/5a9909939e6ce7d09e29). You
-should be aware of what a VPN does and does not get you. A VPN, in the
-best case, is _really_ just a way for you to change your internet
-service provider as far as the internet is concerned. All your traffic
-will look like it's coming from the VPN provider instead of your "real"
-location, and the network you are connected to will only see encrypted
-traffic.
+この授業では、コンピュータをより効率的に使って _ローカルの_ タスクをこなすことについて多くを話してきましたが、こうした教訓の多くは、より広いインターネットにも当てはまることに気づくでしょう。オンラインのサービスのほとんどには、そのデータにプログラムからアクセスできる「API」があります。たとえば米国政府には天気予報を取得できるAPIがあり、これを使えばシェルで簡単に天気予報を取得できます。
 
-While that may seem attractive, keep in mind that when you use a VPN,
-all you are really doing is shifting your trust from you current ISP to
-the VPN hosting company. Whatever your ISP _could_ see, the VPN provider
-now sees _instead_. If you trust them _more_ than your ISP, that is a
-win, but otherwise, it is not clear that you have gained much. If you
-are sitting on some dodgy unencrypted public Wi-Fi at an airport, then
-maybe you don't trust the connection much, but at home, the trade-off is
-not quite as clear.
+こうしたAPIのほとんどは似た形式をしています。それは構造化されたURLで、多くの場合 `api.service.com` を起点とし、パスとクエリパラメータによって、どのデータを読みたいのか、どの操作を実行したいのかを示します。たとえば米国の天気データの場合、特定の場所の予報を取得するには、https://api.weather.gov/points/42.3604,-71.094 に対して(たとえば `curl` で)GETリクエストを発行します。レスポンス自体には、その地域の具体的な予報を取得するための別のURLがいくつも含まれています。通常、レスポンスはJSON形式なので、[`jq`](https://stedolan.github.io/jq/) のようなツールにパイプして、必要な形に加工できます。
 
-You should also know that these days, much of your traffic, at least of
-a sensitive nature, is _already_ encrypted through HTTPS or TLS more
-generally. In that case, it usually matters little whether you are on
-a "bad" network or not -- the network operator will only learn what
-servers you talk to, but not anything about the data that is exchanged.
+一部のAPIは認証を必要とし、これは通常、リクエストに含める必要のある何らかの秘密の _トークン_ という形をとります。利用したいサービスが何を使っているかは、そのAPIのドキュメントを読んで確認すべきですが、「[OAuth](https://www.oauth.com/)」は、よく使われているのを目にするプロトコルです。OAuthは本質的には、特定のサービス上で「あなたとして振る舞う」ことができ、かつ特定の目的にしか使えないトークンをあなたに与える仕組みです。これらのトークンは _秘密_ であり、あなたのトークンを手に入れた人は誰でも、_あなたの_ アカウントで、そのトークンが許可することを何でもできてしまうことを覚えておいてください!
 
-Notice that I said "in the best case" above. It is not unheard of for
-VPN providers to accidentally misconfigure their software such that the
-encryption is either weak or entirely disabled. Some VPN providers are
-malicious (or at the very least opportunist), and will log all your
-traffic, and possibly sell information about it to third parties.
-Choosing a bad VPN provider is often worse than not using one in the
-first place.
+[IFTTT](https://ifttt.com/)は、APIという考え方を中心に据えたWebサイト兼サービスです。膨大な数のサービスとの連携を提供しており、それらのイベントをほぼ任意の方法でつなぎ合わせることができます。ぜひ見てみてください!
 
-In a pinch, MIT [runs a VPN](https://ist.mit.edu/vpn) for its students,
-so that may be worth taking a look at. Also, if you're going to roll
-your own, give [WireGuard](https://www.wireguard.com/) a look.
+## コマンドラインでよく使われるフラグ/パターン {#common-command-line-flagspatterns}
 
-## Markdown
+コマンドラインツールは千差万別で、使う前に `man` ページを確認したくなることが多いでしょう。とはいえ、知っておくとよい共通の特徴がいくつかあります。
 
-There is a high chance that you will write some text over the course of
-your career. And often, you will want to mark up that text in simple
-ways. You want some text to be bold or italic, or you want to add
-headers, links, and code fragments. Instead of pulling out a heavy tool
-like Word or LaTeX, you may want to consider using the lightweight
-markup language [Markdown](https://commonmark.org/help/).
+ - ほとんどのツールは、そのツールの簡単な使い方を表示する何らかの `--help` フラグをサポートしています。
+ - 取り返しのつかない変更を引き起こしうるツールの多くは、「ドライラン」という考え方をサポートしています。これは、_行うはずだったこと_ を表示するだけで、実際には変更を行わないというものです。同様に、破壊的な操作のたびに確認を求める「対話的」フラグを備えていることもよくあります。
+ - 通常、`--version` または `-V` を使うと、プログラムに自身のバージョンを表示させることができます(バグ報告に便利です!)。
+ - ほぼすべてのツールには、より詳細な出力を得るための `--verbose` または `-v` フラグがあります。通常、このフラグを複数回指定する(`-vvv`)と _さらに_ 詳細な出力が得られ、デバッグに役立ちます。同様に、多くのツールには、エラー時にだけ何かを出力するようにする `--quiet` フラグがあります。
+ - 多くのツールでは、ファイル名の代わりに `-` を指定すると、引数に応じて「標準入力」または「標準出力」を意味します。
+ - 破壊的になりうるツールは一般に、デフォルトでは再帰的に動作しませんが、再帰させるための「再帰」フラグ(多くの場合 `-r`)をサポートしています。
+ - ときには、フラグの _ように見える_ ものを通常の引数として渡したいことがあります。たとえば、`-r` という名前のファイルを削除したいとしましょう。あるいは、`ssh machine foo` のように、あるプログラムを別のプログラム「越しに」実行し、「内側」のプログラム(`foo`)にフラグを渡したい場合です。特別な引数 `--` は、それ以降についてプログラムにフラグやオプション(`-` で始まるもの)の処理を _やめさせる_ ので、フラグのように見えるものを、フラグとして解釈されることなく渡せます。`rm -- -r` や `ssh machine --for-ssh -- foo --for-foo` のように使います。
 
-You have probably seen Markdown already, or at least some variant of it.
-Subsets of it are used and supported almost everywhere, even if it's not
-under the name Markdown. At its core, Markdown is an attempt to codify
-the way that people already often mark up text when they are writing
-plain text documents. Emphasis (*italics*) is added by surrounding a
-word with `*`. Strong emphasis (**bold**) is added using `**`. Lines
-starting with `#` are headings (and the number of `#`s is the subheading
-level). Any line starting with `-` is a bullet list item, and any line
-starting with a number + `.` is a numbered list item. Backtick is used
-to show words in `code font`, and a code block can be entered by
-indenting a line with four spaces or surrounding it with
-triple-backticks:
+## ウィンドウマネージャ {#window-managers}
+
+皆さんのほとんどは、Windows、macOS、Ubuntuに標準で付属しているような「ドラッグ&ドロップ」式のウィンドウマネージャに慣れているでしょう。ウィンドウは画面上になんとなく浮かんでいて、ドラッグして動かしたり、サイズを変えたり、互いに重ねたりできます。しかし、これはウィンドウマネージャの _一種_ にすぎず、「フローティング」ウィンドウマネージャと呼ばれることがよくあります。特にLinuxには、ほかにも多くの種類があります。なかでもよく使われる代替が「タイル型」ウィンドウマネージャです。タイル型ウィンドウマネージャでは、ウィンドウは決して重ならず、代わりに、tmuxのペインのように画面上にタイルとして配置されます。タイル型ウィンドウマネージャでは、画面は常に、開いているウィンドウによって埋め尽くされ、それらは何らかの _レイアウト_ に従って配置されます。ウィンドウがひとつだけなら、それが画面全体を占めます。そこでもうひとつ開くと、元のウィンドウが縮んで場所を空けます(多くの場合、2/3と1/3のような割合です)。3つ目を開くと、他のウィンドウがまた縮んで新しいウィンドウを収めます。tmuxのペインと同じように、タイル状に並んだウィンドウの間をキーボードで移動でき、サイズの変更や移動も、すべてマウスに触れずに行えます。調べてみる価値があります!
+
+
+## VPN {#vpns}
+
+VPNは最近大流行していますが、それに[もっともな理由](https://web.archive.org/web/20230710155258/https://gist.github.com/joepie91/5a9909939e6ce7d09e29)があるのかどうかは定かではありません。VPNによって何が得られ、何が得られないのかを知っておくべきです。VPNは、最良の場合でも、_実のところ_ インターネットから見たあなたのインターネットサービスプロバイダを変更する手段にすぎません。あなたのトラフィックはすべて、あなたの「本当の」場所ではなくVPNプロバイダから来ているように見え、あなたが接続しているネットワークからは、暗号化されたトラフィックしか見えなくなります。
+
+これは魅力的に思えるかもしれませんが、VPNを使うときに実際にしているのは、信頼を置く先を現在のISPからVPNのホスティング会社へ移すことだけだ、ということを覚えておいてください。ISPが見ることの _できた_ ものは何であれ、今度は _代わりに_ VPNプロバイダが見ることになります。ISP _よりも_ VPNプロバイダのほうを信頼しているなら、それは得ですが、そうでなければ、大して得るものがあったのかは定かではありません。空港で怪しげな暗号化されていない公衆Wi-Fiを使っているなら、その接続をあまり信頼していないかもしれませんが、自宅では、このトレードオフはそれほど明確ではありません。
+
+また、最近では、トラフィックの多く、少なくとも機密性の高いものは、HTTPS、より一般的にはTLSによって _すでに_ 暗号化されていることも知っておくべきです。その場合、「悪い」ネットワークにいるかどうかは、通常ほとんど問題になりません。ネットワークの運営者にわかるのは、あなたがどのサーバーと通信しているかだけで、やり取りされるデータについては何もわかりません。
+
+上で私が「最良の場合」と言ったことに注意してください。VPNプロバイダがソフトウェアの設定をうっかり誤り、暗号化が弱くなっていたり、完全に無効になっていたりするのは、珍しい話ではありません。VPNプロバイダの中には悪意のある(あるいは少なくとも機会主義的な)ものもあり、あなたのトラフィックをすべて記録し、場合によってはその情報を第三者に売ることもあります。悪いVPNプロバイダを選ぶことは、そもそもVPNを使わないよりも悪い結果になることがよくあります。
+
+いざというときのために、MITは学生向けに[VPNを運用している](https://ist.mit.edu/vpn)ので、見てみる価値があるかもしれません。また、自前で構築するつもりなら、[WireGuard](https://www.wireguard.com/)を見てみてください。
+
+## Markdown {#markdown}
+
+キャリアを通じて、何らかの文章を書くことになる可能性は高いでしょう。そしてしばしば、その文章に簡単なマークアップを施したくなります。一部のテキストを太字や斜体にしたり、見出し、リンク、コード片を加えたりしたいのです。WordやLaTeXのような重いツールを持ち出す代わりに、軽量マークアップ言語である[Markdown](https://commonmark.org/help/)を使うことを検討してみるとよいでしょう。
+
+おそらくMarkdown、あるいは少なくともその何らかの変種を、すでに目にしたことがあるでしょう。Markdownという名前でなくとも、そのサブセットはほぼあらゆる場所で使われ、サポートされています。Markdownの核心は、人々がプレーンテキストの文書を書くときにすでによく行っているテキストのマークアップの仕方を体系化しようという試みです。強調(*イタリック*)は、単語を `*` で囲むことで加えます。強い強調(**太字**)は `**` を使って加えます。`#` で始まる行は見出しです(`#` の数が小見出しのレベルになります)。`-` で始まる行は箇条書きの項目で、数字 + `.` で始まる行は番号付きリストの項目です。バッククォートは単語を `code font` で表示するのに使い、コードブロックは、行を4つのスペースでインデントするか、3連のバッククォートで囲むことで入力できます。
 
     ```
     code goes here
     ```
 
-To add a link, place the _text_ for the link in square brackets,
-and the URL immediately following that in parentheses: `[name](url)`.
-Markdown is easy to get started with, and you can use it nearly
-everywhere. In fact, the lecture notes for this lecture, and all the
-others, are written in Markdown, and you can see the raw Markdown
-[here](https://raw.githubusercontent.com/missing-semester/missing-semester/master/_2020/potpourri.md).
+リンクを追加するには、リンクの _テキスト_ を角括弧に入れ、その直後にURLを丸括弧に入れます: `[name](url)`。Markdownは簡単に始められ、ほぼあらゆる場所で使えます。実際、この講義の講義ノートも、他のすべての講義の講義ノートも、Markdownで書かれており、生のMarkdownは[こちら](https://raw.githubusercontent.com/missing-semester/missing-semester/master/_2020/potpourri.md)で見ることができます。
 
 
 
-## Hammerspoon (desktop automation on macOS)
+## Hammerspoon(macOSでのデスクトップ自動化) {#hammerspoon-desktop-automation-on-macos}
 
-[Hammerspoon](https://www.hammerspoon.org/) is a desktop automation framework
-for macOS. It lets you write Lua scripts that hook into operating system
-functionality, allowing you to interact with the keyboard/mouse, windows,
-displays, filesystem, and much more.
+[Hammerspoon](https://www.hammerspoon.org/)は、macOS向けのデスクトップ自動化フレームワークです。オペレーティングシステムの機能にフックするLuaスクリプトを書くことができ、キーボード/マウス、ウィンドウ、ディスプレイ、ファイルシステムなど、さまざまなものを操作できます。
 
-Some examples of things you can do with Hammerspoon:
+Hammerspoonでできることの例をいくつか挙げます。
 
-- Bind hotkeys to move windows to specific locations
-- Create a menu bar button that automatically lays out windows in a specific layout
-- Mute your speaker when you arrive in lab (by detecting the Wi-Fi network)
-- Show you a warning if you've accidentally taken your friend's power supply
+- ホットキーを割り当てて、ウィンドウを特定の位置に移動する
+- ウィンドウを特定のレイアウトに自動的に配置するメニューバーボタンを作る
+- 研究室に着いたら(Wi-Fiネットワークを検出して)スピーカーをミュートする
+- 友人の電源アダプタをうっかり持ってきてしまったときに警告を表示する
 
-At a high level, Hammerspoon lets you run arbitrary Lua code, bound to menu
-buttons, key presses, or events, and Hammerspoon provides an extensive library
-for interacting with the system, so there's basically no limit to what you can
-do with it. Many people have made their Hammerspoon configurations public, so
-you can generally find what you need by searching the internet, but you can
-always write your own code from scratch.
+大まかに言えば、Hammerspoonでは、メニューボタン、キーの押下、イベントに紐づけて任意のLuaコードを実行できます。またHammerspoonは、システムを操作するための豊富なライブラリを提供しているので、できることには基本的に制限がありません。多くの人が自分のHammerspoonの設定を公開しているので、たいていはインターネットで検索すれば必要なものが見つかりますが、いつでも自分でゼロからコードを書くこともできます。
 
-### Resources
+### 参考資料
 
 - [Getting Started with Hammerspoon](https://www.hammerspoon.org/go/)
-- [Sample configurations](https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations)
-- [Anish's Hammerspoon config](https://github.com/anishathalye/dotfiles-local/tree/mac/hammerspoon)
+- [設定例](https://github.com/Hammerspoon/hammerspoon/wiki/Sample-Configurations)
+- [AnishのHammerspoon設定](https://github.com/anishathalye/dotfiles-local/tree/mac/hammerspoon)
 
-## Booting + Live USBs
+## ブートとライブUSB {#booting--live-usbs}
 
-When your machine boots up, before the operating system is loaded, the
-[BIOS](https://en.wikipedia.org/wiki/BIOS)/[UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface)
-initializes the system. During this process, you can press a specific key
-combination to configure this layer of software. For example, your computer may
-say something like "Press F9 to configure BIOS. Press F12 to enter boot menu."
-during the boot process. You can configure all sorts of hardware-related
-settings in the BIOS menu. You can also enter the boot menu to boot from an
-alternate device instead of your hard drive.
+マシンが起動するとき、オペレーティングシステムが読み込まれる前に、[BIOS](https://en.wikipedia.org/wiki/BIOS)/[UEFI](https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface)がシステムを初期化します。この過程で特定のキーの組み合わせを押すと、このソフトウェア層を設定できます。たとえば、コンピュータが起動中に「Press F9 to configure BIOS. Press F12 to enter boot menu.」のように表示することがあります。BIOSメニューでは、ハードウェアに関するあらゆる種類の設定ができます。また、ブートメニューに入って、ハードドライブの代わりに別のデバイスから起動することもできます。
 
-[Live USBs](https://en.wikipedia.org/wiki/Live_USB) are USB flash drives
-containing an operating system. You can create one of these by downloading an
-operating system (e.g. a Linux distribution) and burning it to the flash drive.
-This process is a little bit more complicated than simply copying a `.iso` file
-to the disk. There are tools like [UNetbootin](https://unetbootin.github.io/)
-to help you create live USBs.
+[ライブUSB](https://en.wikipedia.org/wiki/Live_USB)は、オペレーティングシステムを収めたUSBフラッシュドライブです。オペレーティングシステム(たとえばLinuxディストリビューション)をダウンロードし、フラッシュドライブに書き込むことで作成できます。この作業は、`.iso` ファイルを単にディスクへコピーするよりも少しだけ複雑です。ライブUSBの作成を助けてくれる[UNetbootin](https://unetbootin.github.io/)のようなツールがあります。
 
-Live USBs are useful for all sorts of purposes. Among other things, if you
-break your existing operating system installation so that it no longer boots,
-you can use a live USB to recover data or fix the operating system.
+ライブUSBはさまざまな用途に役立ちます。なかでも、既存のオペレーティングシステムのインストールを壊してしまって起動しなくなった場合に、ライブUSBを使ってデータを復旧したり、オペレーティングシステムを修復したりできます。
 
-## Docker, Vagrant, VMs, Cloud, OpenStack
+## Docker、Vagrant、VM、クラウド、OpenStack {#docker-vagrant-vms-cloud-openstack}
 
-[Virtual machines](https://en.wikipedia.org/wiki/Virtual_machine) and similar
-tools like containers let you emulate a whole computer system, including the
-operating system. This can be useful for creating an isolated environment for
-testing, development, or exploration (e.g. running potentially malicious code).
+[仮想マシン](https://en.wikipedia.org/wiki/Virtual_machine)や、コンテナのような類似のツールを使うと、オペレーティングシステムを含むコンピュータシステム全体をエミュレートできます。これは、テスト、開発、あるいは探索(たとえば、悪意があるかもしれないコードの実行)のための隔離された環境を作るのに役立ちます。
 
-[Vagrant](https://www.vagrantup.com/) is a tool that lets you describe machine
-configurations (operating system, services, packages, etc.) in code, and then
-instantiate VMs with a simple `vagrant up`. [Docker](https://www.docker.com/)
-is conceptually similar but it uses containers instead.
+[Vagrant](https://www.vagrantup.com/)は、マシンの構成(オペレーティングシステム、サービス、パッケージなど)をコードで記述し、`vagrant up` とするだけでVMをインスタンス化できるツールです。[Docker](https://www.docker.com/)は概念的には似ていますが、代わりにコンテナを使います。
 
-You can also rent virtual machines on the cloud, and it's a nice way to get instant
-access to:
+クラウド上で仮想マシンを借りることもできます。これは、次のようなものをすぐに利用できる便利な方法です。
 
-- A cheap always-on machine that has a public IP address, used to host services
-- A machine with a lot of CPU, disk, RAM, and/or GPU
-- Many more machines than you physically have access to (billing is often by
-the second, so if you want a lot of computing for a short amount of time, it's
-feasible to rent 1000 computers for a couple of minutes)
+- パブリックIPアドレスを持ち、常時稼働する安価なマシン。サービスのホスティングに使えます
+- CPU、ディスク、RAM、GPUのいずれか、またはそのすべてを大量に備えたマシン
+- 物理的に利用できる数よりもはるかに多くのマシン(課金は秒単位であることが多いので、短時間だけ大量の計算資源が欲しい場合、1000台のコンピュータを数分間だけ借りることも現実的です)
 
-Popular services include [Amazon AWS](https://aws.amazon.com/), [Google
-Cloud](https://cloud.google.com/),[ Microsoft Azure](https://azure.microsoft.com/),
-[DigitalOcean](https://www.digitalocean.com/).
+人気のサービスには、[Amazon AWS](https://aws.amazon.com/)、[Google Cloud](https://cloud.google.com/)、[Microsoft Azure](https://azure.microsoft.com/)、[DigitalOcean](https://www.digitalocean.com/)などがあります。
 
-If you're a member of MIT CSAIL, you can get free VMs for research purposes
-through the [CSAIL OpenStack
-instance](https://tig.csail.mit.edu/shared-computing/open-stack/).
+MIT CSAILのメンバーであれば、[CSAILのOpenStackインスタンス](https://tig.csail.mit.edu/shared-computing/open-stack/)を通じて、研究目的の無料のVMを利用できます。
 
-## Notebook programming
+## ノートブックプログラミング {#notebook-programming}
 
-[Notebook programming
-environments](https://en.wikipedia.org/wiki/Notebook_interface) can be really
-handy for doing certain types of interactive or exploratory development.
-Perhaps the most popular notebook programming environment today is
-[Jupyter](https://jupyter.org/), for Python (and several other languages).
-[Wolfram Mathematica](https://www.wolfram.com/mathematica/) is another notebook
-programming environment that's great for doing math-oriented programming.
+[ノートブックプログラミング環境](https://en.wikipedia.org/wiki/Notebook_interface)は、ある種の対話的な開発や探索的な開発を行うのにとても便利です。現在もっとも人気のあるノートブックプログラミング環境は、おそらくPython(およびその他いくつかの言語)向けの[Jupyter](https://jupyter.org/)でしょう。[Wolfram Mathematica](https://www.wolfram.com/mathematica/)も、数学寄りのプログラミングに適した優れたノートブックプログラミング環境です。
 
-## GitHub
+## GitHub {#github}
 
-[GitHub](https://github.com/) is one of the most popular platforms for
-open-source software development. Many of the tools we've talked about in this
-class, from [vim](https://github.com/vim/vim) to
-[Hammerspoon](https://github.com/Hammerspoon/hammerspoon), are hosted on
-GitHub. It's easy to get started contributing to open-source to help improve
-the tools that you use every day.
+[GitHub](https://github.com/)は、オープンソースソフトウェア開発のためのもっとも人気のあるプラットフォームのひとつです。[vim](https://github.com/vim/vim)から[Hammerspoon](https://github.com/Hammerspoon/hammerspoon)まで、この授業で取り上げたツールの多くがGitHubでホストされています。オープンソースへの貢献は簡単に始められ、毎日使っているツールの改善に役立てます。
 
-There are two primary ways in which people contribute to projects on GitHub:
+GitHub上のプロジェクトに貢献する主な方法は2つあります。
 
-- Creating an
-[issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue).
-This can be used to report bugs or request a new feature. Neither of these
-involves reading or writing code, so it can be pretty lightweight to do.
-High-quality bug reports can be extremely valuable to developers. Commenting on
-existing discussions can be helpful too.
-- Contribute code through a [pull
-request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests).
-This is generally more involved than creating an issue. You can
-[fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)
-a repository on GitHub, clone your fork, create a new branch, make some changes
-(e.g. fix a bug or implement a feature), push the branch, and then [create a
-pull
-request](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
-After this, there will generally be some back-and-forth with the project
-maintainers, who will give you feedback on your patch. Finally, if all goes
-well, your patch will be merged into the upstream repository. Often times,
-larger projects will have a contributing guide, tag beginner-friendly issues,
-and some even have mentorship programs to help first-time contributors become
-familiar with the project.
+- [issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue)を作成する。これは、バグの報告や新機能のリクエストに使えます。どちらもコードを読んだり書いたりする必要がないので、かなり手軽にできます。質の高いバグ報告は、開発者にとって非常に価値があります。既存の議論にコメントすることも役に立ちます。
+- [プルリクエスト](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests)を通じてコードで貢献する。これは一般に、issueの作成よりも手間がかかります。GitHub上でリポジトリを[フォーク](https://help.github.com/en/github/getting-started-with-github/fork-a-repo)し、自分のフォークをクローンして、新しいブランチを作り、何らかの変更を加え(たとえばバグの修正や機能の実装)、ブランチをプッシュしてから、[プルリクエストを作成](https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request)します。その後は通常、プロジェクトのメンテナとの間で何度かやり取りがあり、メンテナがあなたのパッチに対するフィードバックをくれます。最後に、すべてがうまくいけば、あなたのパッチは上流のリポジトリにマージされます。大きなプロジェクトでは、コントリビューションガイドを用意していたり、初心者向けのissueにタグを付けていたりすることが多く、初めてのコントリビュータがプロジェクトに慣れるのを助けるメンターシッププログラムを設けているところもあります。
