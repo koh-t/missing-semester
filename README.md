@@ -1,30 +1,27 @@
 # The Missing Semester of Your CS Education
 
-[![Build Status](https://github.com/missing-semester/missing-semester/actions/workflows/build.yml/badge.svg)](https://github.com/missing-semester/missing-semester/actions/workflows/build.yml) [![Links Status](https://github.com/missing-semester/missing-semester/actions/workflows/links.yml/badge.svg)](https://github.com/missing-semester/missing-semester/actions/workflows/links.yml)
+[![Build Status](https://github.com/koh-t/missing-semester/actions/workflows/build.yml/badge.svg)](https://github.com/koh-t/missing-semester/actions/workflows/build.yml) [![Links Status](https://github.com/koh-t/missing-semester/actions/workflows/links.yml/badge.svg)](https://github.com/koh-t/missing-semester/actions/workflows/links.yml)
 
-Website for [The Missing Semester of Your CS Education](https://missing.csail.mit.edu/)!
+このリポジトリは、MITの授業[The Missing Semester of Your CS Education](https://missing.csail.mit.edu/)のWebサイトを日本語に翻訳した、非公式のフォークです。原文は[missing-semester/missing-semester](https://github.com/missing-semester/missing-semester)にあります。
 
-Contributions are most welcome! If you have edits or new content to add, please
-open an issue or submit a pull request.
+コントリビューションは大歓迎です! 修正や追加したい新しい内容がある場合は、issueを立てるか、プルリクエストを送ってください。
 
-## Development
+## 開発
 
-To build and view the site locally, run:
+サイトをローカルでビルドして表示するには、次を実行します。
 
 ```bash
 bundle exec jekyll serve -w
 ```
 
-If you'd prefer to develop the site in a Docker container (e.g., to avoid
-having to install Ruby and dependencies on your host machine), run:
+Dockerコンテナ内でサイトを開発したい場合(たとえば、ホストマシンにRubyや依存関係をインストールしたくない場合)は、次を実行します。
 
 ```bash
 docker compose up --build
 ```
 
-Then, navigate to <http://localhost:4000> on your host machine to view the
-website. Jekyll will rebuild the website as you make changes to files.
+その後、ホストマシンで <http://localhost:4000> にアクセスすると、Webサイトを表示できます。ファイルに変更を加えると、JekyllがWebサイトを再ビルドします。
 
-## License
+## ライセンス
 
-All content in this course, including the website source code, lecture notes, exercises, and lecture videos, is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). See [here](https://missing.csail.mit.edu/license) for more information on contributions or translations.
+Webサイトのソースコード、講義ノート、演習、講義動画を含む、このコースのすべてのコンテンツは、[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)のもとでライセンスされています。コントリビューションや翻訳についての詳細は、[こちら](https://missing.csail.mit.edu/license)をご覧ください。
